@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+
+# After you know your real site address, uncomment and fix this line:
+# Sitemap: https://YOUR-SITE-ADDRESS/sitemap.xml
