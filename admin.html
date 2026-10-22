@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin | Fahad Abdur Rahman</title>
+<script>
+(function(){
+  var m=null;try{m=localStorage.getItem('fa-mode')}catch(e){}
+  if(!m)m=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  document.documentElement.setAttribute('data-theme',m);
+})();
+</script>
+<style>
+:root{--green:#287A50;--green-hover:#1f6340;--green-text:#226B45;--bg:#FAF9F6;--surface:#fff;--text:#1C1E1F;--muted:#5A615D;--border:#E6E3DC;--danger:#B42318;--shadow:0 1px 2px rgba(28,30,31,.05),0 12px 36px rgba(28,30,31,.08)}
+:root[data-theme="dark"]{--green-text:#5ACB97;--bg:#1C1E1F;--surface:#25282A;--text:#F2F0EB;--muted:#A9AFAB;--border:#363A3C;--danger:#FF8A80;--shadow:0 1px 2px rgba(0,0,0,.5),0 12px 36px rgba(0,0,0,.4)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;padding-bottom:90px;-webkit-text-size-adjust:100%}
+:focus-visible{outline:3px solid #3FAE7C;outline-offset:2px;border-radius:8px}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--border);padding-top:env(safe-area-inset-top)}
+.top{display:flex;align-items:center;gap:10px;height:58px}
+.top h1{font-size:1.05rem;font-weight:800;margin-right:auto}
+.top h1 span{color:var(--green-text)}
+button,input,textarea{font:inherit;color:inherit}
+.btn{border:1px solid var(--border);background:var(--surface);padding:10px 16px;border-radius:12px;font-weight:700;cursor:pointer;font-size:.9rem}
+.btn.primary{background:var(--green);border-color:var(--green);color:#fff}
+.btn.primary:hover{background:var(--green-hover)}
+.btn.small{padding:6px 10px;font-size:.85rem;border-radius:9px}
+.btn.danger{color:var(--danger)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+a{color:var(--green-text)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:var(--shadow)}
+.login{max-width:420px;margin:48px auto 0}
+.login h2{margin-bottom:6px}
+.login p.sub{color:var(--muted);font-size:.9rem;margin-bottom:16px}
+label{display:block;font-size:.82rem;font-weight:600;margin:12px 0 4px;color:var(--muted)}
+input,textarea{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);font-size:16px}
+textarea{min-height:84px;resize:vertical}
+.msg{margin-top:12px;font-size:.88rem}
+.msg.err{color:var(--danger)}
+.msg.ok{color:var(--green-text)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:1px solid var(--border);background:var(--surface);padding:9px 16px;border-radius:999px;font-weight:700;font-size:.86rem;cursor:pointer;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.panel{display:grid;gap:12px;margin-top:6px}
+.panel[hidden]{display:none}
+.hint{color:var(--muted);font-size:.86rem}
+.item{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px 16px}
+.ihead{display:flex;align-items:center;gap:8px}
+.ihead strong{margin-right:auto;font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acts{display:flex;gap:6px;flex:none}
+.grid2{display:grid;gap:0 12px}
+@media(min-width:560px){.grid2{grid-template-columns:1fr 1fr}}
+.savebar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--border);padding:12px 16px calc(12px + env(safe-area-inset-bottom));z-index:30}
+.savebar .in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.savebar .status{margin-right:auto;font-size:.86rem;color:var(--muted)}
+.savebar .status.dirty{color:var(--danger);font-weight:600}
+.savebar .status.ok{color:var(--green-text);font-weight:600}
+.setup code{background:var(--bg);padding:2px 6px;border-radius:6px;font-size:.85rem}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap top">
+    <h1>FAHAD. <span>Admin</span></h1>
+    <a class="btn small" href="index.html" style="text-decoration:none;color:inherit">View site</a>
+    <button class="btn small" id="mode" type="button" aria-label="Toggle dark mode">🌓</button>
+    <button class="btn small" id="signout" type="button" hidden>Sign out</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- not configured -->
+  <section class="card login setup" id="setup" hidden>
+    <h2>Firebase setup needed</h2>
+    <p class="sub">Open <code>firebase-config.js</code> and fill in your Firebase web app details (apiKey, authDomain, projectId, appId). Then reload this page.</p>
+  </section>
+
+  <!-- login -->
+  <section class="card login" id="login" hidden>
+    <h2>Admin login</h2>
+    <p class="sub">Only the site owner can sign in.</p>
+    <form id="loginForm" novalidate>
+      <label for="em">Email</label>
+      <input id="em" type="email" autocomplete="username" required>
+      <label for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="current-password" required>
+      <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+        <button class="btn primary" id="loginBtn" type="submit">Sign in</button>
+        <button class="btn" id="reset" type="button">Forgot password</button>
+      </div>
+      <p class="msg" id="loginMsg" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <!-- editor -->
+  <section id="app" hidden>
+    <div class="tabs" role="tablist" id="tabs" aria-label="Sections"></div>
+    <div id="panels"></div>
+  </section>
+</main>
+
+<div class="savebar" id="savebar" hidden>
+  <div class="in">
+    <span class="status" id="status" role="status" aria-live="polite">All changes saved</span>
+    <button class="btn primary" id="save" type="button">Save changes</button>
+  </div>
+</div>
+
+<script type="module">
+(async function(){
+  var $=function(id){return document.getElementById(id)};
+
+  /* theme toggle */
+  $('mode').addEventListener('click',function(){
+    var r=document.documentElement,n=r.getAttribute('data-theme')==='dark'?'light':'dark';
+    r.setAttribute('data-theme',n);try{localStorage.setItem('fa-mode',n)}catch(e){}
+  });
+
+  var cfg;
+  try{cfg=await import('./firebase-config.js')}catch(e){$('setup').hidden=false;return}
+  var fc=cfg.firebaseConfig,ADMIN=String(cfg.ADMIN_EMAIL||'').toLowerCase();
+  if(!fc||!fc.apiKey||/YOUR/i.test(fc.apiKey)){$('setup').hidden=false;return}
+
+  var V='10.12.2',B='https://www.gstatic.com/firebasejs/'+V+'/';
+  var appM=await import(B+'firebase-app.js');
+  var authM=await import(B+'firebase-auth.js');
+  var fsM=await import(B+'firebase-firestore.js');
+  var app=appM.initializeApp(fc),auth=authM.getAuth(app),db=fsM.getFirestore(app);
+  var ref=fsM.doc(db,'site','content');
+
+  /* default content = what the site already shows */
+  var DEFAULTS={
+    profile:{
+      about1:'Fahad Abdur Rahman is a passionate youth leader, organization builder, and a firm believer in the power of education, collaboration, and innovation.',
+      about2:'He builds platforms and communities where young people can learn, connect, and turn their ideas into real impact.',
+      email:'fahad.ar.official@gmail.com',
+      location:'Chattogram, Bangladesh',
+      stats:[
+        {n:3,suf:'+',label:'Organizations (Founder & Chairman)'},
+        {n:5,suf:'+',label:'Years of Leadership Experience'},
+        {n:10,suf:'+',label:'Projects & Initiatives'},
+        {n:100,suf:'%',label:'Commitment to Youth Development'}
+      ]
+    },
+    orgs:[
+      {name:'TalentVerse Bangladesh',mono:'TV',tagline:'Where Talent Meets Opportunity',url:''},
+      {name:'NexEra Youth Network',mono:'NY',tagline:'Learn · Connect · Grow',url:''},
+      {name:'Visionary Youth Alliance',mono:'VY',tagline:'Where Vision Meets Action',url:''}
+    ],
+    projects:[
+      {title:'TVBD Website',category:'Website',sub:'Web Development',tag:'TVBD',url:''},
+      {title:'NYN Website',category:'Website',sub:'Web Development',tag:'NYN',url:''},
+      {title:'VYA Platform',category:'Website',sub:'Web Development',tag:'VYA',url:''},
+      {title:'TalentVerse Bangladesh',category:'Organization',sub:'Founder & Chairman',tag:'TV',url:''}
+    ],
+    education:[
+      {period:'YEAR – YEAR',title:'Institution name',desc:'Your class / degree / group.'}
+    ],
+    achievements:[
+      {year:'YEAR',title:'Achievement title',desc:'One line about what it was and why it mattered.'}
+    ],
+    social:{linkedin:'',facebook:'',github:'',x:'',youtube:''}
+  };
+
+  var data=null,dirty=false;
+
+  /* tiny DOM helper */
+  function h(tag,props,kids){
+    var n=document.createElement(tag);
+    props=props||{};
+    Object.keys(props).forEach(function(k){
+      var v=props[k];
+      if(k==='class')n.className=v;
+      else if(k==='text')n.textContent=v;
+      else if(k.indexOf('on')===0)n.addEventListener(k.slice(2),v);
+      else n.setAttribute(k,v);
+    });
+    (kids||[]).forEach(function(c){if(c)n.appendChild(c)});
+    return n;
+  }
+  function markDirty(){
+    dirty=true;
+    var s=$('status');s.textContent='Unsaved changes';s.className='status dirty';
+  }
+  var uid=0;
+  function field(label,value,onInput,opts){
+    opts=opts||{};
+    var id='f'+(++uid);
+    var input=opts.area?h('textarea',{id:id}):h('input',{id:id,type:opts.type||'text'});
+    if(opts.placeholder)input.setAttribute('placeholder',opts.placeholder);
+    if(opts.type==='url')input.setAttribute('inputmode','url');
+    input.value=value==null?'':value;
+    input.addEventListener('input',function(){onInput(input.value);markDirty()});
+    return h('div',{},[h('label',{for:id,text:label}),input]);
+  }
+
+  /* generic list editor */
+  function listEditor(key,fields,blank,nameOf,addLabel){
+    var wrap=h('div',{class:'panel'});
+    function draw(){
+      wrap.textContent='';
+      data[key].forEach(function(it,i){
+        var title=h('strong',{text:(i+1)+'. '+(nameOf(it)||'New item')});
+        var acts=h('span',{class:'acts'},[
+          h('button',{class:'btn small',type:'button','aria-label':'Move up',text:'↑',onclick:function(){move(i,-1)}}),
+          h('button',{class:'btn small',type:'button','aria-label':'Move down',text:'↓',onclick:function(){move(i,1)}}),
+          h('button',{class:'btn small danger',type:'button','aria-label':'Delete',text:'✕',onclick:function(){
+            if(confirm('Delete this item?')){data[key].splice(i,1);markDirty();draw()}
+          }})
+        ]);
+        var card=h('div',{class:'item'},[h('div',{class:'ihead'},[title,acts])]);
+        var g=h('div',{class:'grid2'});
+        fields.forEach(function(f){
+          var el=field(f.label,it[f.key],function(v){
+            it[f.key]=v;
+            if(f.name)title.textContent=(i+1)+'. '+(nameOf(it)||'New item');
+          },{area:f.area,type:f.type,placeholder:f.ph});
+          if(f.area||f.wide)el.style.gridColumn='1 / -1';
+          g.appendChild(el);
+        });
+        card.appendChild(g);
+        wrap.appendChild(card);
+      });
+      wrap.appendChild(h('button',{class:'btn',type:'button',text:addLabel,onclick:function(){
+        data[key].push(JSON.parse(JSON.stringify(blank)));markDirty();draw();
+        var last=wrap.querySelectorAll('.item');
+        if(last.length)last[last.length-1].scrollIntoView({behavior:'smooth',block:'center'});
+      }}));
+    }
+    function move(i,d){
+      var j=i+d;if(j<0||j>=data[key].length)return;
+      var t=data[key][i];data[key][i]=data[key][j];data[key][j]=t;markDirty();draw();
+    }
+    draw();
+    return wrap;
+  }
+
+  function profilePanel(){
+    var p=data.profile,wrap=h('div',{class:'panel'});
+    var about=h('div',{class:'item'},[
+      h('strong',{text:'About text'}),
+      field('Paragraph 1',p.about1,function(v){p.about1=v},{area:true}),
+      field('Paragraph 2',p.about2,function(v){p.about2=v},{area:true})
+    ]);
+    var contact=h('div',{class:'item'},[
+      h('strong',{text:'Contact'}),
+      field('Email',p.email,function(v){p.email=v},{type:'email'}),
+      field('Location',p.location,function(v){p.location=v})
+    ]);
+    var stats=h('div',{class:'item'},[h('strong',{text:'Numbers on the home page'})]);
+    p.stats.forEach(function(s,i){
+      var g=h('div',{class:'grid2'},[
+        field('Number '+(i+1),s.n,function(v){s.n=v===''?0:Number(v)},{type:'number'}),
+        field('Suffix (+ or %)',s.suf,function(v){s.suf=v}),
+        (function(){var e=field('Label',s.label,function(v){s.label=v});e.style.gridColumn='1 / -1';return e})()
+      ]);
+      stats.appendChild(g);
+    });
+    var soc=h('div',{class:'item'},[
+      h('strong',{text:'Social links'}),
+      h('p',{class:'hint',text:'Full address starting with https://. Leave empty to hide that icon.'})
+    ]);
+    [['linkedin','LinkedIn'],['facebook','Facebook'],['github','GitHub'],['x','X / Twitter'],['youtube','YouTube']].forEach(function(n){
+      soc.appendChild(field(n[1],data.social[n[0]],function(v){data.social[n[0]]=v},{type:'url',placeholder:'https://'}));
+    });
+    [about,contact,stats,soc].forEach(function(e){wrap.appendChild(e)});
+    return wrap;
+  }
+
+  var TABS=[
+    {id:'projects',label:'Projects',build:function(){
+      var w=listEditor('projects',[
+        {key:'title',label:'Title',name:true,wide:true},
+        {key:'category',label:'Category',ph:'Organization / Website / Event / Other'},
+        {key:'tag',label:'Badge text (max 8)',ph:'TVBD'},
+        {key:'sub',label:'Short description',wide:true},
+        {key:'url',label:'Link',type:'url',ph:'https://',wide:true}
+      ],{title:'',category:'Other',sub:'',tag:'',url:''},function(i){return i.title},'+ Add project');
+      w.insertBefore(h('p',{class:'hint',text:'The filter buttons on the site are built from the categories you type here.'}),w.firstChild);
+      return w;
+    }},
+    {id:'orgs',label:'Organizations',build:function(){
+      return listEditor('orgs',[
+        {key:'name',label:'Name',name:true,wide:true},
+        {key:'mono',label:'Badge letters (2)',ph:'TV'},
+        {key:'url',label:'Link',type:'url',ph:'https://'},
+        {key:'tagline',label:'Tagline',wide:true}
+      ],{name:'',mono:'',tagline:'',url:''},function(i){return i.name},'+ Add organization');
+    }},
+    {id:'achievements',label:'Achievements',build:function(){
+      return listEditor('achievements',[
+        {key:'title',label:'Title',name:true,wide:true},
+        {key:'year',label:'Year'},
+        {key:'desc',label:'Details',area:true}
+      ],{year:'',title:'',desc:''},function(i){return i.title},'+ Add achievement');
+    }},
+    {id:'education',label:'Education',build:function(){
+      return listEditor('education',[
+        {key:'title',label:'Institution / Degree',name:true,wide:true},
+        {key:'period',label:'Period',ph:'2020 – 2024'},
+        {key:'desc',label:'Details',area:true}
+      ],{period:'',title:'',desc:''},function(i){return i.title},'+ Add education');
+    }},
+    {id:'profile',label:'Profile & Links',build:profilePanel}
+  ];
+
+  function showApp(){
+    var tabs=$('tabs'),panels=$('panels');
+    tabs.textContent='';panels.textContent='';
+    var btns=[],pans=[];
+    function select(k){
+      btns.forEach(function(b,i){b.setAttribute('aria-selected',i===k?'true':'false');pans[i].hidden=i!==k});
+    }
+    TABS.forEach(function(t,i){
+      var b=h('button',{class:'tab',type:'button',role:'tab',text:t.label,onclick:function(){select(i)}});
+      var p=h('div',{role:'tabpanel'},[t.build()]);
+      btns.push(b);pans.push(p);tabs.appendChild(b);panels.appendChild(p);
+    });
+    select(0);
+    $('app').hidden=false;$('savebar').hidden=false;
+  }
+
+  function merge(saved){
+    var d=JSON.parse(JSON.stringify(DEFAULTS));
+    if(!saved)return d;
+    ['orgs','projects','education','achievements'].forEach(function(k){if(Array.isArray(saved[k]))d[k]=saved[k]});
+    if(saved.profile){
+      Object.keys(d.profile).forEach(function(k){if(saved.profile[k]!==undefined)d.profile[k]=saved.profile[k]});
+      if(!Array.isArray(d.profile.stats)||d.profile.stats.length<4)d.profile.stats=DEFAULTS.profile.stats;
+    }
+    if(saved.social)Object.keys(d.social).forEach(function(k){if(saved.social[k]!==undefined)d.social[k]=saved.social[k]});
+    return d;
+  }
+
+  async function enter(){
+    try{
+      var snap=await fsM.getDoc(ref);
+      data=merge(snap.exists()?snap.data():null);
+    }catch(e){
+      data=merge(null);
+      alert('Could not load saved content ('+(e.code||e.message)+'). Showing defaults. Check your Firestore rules.');
+    }
+    dirty=false;
+    $('login').hidden=true;$('signout').hidden=false;
+    showApp();
+  }
+
+  /* auth */
+  authM.onAuthStateChanged(auth,function(user){
+    if(user&&String(user.email||'').toLowerCase()===ADMIN){enter();return}
+    $('app').hidden=true;$('savebar').hidden=true;$('signout').hidden=true;$('login').hidden=false;
+    if(user){
+      var m=$('loginMsg');m.className='msg err';m.textContent='This account is not allowed to manage the site.';
+      authM.signOut(auth);
+    }
+  });
+  $('loginForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    var m=$('loginMsg'),b=$('loginBtn');
+    m.className='msg';m.textContent='';
+    var em=$('em').value.trim(),pw=$('pw').value;
+    if(!em||!pw){m.className='msg err';m.textContent='Enter email and password.';return}
+    b.disabled=true;
+    try{await authM.signInWithEmailAndPassword(auth,em,pw)}
+    catch(err){m.className='msg err';m.textContent='Sign-in failed. Check your email and password.'}
+    b.disabled=false;
+  });
+  $('reset').addEventListener('click',async function(){
+    var m=$('loginMsg'),em=$('em').value.trim();
+    if(!em){m.className='msg err';m.textContent='Type your email first, then tap "Forgot password".';return}
+    try{await authM.sendPasswordResetEmail(auth,em);m.className='msg ok';m.textContent='If this email exists, a reset link has been sent.'}
+    catch(err){m.className='msg err';m.textContent='Could not send reset email.'}
+  });
+  $('signout').addEventListener('click',function(){
+    if(dirty&&!confirm('You have unsaved changes. Sign out anyway?'))return;
+    dirty=false;authM.signOut(auth);
+  });
+
+  /* save */
+  $('save').addEventListener('click',async function(){
+    var s=$('status'),b=$('save');
+    b.disabled=true;s.className='status';s.textContent='Saving…';
+    try{
+      var out=JSON.parse(JSON.stringify(data));
+      out.updatedAt=Date.now();
+      await fsM.setDoc(ref,out);
+      dirty=false;s.className='status ok';s.textContent='Saved ✓ — live on the site';
+    }catch(err){
+      s.className='status dirty';
+      s.textContent=(err.code==='permission-denied')?'Not allowed — check Firestore rules':'Save failed: '+(err.code||err.message);
+    }
+    b.disabled=false;
+  });
+  addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
+})();
+</script>
+</body>
+</html>
