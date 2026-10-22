@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Replace YOUR-SITE-ADDRESS with your real site address (e.g. https://example.com/) -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://YOUR-SITE-ADDRESS/</loc>
+    <loc>https://fahad-abdur-rahman.github.io/ghost-leader/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
