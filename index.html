@@ -427,9 +427,9 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
       <div class="sh" style="margin-bottom:0"><span class="num" aria-hidden="true">01</span><div><div class="eyebrow">Organizations</div><h2 id="org-title">My Organizations</h2></div></div>
       <p class="tag">Building People · Creating Opportunities · Shaping the Future</p>
       <div class="org-grid" id="orgGrid">
-        <a class="card org" href="#"><span class="go" aria-hidden="true">→</span><div class="mono" aria-hidden="true">TV</div><h3>TalentVerse Bangladesh</h3><p>Where Talent Meets Opportunity</p></a>
-        <a class="card org" href="#"><span class="go" aria-hidden="true">→</span><div class="mono" aria-hidden="true">NY</div><h3>NexEra Youth Network</h3><p>Learn · Connect · Grow</p></a>
-        <a class="card org" href="#"><span class="go" aria-hidden="true">→</span><div class="mono" aria-hidden="true">VY</div><h3>Visionary Youth Alliance</h3><p>Where Vision Meets Action</p></a>
+        <a class="card org" href="talentverse-bangladesh.html"><span class="go" aria-hidden="true">→</span><div class="mono" aria-hidden="true">TV</div><h3>TalentVerse Bangladesh</h3><p>Where Talent Meets Opportunity</p></a>
+        <a class="card org" href="nexera-youth-network.html"><span class="go" aria-hidden="true">→</span><div class="mono" aria-hidden="true">NY</div><h3>NexEra Youth Network</h3><p>Learn · Connect · Grow</p></a>
+        <a class="card org" href="visionary-youth-alliance.html"><span class="go" aria-hidden="true">→</span><div class="mono" aria-hidden="true">VY</div><h3>Visionary Youth Alliance</h3><p>Where Vision Meets Action</p></a>
       </div>
     </div>
   </div>
@@ -542,7 +542,7 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
 </section>
 </main>
 
-<footer><div class="wrap">© <span id="yr">2026</span> Fahad Abdur Rahman. All rights reserved. · <a href="admin.html" rel="nofollow" style="text-decoration:underline;text-underline-offset:3px">Admin</a></div></footer>
+<footer><div class="wrap"><div role="group" aria-label="Organizations" style="display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;margin-bottom:10px"><a href="talentverse-bangladesh.html" style="text-decoration:underline;text-underline-offset:3px">TalentVerse Bangladesh</a><a href="nexera-youth-network.html" style="text-decoration:underline;text-underline-offset:3px">NexEra Youth Network</a><a href="visionary-youth-alliance.html" style="text-decoration:underline;text-underline-offset:3px">Visionary Youth Alliance</a></div>© <span id="yr">2026</span> Fahad Abdur Rahman. All rights reserved. · <a href="admin.html" rel="nofollow" style="text-decoration:underline;text-underline-offset:3px">Admin</a></div></footer>
 
 <script>
 (function(){
@@ -767,11 +767,12 @@ window.faContent=(async function(){
     });
     window.faSetupFilters();
   }
+  var ORG_PAGES={'talentverse bangladesh':'talentverse-bangladesh.html','nexera youth network':'nexera-youth-network.html','visionary youth alliance':'visionary-youth-alliance.html'};
   function renderOrgs(list){
     if(!Array.isArray(list))return;
     var g=document.getElementById('orgGrid');g.textContent='';
     list.forEach(function(o){
-      var a=h('a','card org');setExternal(a,o.url);
+      var a=h('a','card org');var pg=ORG_PAGES[String(o.name||'').trim().toLowerCase()];if(pg)a.href=pg;else setExternal(a,o.url);
       var go=h('span','go','→');go.setAttribute('aria-hidden','true');
       var mono=h('div','mono',String(o.mono||o.name||'').slice(0,2).toUpperCase());mono.setAttribute('aria-hidden','true');
       a.appendChild(go);a.appendChild(mono);
