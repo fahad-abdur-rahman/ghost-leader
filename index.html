@@ -265,6 +265,24 @@ h2{font-size:clamp(1.55rem,5vw,2.15rem);line-height:1.15;font-weight:800;letter-
 .contact :focus-visible{outline-color:#7FDDB0}
 footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem}
 
+/* intro / loading screen */
+#intro{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:var(--bg);transition:opacity .6s var(--ease),transform .8s var(--ease),visibility .8s}
+#intro.out{opacity:0;visibility:hidden;transform:scale(1.05);pointer-events:none}
+.intro-on,.intro-on body{overflow:hidden}
+.intro-in{width:min(320px,80vw);text-align:center;padding:20px}
+.intro-mark{position:relative;width:76px;height:76px;margin:0 auto 22px;border-radius:24px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--green-2));color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2rem;box-shadow:0 14px 36px color-mix(in srgb,var(--green) 40%,transparent);animation:introPop .8s var(--ease) both}
+.intro-mark::after{content:"";position:absolute;inset:-8px;border-radius:30px;border:2px solid color-mix(in srgb,var(--green) 55%,transparent);animation:introRing 1.8s ease-out infinite}
+.intro-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;animation:introUp .7s .15s var(--ease) both}
+.intro-name span{color:var(--green-text)}
+.intro-tag{color:var(--muted);font-size:.95rem;animation:introUp .7s .3s var(--ease) both}
+.intro-track{height:4px;border-radius:99px;background:var(--border);margin:28px 0 10px;overflow:hidden}
+.intro-bar{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--green-2));border-radius:inherit}
+.intro-pct{font-size:.78rem;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+@keyframes introPop{from{opacity:0;transform:scale(.6) rotate(-8deg)}to{opacity:1;transform:none}}
+@keyframes introUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes introRing{0%{opacity:.9;transform:scale(.92)}100%{opacity:0;transform:scale(1.28)}}
+@media(prefers-reduced-motion:reduce){.intro-mark,.intro-name,.intro-tag{animation:none}.intro-mark::after{animation:none;opacity:0}#intro{transition:opacity .2s}}
+
 /* reveal */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:var(--d,0s)}
 .reveal.show{opacity:1;transform:none}
@@ -277,6 +295,16 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
 </style>
 </head>
 <body>
+<div id="intro" role="status" aria-label="Loading Fahad Abdur Rahman's website">
+  <div class="intro-in">
+    <div class="intro-mark" aria-hidden="true">F</div>
+    <div class="intro-name">Fahad Abdur <span>Rahman</span></div>
+    <div class="intro-tag">Ideas into Impact.</div>
+    <div class="intro-track" aria-hidden="true"><div class="intro-bar" id="introBar"></div></div>
+    <div class="intro-pct" id="introPct" aria-hidden="true">0%</div>
+  </div>
+</div>
+<noscript><style>#intro{display:none!important}</style></noscript>
 <a class="skip" href="#main">Skip to main content</a>
 <div id="bar" aria-hidden="true"></div>
 
@@ -611,10 +639,64 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
 })();
 </script>
 
+<script>
+/* Intro screen: the bar follows what is really loading (page, fonts, images, saved admin content).
+   It stays at least ~1.8 s, and never longer than ~7 s even on a slow connection. */
+(function(){
+  var el=document.getElementById('intro');
+  if(!el)return;
+  var root=document.documentElement;
+  root.classList.add('intro-on');
+  var bar=document.getElementById('introBar'),pct=document.getElementById('introPct');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var MIN=reduce?300:1800,MAX=7000,t0=performance.now();
+  var done={dom:false,fonts:false,load:false,content:false};
+  var W={dom:15,fonts:25,load:35,content:25};
+  function mark(k){done[k]=true}
+  function target(){var s=0;for(var k in done){if(done[k])s+=W[k]}return s}
+
+  if(document.readyState!=='loading')mark('dom');
+  else document.addEventListener('DOMContentLoaded',function(){mark('dom')});
+
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){mark('fonts')},function(){mark('fonts')});
+  else mark('fonts');
+
+  function afterLoad(){
+    mark('load');
+    Promise.resolve(window.faContent).then(function(){mark('content')},function(){mark('content')});
+  }
+  if(document.readyState==='complete')afterLoad();
+  else window.addEventListener('load',afterLoad);
+
+  var shown=0,finished=false;
+  function finish(){
+    if(finished)return;finished=true;
+    bar.style.width='100%';pct.textContent='100%';
+    setTimeout(function(){
+      el.classList.add('out');
+      root.classList.remove('intro-on');
+      setTimeout(function(){el.hidden=true;el.style.display='none'},900);
+    },200);
+  }
+  function tick(now){
+    var spent=now-t0;
+    var goal=Math.min(target(),Math.min(100,spent/MIN*100));
+    if(spent>=MAX)goal=100;
+    shown+=(goal-shown)*0.14;
+    if(goal-shown<0.5)shown=goal;
+    bar.style.width=shown+'%';
+    pct.textContent=Math.round(shown)+'%';
+    if(shown>=100){finish();return}
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+
 <script type="module">
 /* Loads content saved from admin.html (Firebase). If Firebase is not set up,
    or anything fails, the built-in content above simply stays as it is. */
-(async function(){
+window.faContent=(async function(){
   var cfg;
   try{cfg=await import('./firebase-config.js')}catch(e){return}
   var c=cfg.firebaseConfig;
