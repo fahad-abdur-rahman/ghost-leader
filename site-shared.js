@@ -31,20 +31,50 @@ export function logoInto(el, o, altSuffix) {
   } else { el.classList.remove('has-logo'); el.textContent = mono(o); }
 }
 
-// Rebuild the "Organizations" dropdown in the menu from the saved list.
+// Rebuild the "Organizations" dropdown (desktop) and drawer list (mobile) from the saved list.
 export function fillNav(orgs, activeSlug) {
-  var box = document.querySelector('#orgMenu .ddm-in');
-  if (!box || !Array.isArray(orgs) || !orgs.length) return;
-  [].slice.call(box.querySelectorAll('a:not([data-all])')).forEach(function (a) { a.remove(); });
-  orgs.forEach(function (o) {
-    if (!o || !o.name) return;
-    var a = document.createElement('a');
-    a.href = orgHref(o);
-    if (orgSlug(o) === activeSlug) a.setAttribute('aria-current', 'page');
-    var lg = document.createElement('span'); lg.className = 'lg'; lg.setAttribute('aria-hidden', 'true');
-    logoInto(lg, o);
-    var t = document.createElement('span'); t.textContent = o.name;
-    a.appendChild(lg); a.appendChild(t);
-    box.appendChild(a);
+  if (!Array.isArray(orgs) || !orgs.length) return;
+  function build(box, cls) {
+    if (!box) return;
+    [].slice.call(box.querySelectorAll('a:not([data-all])')).forEach(function (a) { a.remove(); });
+    orgs.forEach(function (o) {
+      if (!o || !o.name) return;
+      var a = document.createElement('a');
+      a.href = orgHref(o);
+      if (cls) a.className = cls;
+      if (orgSlug(o) === activeSlug) a.setAttribute('aria-current', 'page');
+      var lg = document.createElement('span'); lg.className = 'lg'; lg.setAttribute('aria-hidden', 'true');
+      logoInto(lg, o);
+      var t = document.createElement('span'); t.textContent = o.name;
+      a.appendChild(lg); a.appendChild(t);
+      box.appendChild(a);
+    });
+  }
+  build(document.querySelector('#orgMenu .ddm-in'), '');
+  build(document.getElementById('drOrgs'), 'dl');
+}
+
+// "Connect" block of the drawer: email + the social links saved in the admin panel.
+export function fillConnect(d) {
+  var box = document.getElementById('drConnect');
+  if (!box || !d) return;
+  var labels = { linkedin: 'LinkedIn', facebook: 'Facebook', github: 'GitHub', x: 'X / Twitter', youtube: 'YouTube' };
+  var email = d.profile && d.profile.email;
+  var items = [];
+  function add(text, href, ext) { items.push([text, href, ext]); }
+  function draw() {
+    if (!items.length) return;
+    box.textContent = '';
+    items.forEach(function (it) {
+      var a = document.createElement('a'); a.className = 'dl'; a.href = it[1]; a.textContent = it[0];
+      if (it[2]) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+      box.appendChild(a);
+    });
+  }
+  if (email && /^[^\s@]+@[^\s@]+$/.test(email)) add('Email', 'mailto:' + email, false);
+  var soc = d.social || {};
+  Object.keys(labels).forEach(function (k) {
+    if (soc[k] && /^https?:\/\//i.test(soc[k])) add(labels[k], soc[k], true);
   });
+  draw();
 }
