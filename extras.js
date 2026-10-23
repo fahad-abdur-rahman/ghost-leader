@@ -9,10 +9,37 @@
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var LANG = get('fa-lang') === 'bn' ? 'bn' : 'en';
 
+  /* ================= Islamic geometric pattern (8-pointed star), kept very light ================= */
+  function geoSvg(c) {
+    return "<svg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84' fill='none' stroke='" + c + "' stroke-width='1.1'>" +
+      "<rect x='17' y='17' width='50' height='50'/><path d='M42 6.6L77.4 42L42 77.4L6.6 42Z'/><circle cx='42' cy='42' r='6'/>" +
+      "<circle cx='0' cy='0' r='2.5'/><circle cx='84' cy='0' r='2.5'/><circle cx='0' cy='84' r='2.5'/><circle cx='84' cy='84' r='2.5'/></svg>";
+  }
+  var GEO_G = 'data:image/svg+xml,' + encodeURIComponent(geoSvg('#287A50'));
+  var GEO_L = 'data:image/svg+xml,' + encodeURIComponent(geoSvg('#7FDDB0'));
+
   /* ================= styles ================= */
   var css = [
     '.fa-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}',
     '.langbtn{font:700 .78rem/1 "Plus Jakarta Sans","Hind Siliguri",system-ui,sans-serif;letter-spacing:0;cursor:pointer;color:var(--text)}',
+    /* Islamic touch: pattern, greeting, guiding thought */
+    '.geo{position:absolute;inset:0;pointer-events:none;background-image:url("' + GEO_G + '");background-size:84px 84px;opacity:.1;-webkit-mask-image:radial-gradient(ellipse 80% 75% at 50% 35%,#000 15%,transparent 78%);mask-image:radial-gradient(ellipse 80% 75% at 50% 35%,#000 15%,transparent 78%)}',
+    'html[data-theme="dark"] .geo{background-image:url("' + GEO_L + '");opacity:.11}',
+    '.geo.dk{background-image:url("' + GEO_L + '")!important;opacity:.09;z-index:0}',
+    '.band>.geo,.contact>.geo{position:absolute}',
+    '.aurora.has-geo::before{display:none}',
+    '.salam{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.84rem;font-weight:600;color:var(--green-text);margin:0 0 14px}',
+    '.salam-ar{font-family:"Amiri","Noto Naskh Arabic","Scheherazade New",serif;font-size:1.3rem;line-height:1.2;font-weight:700}',
+    '.salam .dot{font-size:.55rem;color:var(--green)}',
+    '.aq{position:relative;overflow:hidden;margin:0 auto;max-width:720px;padding:40px 24px 34px;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius,22px);box-shadow:var(--shadow)}',
+    '.aq>*{position:relative;z-index:1}',
+    '.aq>.geo{position:absolute;z-index:0;opacity:.1}',
+    '.aq .orn{display:flex;align-items:center;justify-content:center;gap:14px;color:var(--green-text);margin-bottom:12px;font-size:.9rem}',
+    '.aq .orn i{flex:0 1 90px;height:1px;background:linear-gradient(90deg,transparent,var(--green))}',
+    '.aq .orn i:last-child{background:linear-gradient(270deg,transparent,var(--green))}',
+    '.aq-ar{margin:10px 0 6px;font-family:"Amiri","Noto Naskh Arabic","Scheherazade New",serif;font-size:clamp(1.5rem,5.6vw,2.2rem);line-height:2;font-weight:700;color:var(--text)}',
+    '.aq-tr{max-width:560px;margin:6px auto 0;color:var(--muted);font-size:1.02rem}',
+    '.aq figcaption{margin-top:12px;font-size:.8rem;font-weight:600;letter-spacing:.04em;color:var(--green-text)}',
     /* back to top */
     '.totop{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));width:48px;height:48px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--green-text);box-shadow:var(--shadow-lg,0 10px 30px rgba(0,0,0,.15));display:grid;place-items:center;cursor:pointer;z-index:55;opacity:0;visibility:hidden;transform:translateY(14px) scale(.9);transition:opacity .3s,transform .3s cubic-bezier(.2,.8,.2,1),visibility .3s}',
     '.totop.show{opacity:1;visibility:visible;transform:none}',
@@ -56,6 +83,10 @@
     'Fahad Abdur': 'ফাহাদ আব্দুর', 'Rahman': 'রহমান',
     'Fahad Abdur Rahman. All rights reserved.': 'ফাহাদ আব্দুর রহমান। সর্বস্বত্ব সংরক্ষিত।',
     'Back to top': 'উপরে ফিরে যান',
+    'Assalamu Alaikum · Welcome': 'আসসালামু আলাইকুম · স্বাগতম',
+    'A Guiding Thought': 'একটি পথনির্দেশক ভাবনা',
+    '“Indeed, Allah will not change the condition of a people until they change what is in themselves.”': '“নিশ্চয়ই আল্লাহ কোনো জাতির অবস্থা পরিবর্তন করেন না, যতক্ষণ না তারা নিজেরা নিজেদের অবস্থা পরিবর্তন করে।”',
+    'Surah Ar-Ra’d · 13:11': 'সূরা আর-রা’দ · ১৩:১১',
 
     /* hero */
     'Founder & Chairman · Youth Leader': 'প্রতিষ্ঠাতা ও চেয়ারম্যান · যুব নেতা',
@@ -391,8 +422,21 @@
   }
   function idle(fn) { (window.requestIdleCallback || function (f) { setTimeout(f, 300); })(fn, { timeout: 2500 }); }
 
+  /* ================= pattern overlays ================= */
+  function addGeo(el, cls) {
+    if (el.querySelector(':scope > .geo')) return;
+    var g = document.createElement('div'); g.className = 'geo' + (cls ? ' ' + cls : ''); g.setAttribute('aria-hidden', 'true');
+    el.insertBefore(g, el.firstChild);
+  }
+  function mountGeo() {
+    [].forEach.call(document.querySelectorAll('.aurora'), function (a) { addGeo(a); a.classList.add('has-geo'); });
+    [].forEach.call(document.querySelectorAll('.band,.contact'), function (a) { addGeo(a, 'dk'); });
+    [].forEach.call(document.querySelectorAll('.aq'), function (a) { addGeo(a); });
+  }
+
   /* ================= start ================= */
   function init() {
+    mountGeo();
     mountToggle();
     mountTop();
     mountTyping();
