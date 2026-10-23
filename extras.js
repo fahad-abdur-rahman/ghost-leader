@@ -42,6 +42,7 @@
     /* navigation & shared */
     'Skip to main content': 'মূল অংশে যান',
     'Home': 'হোম', 'About': 'পরিচিতি', 'Education': 'শিক্ষা', 'Skills': 'দক্ষতা',
+    'Blog': 'ব্লগ', 'Articles & Updates': 'লেখা ও আপডেট', 'Thoughts, stories and updates from my journey as a youth leader and founder.': 'যুব নেতা ও প্রতিষ্ঠাতা হিসেবে আমার পথচলার ভাবনা, গল্প ও আপডেট।', 'Read more →': 'আরও পড়ুন →', '← All posts': '← সব লেখা', 'No posts yet. Please check back soon.': 'এখনো কোনো লেখা নেই। শীঘ্রই আবার দেখুন।', 'Loading posts…': 'লেখা লোড হচ্ছে…', 'Post not found': 'লেখাটি পাওয়া যায়নি', 'Back to all posts': 'সব লেখায় ফিরে যান',
     'Organizations': 'সংগঠনসমূহ', 'Organisations': 'সংগঠনসমূহ',
     'All organizations': 'সব সংগঠন', 'All organisations': 'সব সংগঠন', 'All Organizations': 'সব সংগঠন',
     'Other organizations': 'অন্যান্য সংগঠন',

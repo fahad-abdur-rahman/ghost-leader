@@ -202,6 +202,7 @@ input[type=file]{padding:8px;font-size:.85rem}
       contactTitle:"Let's Work Together",
       contactText:'Have a project, collaboration or just want to say hello? Feel free to reach out!'
     },
+    posts:[],
     skills:[{name:'Leadership'},{name:'Communication'},{name:'Content Creation'},{name:'Web Design'},{name:'Event Management'},{name:'Problem Solving'}]
   };
 
@@ -584,6 +585,17 @@ input[type=file]{padding:8px;font-size:.85rem}
         {key:'desc',label:'Details',area:true}
       ],{period:'',title:'',desc:''},function(i){return i.title},'+ Add education');
     }},
+    {id:'blog',label:'Blog',build:function(){
+      var w=listEditor('posts',[
+        {key:'title',label:'Title',name:true,wide:true},
+        {key:'date',label:'Date',type:'date'},
+        {key:'tag',label:'Topic (optional)',ph:'Leadership'},
+        {key:'summary',label:'Short summary (shown on the blog list)',area:true},
+        {key:'body',label:'Full article',area:true}
+      ],{title:'',slug:'',date:new Date().toISOString().slice(0,10),tag:'',summary:'',body:''},function(i){return i.title},'+ Add post');
+      w.insertBefore(h('p',{class:'hint',text:'Write your article in the big box. Leave an empty line between paragraphs. Start a line with ## to make a heading. Newest date shows first. Press Save at the bottom to publish.'}),w.firstChild);
+      return w;
+    }},
     {id:'site',label:'Site texts',build:sitePanel},
     {id:'messages',label:'Messages',build:messagesPanel},
     {id:'profile',label:'Profile & Links',build:profilePanel}
@@ -620,6 +632,7 @@ input[type=file]{padding:8px;font-size:.85rem}
         return m;
       });
     }
+    if(Array.isArray(saved.posts))d.posts=saved.posts;
     if(saved.site)Object.keys(d.site).forEach(function(k){if(typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
     if(saved.profile){
       Object.keys(d.profile).forEach(function(k){if(saved.profile[k]!==undefined)d.profile[k]=saved.profile[k]});
@@ -685,11 +698,20 @@ input[type=file]{padding:8px;font-size:.85rem}
         while(used[sg]){sg=base+'-'+(n++)}
         used[sg]=1;o.slug=sg;
       });
+      var usedP={};
+      out.posts=(out.posts||[]).filter(function(x){return x&&String(x.title||'').trim()});
+      out.posts.forEach(function(x,i){
+        var sg=(x.slug&&/^[a-z0-9-]+$/.test(x.slug))?x.slug:(slugify(x.title)||('post-'+Date.now().toString(36)+i));
+        var n=2,base=sg;
+        while(usedP[sg]){sg=base+'-'+(n++)}
+        usedP[sg]=1;x.slug=sg;
+      });
       if(JSON.stringify(out).length>900000){
         s.className='status dirty';s.textContent='Too much image data — use smaller logos/photo';b.disabled=false;return;
       }
       out.updatedAt=Date.now();
       await fsM.setDoc(ref,out);
+      (data.posts||[]).forEach(function(x){var m=out.posts.filter(function(y){return y.title===x.title&&y.body===x.body&&y.date===x.date})[0];if(m)x.slug=m.slug});
       dirty=false;s.className='status ok';s.textContent='Saved ✓ — live on the site';
     }catch(err){
       s.className='status dirty';
