@@ -345,23 +345,50 @@ html{background:var(--bg)}
 .drawer a.dl:hover,.drawer a.dl.active,.drawer a.dl[aria-current="page"]{color:var(--green-text);background:color-mix(in srgb,var(--green) 13%,transparent)}
 @media(min-width:961px){.drawer,.drawer-bg{display:none}}
 
-/* intro / loading screen */
-#intro{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:var(--bg);transition:opacity .6s var(--ease),transform .8s var(--ease),visibility .8s}
-#intro.out{opacity:0;visibility:hidden;transform:scale(1.05);pointer-events:none}
+/* intro / loading screen (always dark, so it feels premium in either theme) */
+#intro{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;color:#EEF3F0;overflow:hidden}
+#intro .cp{position:absolute;left:0;right:0;height:50.2%;background:#070A09;z-index:0;transition:transform 1s cubic-bezier(.77,0,.18,1)}
+#intro .cp.top{top:0}
+#intro .cp.bot{bottom:0}
+#intro.out .cp.top{transform:translateY(-101%)}
+#intro.out .cp.bot{transform:translateY(101%)}
+#intro.out{pointer-events:none}
+.in-fx{position:absolute;inset:0;z-index:1;pointer-events:none;transition:opacity .5s}
+.in-fx .g1,.in-fx .g2{position:absolute;border-radius:50%;filter:blur(90px)}
+.in-fx .g1{width:420px;height:420px;left:-120px;top:-60px;background:#287A50;opacity:.38;animation:inFloat 9s ease-in-out infinite}
+.in-fx .g2{width:380px;height:380px;right:-110px;bottom:-40px;background:#3FAE7C;opacity:.26;animation:inFloat 11s ease-in-out infinite reverse}
+.in-fx .gr{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0,transparent 68%);mask-image:radial-gradient(circle at 50% 50%,#000 0,transparent 68%)}
+@keyframes inFloat{50%{transform:translate(34px,-26px) scale(1.1)}}
+.intro-in{position:relative;z-index:2;text-align:center;padding:20px;width:min(520px,92vw);transition:opacity .45s,transform .9s cubic-bezier(.77,0,.18,1)}
+#intro.out .intro-in{opacity:0;transform:scale(1.06)}
+#intro.out .in-fx,#intro.out .in-foot{opacity:0}
+.in-mark{position:relative;width:92px;height:92px;margin:0 auto 30px;border-radius:28px;display:grid;place-items:center;background:linear-gradient(135deg,#287A50,#3FAE7C);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2.5rem;box-shadow:0 18px 60px rgba(63,174,124,.45),inset 0 1px 0 rgba(255,255,255,.35);animation:inPop .9s cubic-bezier(.2,.8,.2,1) both}
+.in-mark b{animation:inPulse 2.4s ease-in-out infinite}
+.in-mark::before{content:"";position:absolute;inset:-9px;border-radius:36px;padding:2px;background:conic-gradient(from var(--a),transparent 0 55%,#7FDDB0 80%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask-composite:exclude;animation:inSpin 2.2s linear infinite}
+.in-mark::after{content:"";position:absolute;inset:-22px;border-radius:44px;border:1px solid rgba(127,221,176,.22);animation:inRing 2.4s ease-out infinite}
+.in-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(1.9rem,8.5vw,2.9rem);line-height:1.1;letter-spacing:-.03em}
+.in-name .w{display:inline-block;white-space:nowrap}
+.in-name i{display:inline-block;font-style:normal;opacity:0;transform:translateY(.7em) rotate(4deg);filter:blur(6px);animation:inLetter .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.25s + var(--i)*.045s)}
+.in-name .acc i{color:#5ACB97;text-shadow:0 0 28px rgba(90,203,151,.45)}
+.in-tag{margin-top:14px;font-size:1.02rem;font-weight:500;color:#B4BBB6;opacity:0;animation:inUp .8s .95s cubic-bezier(.2,.8,.2,1) both}
+.in-role{margin-top:18px;font-size:.64rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#7FDDB0;opacity:0;animation:inUp .8s 1.2s cubic-bezier(.2,.8,.2,1) both}
+.in-foot{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:0 0 calc(26px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:12px;transition:opacity .4s}
+.intro-pct{font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.2em;color:#9AA7A1;font-variant-numeric:tabular-nums}
+.intro-track{width:min(260px,64vw);height:2px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.intro-bar{height:100%;width:0;background:linear-gradient(90deg,#287A50,#7FDDB0);border-radius:inherit;box-shadow:0 0 14px rgba(127,221,176,.8)}
 .intro-on,.intro-on body{overflow:hidden}
-.intro-in{width:min(320px,80vw);text-align:center;padding:20px}
-.intro-mark{position:relative;width:76px;height:76px;margin:0 auto 22px;border-radius:24px;display:grid;place-items:center;background:linear-gradient(135deg,var(--green),var(--green-2));color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2rem;box-shadow:0 14px 36px color-mix(in srgb,var(--green) 40%,transparent);animation:introPop .8s var(--ease) both}
-.intro-mark::after{content:"";position:absolute;inset:-8px;border-radius:30px;border:2px solid color-mix(in srgb,var(--green) 55%,transparent);animation:introRing 1.8s ease-out infinite}
-.intro-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;animation:introUp .7s .15s var(--ease) both}
-.intro-name span{color:var(--green-text)}
-.intro-tag{color:var(--muted);font-size:.95rem;animation:introUp .7s .3s var(--ease) both}
-.intro-track{height:4px;border-radius:99px;background:var(--border);margin:28px 0 10px;overflow:hidden}
-.intro-bar{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--green-2));border-radius:inherit}
-.intro-pct{font-size:.78rem;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
-@keyframes introPop{from{opacity:0;transform:scale(.6) rotate(-8deg)}to{opacity:1;transform:none}}
-@keyframes introUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@keyframes introRing{0%{opacity:.9;transform:scale(.92)}100%{opacity:0;transform:scale(1.28)}}
-@media(prefers-reduced-motion:reduce){.intro-mark,.intro-name,.intro-tag{animation:none}.intro-mark::after{animation:none;opacity:0}#intro{transition:opacity .2s}}
+@keyframes inPop{from{opacity:0;transform:scale(.55) rotate(-10deg)}to{opacity:1;transform:none}}
+@keyframes inPulse{50%{transform:scale(1.08)}}
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes inSpin{to{--a:360deg}}
+@keyframes inRing{0%{opacity:.8;transform:scale(.94)}100%{opacity:0;transform:scale(1.2)}}
+@keyframes inLetter{to{opacity:1;transform:none;filter:none}}
+@keyframes inUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .in-mark,.in-mark b,.in-mark::before,.in-mark::after,.in-fx .g1,.in-fx .g2{animation:none}
+  .in-name i,.in-tag,.in-role{animation:none;opacity:1;transform:none;filter:none}
+  #intro .cp,.intro-in{transition:opacity .2s,transform .2s}
+}
 
 /* reveal */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:var(--d,0s)}
@@ -376,12 +403,17 @@ html{background:var(--bg)}
 </head>
 <body>
 <div id="intro" role="status" aria-label="Loading Fahad Abdur Rahman's website">
+  <div class="cp top" aria-hidden="true"></div><div class="cp bot" aria-hidden="true"></div>
+  <div class="in-fx" aria-hidden="true"><span class="g1"></span><span class="g2"></span><span class="gr"></span></div>
   <div class="intro-in">
-    <div class="intro-mark" aria-hidden="true">F</div>
-    <div class="intro-name">Fahad Abdur <span>Rahman</span></div>
-    <div class="intro-tag">Ideas into Impact.</div>
-    <div class="intro-track" aria-hidden="true"><div class="intro-bar" id="introBar"></div></div>
-    <div class="intro-pct" id="introPct" aria-hidden="true">0%</div>
+    <div class="in-mark" aria-hidden="true"><b>F</b></div>
+    <div class="in-name" aria-hidden="true"><span class="w"><i style="--i:0">F</i><i style="--i:1">a</i><i style="--i:2">h</i><i style="--i:3">a</i><i style="--i:4">d</i></span> <span class="w"><i style="--i:6">A</i><i style="--i:7">b</i><i style="--i:8">d</i><i style="--i:9">u</i><i style="--i:10">r</i></span> <span class="w acc"><i style="--i:12">R</i><i style="--i:13">a</i><i style="--i:14">h</i><i style="--i:15">m</i><i style="--i:16">a</i><i style="--i:17">n</i></span></div>
+    <div class="in-tag">Ideas into Impact.</div>
+    <div class="in-role">Youth Leader · Founder · Chairman</div>
+  </div>
+  <div class="in-foot" aria-hidden="true">
+    <div class="intro-pct" id="introPct">0%</div>
+    <div class="intro-track"><div class="intro-bar" id="introBar"></div></div>
   </div>
 </div>
 <noscript><style>#intro{display:none!important}</style></noscript>
@@ -632,7 +664,7 @@ html{background:var(--bg)}
 </section>
 </main>
 
-<footer><div class="wrap">© <span id="yr">2026</span> Fahad Abdur Rahman. All rights reserved. · <a href="admin.html" rel="nofollow" style="text-decoration:underline;text-underline-offset:3px">Admin</a></div></footer>
+<footer><div class="wrap">© <span id="yr">2026</span> Fahad Abdur Rahman. All rights reserved.</div></footer>
 
 <script>
 (function(){
@@ -762,15 +794,18 @@ html{background:var(--bg)}
 
 <script>
 /* Intro screen: the bar follows what is really loading (page, fonts, images, saved admin content).
-   It stays at least ~1.8 s, and never longer than ~7 s even on a slow connection. */
+   It stays at least ~2.6 s, and never longer than ~7 s even on a slow connection. */
 (function(){
   var el=document.getElementById('intro');
   if(!el)return;
+  /* already shown during this visit: skip it (e.g. when coming back from an organization page) */
+  try{if(sessionStorage.getItem('fa-intro')){el.hidden=true;el.style.display='none';return}}catch(e){}
+  try{sessionStorage.setItem('fa-intro','1')}catch(e){}
   var root=document.documentElement;
   root.classList.add('intro-on');
   var bar=document.getElementById('introBar'),pct=document.getElementById('introPct');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var MIN=reduce?300:1800,MAX=7000,t0=performance.now();
+  var MIN=reduce?300:2600,MAX=7000,t0=performance.now();
   var done={dom:false,fonts:false,load:false,content:false};
   var W={dom:15,fonts:25,load:35,content:25};
   function mark(k){done[k]=true}
@@ -796,7 +831,7 @@ html{background:var(--bg)}
     setTimeout(function(){
       el.classList.add('out');
       root.classList.remove('intro-on');
-      setTimeout(function(){el.hidden=true;el.style.display='none'},900);
+      setTimeout(function(){el.hidden=true;el.style.display='none'},1150);
     },200);
   }
   function tick(now){

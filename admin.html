@@ -60,6 +60,17 @@ textarea{min-height:84px;resize:vertical}
 .savebar .status.dirty{color:var(--danger);font-weight:600}
 .savebar .status.ok{color:var(--green-text);font-weight:600}
 .setup code{background:var(--bg);padding:2px 6px;border-radius:6px;font-size:.85rem}
+.cropbg{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:16px}
+.cropbox{width:min(100%,380px);background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.cropbox h3{font-size:1.02rem;margin-bottom:4px}
+.cropview{margin:12px auto 0;display:block;border-radius:14px;touch-action:none;cursor:grab;background:#2a2d2f;max-width:100%}
+.cropview:active{cursor:grabbing}
+.croprow{display:flex;align-items:center;gap:10px;margin-top:12px}
+.croprow input[type=range]{padding:0;flex:1;accent-color:var(--green)}
+.shapes{display:flex;gap:8px;margin-top:12px}
+.shapes .btn{flex:1}
+.shapes .btn[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.cropact{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
 [hidden]{display:none!important}
 .imgrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:6px}
 .thumb{width:84px;height:84px;border-radius:14px;border:1px dashed var(--border);background:#fff;display:grid;place-items:center;overflow:hidden;color:#888;font-size:.72rem;flex:none}
@@ -253,6 +264,92 @@ input[type=file]{padding:8px;font-size:.85rem}
       fr.readAsDataURL(file);
     });
   }
+
+  /* crop tool: drag to move, slider to zoom, square or round */
+  function cropImage(file,o){
+    return new Promise(function(res,rej){
+      var fr=new FileReader();
+      fr.onerror=function(){rej()};
+      fr.onload=function(){
+        var im=new Image();
+        im.onerror=function(){rej()};
+        im.onload=function(){start(im)};
+        im.src=fr.result;
+      };
+      fr.readAsDataURL(file);
+
+      function start(im){
+        var VW=Math.min(320,Math.max(200,innerWidth-80)),VH=Math.round(VW/o.aspect);
+        var cover=Math.max(VW/im.width,VH/im.height),contain=Math.min(VW/im.width,VH/im.height);
+        var minZ=Math.min(1,contain/cover),z=o.shapes?minZ:1,cx=VW/2,cy=VH/2,round=false;
+        var cv=h('canvas',{class:'cropview',width:VW,height:VH});
+        cv.style.width=VW+'px';cv.style.height=VH+'px';
+        var ctx=cv.getContext('2d');
+        function draw(){
+          ctx.clearRect(0,0,VW,VH);
+          ctx.fillStyle='#2a2d2f';ctx.fillRect(0,0,VW,VH);
+          var sc=cover*z,w=im.width*sc,hh=im.height*sc;
+          ctx.drawImage(im,cx-w/2,cy-hh/2,w,hh);
+          /* dim everything outside the crop shape */
+          ctx.save();ctx.fillStyle='rgba(0,0,0,.55)';ctx.beginPath();ctx.rect(0,0,VW,VH);
+          if(round){ctx.arc(VW/2,VH/2,Math.min(VW,VH)/2,0,Math.PI*2,true)}
+          ctx.fill('evenodd');ctx.restore();
+          ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=1.5;ctx.beginPath();
+          if(round)ctx.arc(VW/2,VH/2,Math.min(VW,VH)/2-.75,0,Math.PI*2);else ctx.rect(.75,.75,VW-1.5,VH-1.5);
+          ctx.stroke();
+        }
+        var drag=null;
+        cv.addEventListener('pointerdown',function(e){cv.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,cx:cx,cy:cy}});
+        cv.addEventListener('pointermove',function(e){if(!drag)return;cx=drag.cx+(e.clientX-drag.x);cy=drag.cy+(e.clientY-drag.y);draw()});
+        cv.addEventListener('pointerup',function(){drag=null});
+        cv.addEventListener('pointercancel',function(){drag=null});
+        cv.addEventListener('wheel',function(e){e.preventDefault();setZ(z*(e.deltaY<0?1.06:.94))},{passive:false});
+        var range=h('input',{type:'range',min:String(minZ),max:'4',step:'0.01','aria-label':'Zoom'});
+        range.value=z;
+        function setZ(v){z=Math.max(minZ,Math.min(4,v));range.value=z;draw()}
+        range.addEventListener('input',function(){setZ(Number(range.value))});
+
+        var bSq=h('button',{class:'btn small',type:'button',text:'Square','aria-pressed':'true'});
+        var bRd=h('button',{class:'btn small',type:'button',text:'Round','aria-pressed':'false'});
+        function shape(r){round=r;bSq.setAttribute('aria-pressed',r?'false':'true');bRd.setAttribute('aria-pressed',r?'true':'false');draw()}
+        bSq.addEventListener('click',function(){shape(false)});
+        bRd.addEventListener('click',function(){shape(true)});
+
+        var bg=h('div',{class:'cropbg',role:'dialog','aria-modal':'true','aria-label':'Crop image'});
+        function close(){bg.remove();document.removeEventListener('keydown',onKey)}
+        function onKey(e){if(e.key==='Escape'){close();rej('cancel')}}
+        document.addEventListener('keydown',onKey);
+        var cancel=h('button',{class:'btn small',type:'button',text:'Cancel',onclick:function(){close();rej('cancel')}});
+        var use=h('button',{class:'btn small primary',type:'button',text:'Use this',onclick:function(){
+          var outW=o.outW,out='';
+          for(var t=0;t<4;t++){
+            var outH=Math.round(outW/o.aspect),k=outW/VW;
+            var c=document.createElement('canvas');c.width=outW;c.height=outH;
+            var x=c.getContext('2d');
+            if(o.mime==='image/jpeg'){x.fillStyle='#fff';x.fillRect(0,0,outW,outH)}
+            if(round){x.beginPath();x.arc(outW/2,outH/2,Math.min(outW,outH)/2,0,Math.PI*2);x.closePath();x.clip()}
+            var sc=cover*z*k,w=im.width*sc,hh=im.height*sc;
+            x.drawImage(im,cx*k-w/2,cy*k-hh/2,w,hh);
+            out=c.toDataURL(round&&o.mime==='image/jpeg'?'image/png':o.mime,o.q);
+            if(out.length<=(o.mime==='image/jpeg'?260000:140000))break;
+            outW=Math.round(outW*.75);
+          }
+          close();res(out);
+        }});
+        var box=h('div',{class:'cropbox'},[
+          h('h3',{text:o.shapes?'Crop your logo':'Crop your photo'}),
+          h('p',{class:'hint',text:'Drag the picture to move it. Use the slider to zoom.'}),
+          cv,
+          h('div',{class:'croprow'},[h('span',{class:'hint',text:'Zoom'}),range]),
+          o.shapes?h('div',{class:'shapes'},[bSq,bRd]):null,
+          h('div',{class:'cropact'},[cancel,use])
+        ]);
+        bg.appendChild(box);document.body.appendChild(bg);
+        draw();use.focus();
+      }
+    });
+  }
+
   function imageField(label,value,onChange,opts){
     opts=opts||{};
     var prev=h('div',{class:'thumb'+(opts.wide?' wide':'')});
@@ -264,10 +361,11 @@ input[type=file]{padding:8px;font-size:.85rem}
     file.addEventListener('change',function(){
       var f=file.files&&file.files[0];if(!f)return;
       msg.textContent='Processing…';
-      resizeImage(f,opts.max||256,opts.mime||'image/webp',opts.q||.9).then(function(url){
+      var job=opts.crop?cropImage(f,opts):resizeImage(f,opts.max||256,opts.mime||'image/webp',opts.q||.9);
+      job.then(function(url){
         onChange(url);show(url);markDirty();
         msg.textContent='Ready ('+Math.round(url.length/1024)+' KB). Press “Save changes”.';
-      }).catch(function(){msg.textContent='Could not read this image. Try a PNG or JPG.'});
+      }).catch(function(err){msg.textContent=err==='cancel'?'':'Could not read this image. Try a PNG or JPG.'});
       file.value='';
     });
     var rm=h('button',{class:'btn small danger',type:'button',text:'Remove',onclick:function(){onChange('');show('');markDirty();msg.textContent='Removed. Press “Save changes”.'}});
@@ -294,7 +392,7 @@ input[type=file]{padding:8px;font-size:.85rem}
   }
   function orgExtra(it){
     var wrap=h('div',{});
-    wrap.appendChild(imageField('Logo (shows on the home page, its own page and the menu)',it.logo,function(v){it.logo=v},{max:256,mime:'image/webp',q:.9,hint:'Square logos look best. PNG with transparent background is fine.'}));
+    wrap.appendChild(imageField('Logo (shows on the home page, its own page and the menu)',it.logo,function(v){it.logo=v},{crop:true,aspect:1,shapes:true,outW:256,mime:'image/webp',q:.92,hint:'After choosing a file you can crop it (square or round) and zoom.'}));
     wrap.appendChild(featuresEditor(it));
     var slug=it.slug||slugify(it.name)||'(set after you type a name)';
     var addr=STATIC_SLUGS.indexOf(slug)>=0?slug+'.html':'organization.html?o='+slug;
@@ -353,7 +451,7 @@ input[type=file]{padding:8px;font-size:.85rem}
     ]);
     var photo=h('div',{class:'item'},[
       h('strong',{text:'Your photo (home page)'}),
-      imageField('Upload photo',p.photo,function(v){p.photo=v},{max:900,mime:'image/jpeg',q:.85,wide:true,hint:'Portrait photo, face near the top works best.'})
+      imageField('Upload photo',p.photo,function(v){p.photo=v},{crop:true,aspect:.8,shapes:false,outW:720,mime:'image/jpeg',q:.85,wide:true,hint:'After choosing a file you can crop it. Portrait works best.'})
     ]);
     var contact=h('div',{class:'item'},[
       h('strong',{text:'Contact'}),
