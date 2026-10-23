@@ -2,6 +2,13 @@
 import { fillNav, fillConnect } from './site-shared.js';
 var $ = function (id) { return document.getElementById(id); };
 function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+var ALL = [];                    /* posts loaded from the admin panel */
+function isBn() { return document.documentElement.getAttribute('lang') === 'bn'; }
+/* pick the Bangla or English text of a field; fall back to the other language when empty */
+function pick(p, k) {
+  var en = String(p[k] || '').trim(), bn = String(p[k + 'Bn'] || '').trim();
+  return isBn() ? (bn || en) : (en || bn);
+}
 var slugWanted = (new URLSearchParams(location.search).get('p') || '').toLowerCase().replace(/[^a-z0-9-]/g, '');
 
 function fmtDate(s) {
@@ -14,9 +21,9 @@ function fmtDate(s) {
 function minutes(t) { var w = String(t || '').trim().split(/\s+/).filter(Boolean).length; return Math.max(1, Math.round(w / 200)); }
 function meta(p) {
   var m = el('div', 'bl-meta');
-  if (p.tag) m.appendChild(el('span', 'bl-tag', p.tag));
+  var tg = pick(p, 'tag'); if (tg) m.appendChild(el('span', 'bl-tag', tg));
   var d = fmtDate(p.date); if (d) m.appendChild(el('span', null, d));
-  m.appendChild(el('span', null, minutes(p.body || p.summary) + ' min read'));
+  m.appendChild(el('span', null, minutes(pick(p, 'body') || pick(p, 'summary')) + ' min read'));
   return m;
 }
 function setMeta(sel, attr, v) { var e = document.querySelector(sel); if (e) e.setAttribute(attr, v); }
@@ -28,8 +35,8 @@ function renderList(posts) {
   posts.forEach(function (p) {
     var a = el('a', 'card bl-card'); a.href = 'blog.html?p=' + encodeURIComponent(p.slug);
     a.appendChild(meta(p));
-    a.appendChild(el('h3', null, p.title));
-    var sum = (p.summary || '').trim() || String(p.body || '').trim().replace(/\s+/g, ' ').slice(0, 160);
+    a.appendChild(el('h3', null, pick(p, 'title')));
+    var sum = pick(p, 'summary') || pick(p, 'body').replace(/\s+/g, ' ').slice(0, 160);
     if (sum) a.appendChild(el('p', null, sum));
     a.appendChild(el('span', 'bl-more', 'Read more →'));
     g.appendChild(a);
@@ -38,21 +45,22 @@ function renderList(posts) {
 }
 
 function renderPost(p) {
-  document.title = p.title + ' | Fahad Abdur Rahman';
-  var desc = ((p.summary || '').trim() || String(p.body || '').trim().replace(/\s+/g, ' ')).slice(0, 160);
+  var ttl = pick(p, 'title');
+  document.title = ttl + ' | Fahad Abdur Rahman';
+  var desc = (pick(p, 'summary') || pick(p, 'body').replace(/\s+/g, ' ')).slice(0, 160);
   setMeta('meta[name=description]', 'content', desc);
-  setMeta('meta[property="og:title"]', 'content', p.title);
-  setMeta('meta[name="twitter:title"]', 'content', p.title);
+  setMeta('meta[property="og:title"]', 'content', ttl);
+  setMeta('meta[name="twitter:title"]', 'content', ttl);
   setMeta('meta[property="og:description"]', 'content', desc);
   setMeta('meta[name="twitter:description"]', 'content', desc);
-  $('crumbPost').textContent = ' / ' + p.title;
+  $('crumbPost').textContent = ' / ' + ttl;
   var head = $('blHead'); head.textContent = '';
   var wrap = $('blWrap'); wrap.textContent = '';
   var art = el('article', 'bl-art');
   art.appendChild(meta(p));
-  art.appendChild(el('h1', null, p.title));
+  art.appendChild(el('h1', null, ttl));
   var body = el('div', 'bl-body');
-  String(p.body || '').replace(/\r/g, '').split(/\n{2,}/).forEach(function (blk) {
+  pick(p, 'body').replace(/\r/g, '').split(/\n{2,}/).forEach(function (blk) {
     blk = blk.trim(); if (!blk) return;
     if (/^##\s+/.test(blk)) { body.appendChild(el('h2', null, blk.replace(/^##\s+/, ''))); return; }
     var para = el('p');
@@ -62,8 +70,7 @@ function renderPost(p) {
   art.appendChild(body);
   var back = el('a', 'bl-back', '← All posts'); back.href = 'blog.html'; art.appendChild(back);
   wrap.appendChild(art);
-  window.scrollTo(0, 0);
-}
+  }
 
 function notFound() {
   var head = $('blHead'); head.textContent = '';
@@ -89,10 +96,18 @@ window.faContent = (async function () {
 
   if (d && Array.isArray(d.orgs)) fillNav(d.orgs);
   if (d) fillConnect(d);
-  var posts = (d && Array.isArray(d.posts) ? d.posts : []).filter(function (p) { return p && p.title && p.slug; });
-  posts.sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); });
-  if (slugWanted) {
-    var me = posts.filter(function (p) { return p.slug === slugWanted; })[0];
-    if (me) renderPost(me); else notFound();
-  } else renderList(posts);
+  ALL = (d && Array.isArray(d.posts) ? d.posts : []).filter(function (p) { return p && p.slug && (String(p.title || '').trim() || String(p.titleBn || '').trim()); });
+  ALL.sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); });
+  draw(true);
+  /* re-draw when the visitor switches বাংলা / EN */
+  var last = isBn();
+  new MutationObserver(function () { if (isBn() !== last) { last = isBn(); draw(false); } })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 })();
+
+function draw(first) {
+  if (slugWanted) {
+    var me = ALL.filter(function (p) { return p.slug === slugWanted; })[0];
+    if (me) { renderPost(me); if (first) window.scrollTo(0, 0); } else notFound();
+  } else renderList(ALL);
+}

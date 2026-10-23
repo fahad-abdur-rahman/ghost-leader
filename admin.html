@@ -587,13 +587,17 @@ input[type=file]{padding:8px;font-size:.85rem}
     }},
     {id:'blog',label:'Blog',build:function(){
       var w=listEditor('posts',[
-        {key:'title',label:'Title',name:true,wide:true},
+        {key:'title',label:'English — Title',name:true,wide:true},
         {key:'date',label:'Date',type:'date'},
-        {key:'tag',label:'Topic (optional)',ph:'Leadership'},
-        {key:'summary',label:'Short summary (shown on the blog list)',area:true},
-        {key:'body',label:'Full article',area:true}
-      ],{title:'',slug:'',date:new Date().toISOString().slice(0,10),tag:'',summary:'',body:''},function(i){return i.title},'+ Add post');
-      w.insertBefore(h('p',{class:'hint',text:'Write your article in the big box. Leave an empty line between paragraphs. Start a line with ## to make a heading. Newest date shows first. Press Save at the bottom to publish.'}),w.firstChild);
+        {key:'tag',label:'English — Topic (optional)',ph:'Leadership'},
+        {key:'summary',label:'English — Short summary (shown on the blog list)',area:true},
+        {key:'body',label:'English — Full article',area:true},
+        {key:'titleBn',label:'বাংলা — শিরোনাম (Bangla title)',wide:true},
+        {key:'tagBn',label:'বাংলা — বিষয় (Bangla topic, optional)',ph:'নেতৃত্ব'},
+        {key:'summaryBn',label:'বাংলা — সংক্ষিপ্ত বিবরণ (Bangla summary)',area:true},
+        {key:'bodyBn',label:'বাংলা — পুরো লেখা (Bangla full article)',area:true}
+      ],{title:'',slug:'',date:new Date().toISOString().slice(0,10),tag:'',summary:'',body:'',titleBn:'',tagBn:'',summaryBn:'',bodyBn:''},function(i){return i.title},'+ Add post');
+      w.insertBefore(h('p',{class:'hint',text:'Write the English version in the English boxes and the Bangla version in the বাংলা boxes. You can fill one or both: visitors see the language they chose (if one is empty, the other is shown). Leave an empty line between paragraphs. Start a line with ## to make a heading. Newest date shows first. Press Save at the bottom to publish.'}),w.firstChild);
       return w;
     }},
     {id:'site',label:'Site texts',build:sitePanel},
@@ -699,7 +703,7 @@ input[type=file]{padding:8px;font-size:.85rem}
         used[sg]=1;o.slug=sg;
       });
       var usedP={};
-      out.posts=(out.posts||[]).filter(function(x){return x&&String(x.title||'').trim()});
+      out.posts=(out.posts||[]).filter(function(x){return x&&(String(x.title||'').trim()||String(x.titleBn||'').trim())});
       out.posts.forEach(function(x,i){
         var sg=(x.slug&&/^[a-z0-9-]+$/.test(x.slug))?x.slug:(slugify(x.title)||('post-'+Date.now().toString(36)+i));
         var n=2,base=sg;
