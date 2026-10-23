@@ -71,6 +71,11 @@ textarea{min-height:84px;resize:vertical}
 .shapes .btn{flex:1}
 .shapes .btn[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
 .cropact{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+.msgc{white-space:pre-wrap;word-break:break-word;margin:8px 0 10px;font-size:.95rem}
+.msgmeta{font-size:.8rem;color:var(--muted)}
+details.rules{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 14px}
+details.rules summary{cursor:pointer;font-weight:700;font-size:.9rem}
+details.rules pre{margin-top:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.78rem;overflow-x:auto;white-space:pre}
 [hidden]{display:none!important}
 .imgrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:6px}
 .thumb{width:84px;height:84px;border-radius:14px;border:1px dashed var(--border);background:#fff;display:grid;place-items:center;overflow:hidden;color:#888;font-size:.72rem;flex:none}
@@ -502,6 +507,44 @@ input[type=file]{padding:8px;font-size:.85rem}
     return wrap;
   }
 
+  var RULES="rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /site/content {\n      allow read: if true;\n      allow write: if request.auth != null && request.auth.token.email == '"+ADMIN+"';\n    }\n    match /messages/{id} {\n      allow create: if request.resource.data.keys().hasOnly(['name','email','message','createdAt','page'])\n        && request.resource.data.name is string && request.resource.data.name.size() <= 80\n        && request.resource.data.email is string && request.resource.data.email.size() <= 120\n        && request.resource.data.message is string && request.resource.data.message.size() <= 2000\n        && request.resource.data.createdAt is number;\n      allow read, delete: if request.auth != null && request.auth.token.email == '"+ADMIN+"';\n      allow update: if false;\n    }\n  }\n}";
+  function messagesPanel(){
+    var wrap=h('div',{class:'panel'});
+    var list=h('div',{class:'panel'});
+    var status=h('p',{class:'hint',text:''});
+    function load(){
+      status.textContent='Loading…';list.textContent='';
+      var q=fsM.query(fsM.collection(db,'messages'),fsM.orderBy('createdAt','desc'),fsM.limit(100));
+      fsM.getDocs(q).then(function(snap){
+        list.textContent='';
+        if(snap.empty){status.textContent='No messages yet. Messages sent from the Contact page appear here.';return}
+        status.textContent=snap.size+' message'+(snap.size===1?'':'s');
+        snap.forEach(function(d){
+          var m=d.data(),when=m.createdAt?new Date(m.createdAt).toLocaleString():'';
+          var card=h('div',{class:'item'},[
+            h('div',{class:'ihead'},[h('strong',{text:m.name||'(no name)'}),h('span',{class:'msgmeta',text:when})]),
+            h('div',{class:'msgmeta',text:m.email||''}),
+            h('div',{class:'msgc',text:m.message||''})
+          ]);
+          var acts=h('div',{style:'display:flex;gap:8px;flex-wrap:wrap'});
+          var reply=h('a',{class:'btn small',href:'mailto:'+encodeURIComponent(m.email||'').replace('%40','@')+'?subject='+encodeURIComponent('Re: your message'),text:'Reply by email',style:'text-decoration:none;color:inherit'});
+          var del=h('button',{class:'btn small danger',type:'button',text:'Delete',onclick:function(){
+            if(!confirm('Delete this message?'))return;
+            fsM.deleteDoc(fsM.doc(db,'messages',d.id)).then(function(){card.remove()}).catch(function(e){alert('Could not delete: '+(e.code||e.message))});
+          }});
+          acts.appendChild(reply);acts.appendChild(del);card.appendChild(acts);list.appendChild(card);
+        });
+      }).catch(function(e){
+        status.textContent=(e.code==='permission-denied')?'Not allowed yet — update the Firestore rules (see below), then press Refresh.':'Could not load messages: '+(e.code||e.message);
+      });
+    }
+    var top=h('div',{style:'display:flex;gap:10px;align-items:center'},[h('button',{class:'btn small',type:'button',text:'Refresh',onclick:load}),status]);
+    var det=h('details',{class:'rules'},[h('summary',{text:'Firestore rules needed for the contact form'}),h('p',{class:'hint',style:'margin-top:8px',text:'Firebase Console → Firestore Database → Rules → replace everything with this, then Publish.'}),h('pre',{text:RULES})]);
+    wrap.appendChild(top);wrap.appendChild(list);wrap.appendChild(det);
+    load();
+    return wrap;
+  }
+
   var TABS=[
     {id:'projects',label:'Projects',build:function(){
       var w=listEditor('projects',[
@@ -542,6 +585,7 @@ input[type=file]{padding:8px;font-size:.85rem}
       ],{period:'',title:'',desc:''},function(i){return i.title},'+ Add education');
     }},
     {id:'site',label:'Site texts',build:sitePanel},
+    {id:'messages',label:'Messages',build:messagesPanel},
     {id:'profile',label:'Profile & Links',build:profilePanel}
   ];
 
@@ -551,6 +595,7 @@ input[type=file]{padding:8px;font-size:.85rem}
     var btns=[],pans=[];
     function select(k){
       btns.forEach(function(b,i){b.setAttribute('aria-selected',i===k?'true':'false');pans[i].hidden=i!==k});
+      $('savebar').hidden=(TABS[k].id==='messages');
     }
     TABS.forEach(function(t,i){
       var b=h('button',{class:'tab',type:'button',role:'tab',text:t.label,onclick:function(){select(i)}});

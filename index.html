@@ -426,7 +426,7 @@ html{background:var(--bg)}
       <a href="#home" class="logo" aria-label="Fahad Abdur Rahman — home"><b>F</b>FAHAD.</a>
       <div class="links" id="links">
         <a href="#home">Home</a>
-        <a href="#about">About</a>
+        <a href="about.html">About</a>
         <a href="#education">Education</a>
         <a href="#skills">Skills</a>
         <div class="dd" id="orgDD">
@@ -440,7 +440,7 @@ html{background:var(--bg)}
         </div>
         <a href="#projects">Projects</a>
         <a href="#achievements">Achievements</a>
-        <a href="#contact">Contact</a>
+        <a href="contact.html">Contact</a>
       </div>
       <div class="tools">
         <button class="ibtn" id="mode" type="button" aria-label="Switch to dark mode">
@@ -466,12 +466,12 @@ html{background:var(--bg)}
   <h2 class="dr-h" style="font-size:.7rem;letter-spacing:.22em">Explore</h2>
   <div class="dr-list">
     <a class="dl" href="#home">Home</a>
-    <a class="dl" href="#about">About</a>
+    <a class="dl" href="about.html">About</a>
     <a class="dl" href="#education">Education</a>
     <a class="dl" href="#skills">Skills</a>
     <a class="dl" href="#projects">Projects</a>
     <a class="dl" href="#achievements">Achievements</a>
-    <a class="dl" href="#contact">Contact</a>
+    <a class="dl" href="contact.html">Contact</a>
   </div>
   <h2 class="dr-h" style="font-size:.7rem;letter-spacing:.22em">Organisations</h2>
   <div class="dr-list" id="drOrgs">
@@ -565,7 +565,7 @@ html{background:var(--bg)}
         <div class="sh" style="margin-bottom:0"><span class="num" aria-hidden="true">02</span><div><div class="eyebrow">About</div><h2 id="about-title">About Me</h2></div></div>
         <p id="aboutP1">Fahad Abdur Rahman is a passionate youth leader, organization builder, and a firm believer in the power of education, collaboration, and innovation.</p>
         <p id="aboutP2">He builds platforms and communities where young people can learn, connect, and turn their ideas into real impact.</p>
-        <div class="cta" style="margin-top:22px"><a href="#contact" class="btn primary">Learn More <span class="ar" aria-hidden="true">→</span></a></div>
+        <div class="cta" style="margin-top:22px"><a href="about.html" class="btn primary">Learn More <span class="ar" aria-hidden="true">→</span></a></div>
       </div>
       <div class="card box" id="skills" aria-labelledby="skills-title">
         <div class="sh" style="margin-bottom:0"><span class="num" aria-hidden="true">03</span><div><div class="eyebrow">Skills</div><h2 id="skills-title">Skills &amp; Expertise</h2></div></div>
@@ -658,7 +658,7 @@ html{background:var(--bg)}
           </a>
         </div>
       </div>
-      <a class="btn primary" id="sendLink" href="mailto:fahad.ar.official@gmail.com">Send Message <span class="ar" aria-hidden="true">→</span></a>
+      <a class="btn primary" id="sendLink" href="contact.html">Send Message <span class="ar" aria-hidden="true">→</span></a>
     </div>
   </div>
 </section>
@@ -952,7 +952,7 @@ window.faContent=(async function(){
     }
     if(p.email&&/^[^\s@]+@[^\s@]+$/.test(p.email)){
       txt('mailText',p.email);
-      ['mailLink','sendLink'].forEach(function(id){var e=document.getElementById(id);if(e)e.href='mailto:'+p.email});
+      ['mailLink'].forEach(function(id){var e=document.getElementById(id);if(e)e.href='mailto:'+p.email});
     }
     if(Array.isArray(p.stats)){
       var cards=document.querySelectorAll('.stat');
