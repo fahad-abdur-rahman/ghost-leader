@@ -61,6 +61,17 @@ textarea{min-height:84px;resize:vertical}
 .savebar .status.ok{color:var(--green-text);font-weight:600}
 .setup code{background:var(--bg);padding:2px 6px;border-radius:6px;font-size:.85rem}
 [hidden]{display:none!important}
+.imgrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:6px}
+.thumb{width:84px;height:84px;border-radius:14px;border:1px dashed var(--border);background:#fff;display:grid;place-items:center;overflow:hidden;color:#888;font-size:.72rem;flex:none}
+.thumb img{width:100%;height:100%;object-fit:contain}
+.thumb.wide{width:84px;height:104px}
+.thumb.wide img{object-fit:cover}
+input[type=file]{padding:8px;font-size:.85rem}
+.sub{margin-top:14px;padding-top:6px;border-top:1px dashed var(--border)}
+.frow{border:1px solid var(--border);border-radius:12px;padding:4px 12px 12px;margin-top:10px}
+.frow .btn{margin-top:8px}
+.pgaddr{font-size:.8rem;color:var(--muted);margin-top:8px;word-break:break-all}
+
 </style>
 </head>
 <body>
@@ -138,6 +149,7 @@ textarea{min-height:84px;resize:vertical}
     profile:{
       about1:'Fahad Abdur Rahman is a passionate youth leader, organization builder, and a firm believer in the power of education, collaboration, and innovation.',
       about2:'He builds platforms and communities where young people can learn, connect, and turn their ideas into real impact.',
+      photo:'',
       email:'fahad.ar.official@gmail.com',
       location:'Joypurhat, Bangladesh',
       stats:[
@@ -148,9 +160,9 @@ textarea{min-height:84px;resize:vertical}
       ]
     },
     orgs:[
-      {name:'TalentVerse Bangladesh',mono:'TV',tagline:'Where Talent Meets Opportunity',url:''},
-      {name:'NexEra Youth Network',mono:'NY',tagline:'Learn · Connect · Grow',url:''},
-      {name:'Visionary Youth Alliance',mono:'VY',tagline:'Where Vision Meets Action',url:''}
+      {name:"TalentVerse Bangladesh",slug:"talentverse-bangladesh",mono:"TV",tagline:"Where Talent Meets Opportunity",url:'',logo:'',lead:"TalentVerse Bangladesh is a youth-focused organization founded and chaired by Fahad Abdur Rahman, built on one idea: talent should meet opportunity.",about1:"TalentVerse Bangladesh brings young people and opportunities closer together. Under the leadership of its founder and chairman, Fahad Abdur Rahman, the organization works to help young people in Bangladesh discover, develop and showcase their abilities.",about2:"It is one of the three youth organizations built by Fahad Abdur Rahman, alongside NexEra Youth Network and Visionary Youth Alliance, all guided by the belief in \"Better Youth, Better Tomorrow\".",features:[{"title": "Talent", "desc": "Recognizing and nurturing the skills and potential of young people across Bangladesh."}, {"title": "Opportunity", "desc": "Connecting young talent with platforms, programs and people who can help it grow."}, {"title": "Impact", "desc": "Turning individual ability into real, visible contributions to society."}]},
+      {name:"NexEra Youth Network",slug:"nexera-youth-network",mono:"NY",tagline:"Learn · Connect · Grow",url:'',logo:'',lead:"NexEra Youth Network is a youth organization founded and chaired by Fahad Abdur Rahman, centered on learning, connection and growth.",about1:"NexEra Youth Network is a community for young people who want to learn, meet like-minded peers and grow together. It was founded by Fahad Abdur Rahman, who serves as its founder and chairman.",about2:"It is one of the three youth organizations built by Fahad Abdur Rahman, alongside TalentVerse Bangladesh and Visionary Youth Alliance, all guided by the belief in \"Better Youth, Better Tomorrow\".",features:[{"title": "Learn", "desc": "Creating spaces where young people can pick up new knowledge and skills."}, {"title": "Connect", "desc": "Bringing young people together to share ideas, support each other and collaborate."}, {"title": "Grow", "desc": "Helping members turn what they learn into personal and community progress."}]},
+      {name:"Visionary Youth Alliance",slug:"visionary-youth-alliance",mono:"VY",tagline:"Where Vision Meets Action",url:'',logo:'',lead:"Visionary Youth Alliance is a youth organization founded and chaired by Fahad Abdur Rahman, built around turning vision into action.",about1:"Visionary Youth Alliance unites young people who have ideas for a better future and the drive to act on them. It was founded by Fahad Abdur Rahman, who serves as its founder and chairman.",about2:"It is one of the three youth organizations built by Fahad Abdur Rahman, alongside TalentVerse Bangladesh and NexEra Youth Network, all guided by the belief in \"Better Youth, Better Tomorrow\".",features:[{"title": "Vision", "desc": "Encouraging young people to imagine a better tomorrow for their communities."}, {"title": "Action", "desc": "Turning ideas into real projects, programs and initiatives."}, {"title": "Alliance", "desc": "Bringing young changemakers together so they achieve more as a team."}]}
     ],
     projects:[
       {title:'TVBD Website',category:'Website',sub:'Web Development',tag:'TVBD',url:''},
@@ -164,7 +176,17 @@ textarea{min-height:84px;resize:vertical}
     achievements:[
       {year:'YEAR',title:'Achievement title',desc:'One line about what it was and why it mattered.'}
     ],
-    social:{linkedin:'',facebook:'',github:'',x:'',youtube:''}
+    social:{linkedin:'',facebook:'',github:'',x:'',youtube:''},
+    site:{
+      heroPill:'Founder & Chairman · Youth Leader',
+      heroSub:'Ideas into Impact.',
+      heroLead:'I am a youth leader, organization builder, and passionate about creating opportunities for the next generation.',
+      orgTitle:'My Organizations',
+      orgTag:'Building People · Creating Opportunities · Shaping the Future',
+      contactTitle:"Let's Work Together",
+      contactText:'Have a project, collaboration or just want to say hello? Feel free to reach out!'
+    },
+    skills:[{name:'Leadership'},{name:'Communication'},{name:'Content Creation'},{name:'Web Design'},{name:'Event Management'},{name:'Problem Solving'}]
   };
 
   var data=null,dirty=false;
@@ -199,8 +221,89 @@ textarea{min-height:84px;resize:vertical}
     return h('div',{},[h('label',{for:id,text:label}),input]);
   }
 
+
+  function slugify(t){return String(t||'').toLowerCase().trim().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)}
+  var STATIC_SLUGS=['talentverse-bangladesh','nexera-youth-network','visionary-youth-alliance'];
+
+  /* read an image file, shrink it, return a small data URL (stored in Firestore, no Storage needed) */
+  function resizeImage(file,max,mime,q){
+    return new Promise(function(res,rej){
+      var fr=new FileReader();
+      fr.onerror=rej;
+      fr.onload=function(){
+        var im=new Image();
+        im.onerror=rej;
+        im.onload=function(){
+          var m=max,out='';
+          for(var tries=0;tries<5;tries++){
+            var sc=Math.min(1,m/Math.max(im.width,im.height));
+            var c=document.createElement('canvas');
+            c.width=Math.max(1,Math.round(im.width*sc));c.height=Math.max(1,Math.round(im.height*sc));
+            var x=c.getContext('2d');
+            if(mime==='image/jpeg'){x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height)}
+            x.drawImage(im,0,0,c.width,c.height);
+            out=c.toDataURL(mime,q);
+            if(out.length<=(mime==='image/jpeg'?260000:120000))break;
+            m=Math.round(m*.75);
+          }
+          res(out);
+        };
+        im.src=fr.result;
+      };
+      fr.readAsDataURL(file);
+    });
+  }
+  function imageField(label,value,onChange,opts){
+    opts=opts||{};
+    var prev=h('div',{class:'thumb'+(opts.wide?' wide':'')});
+    function show(v){prev.textContent='';if(v)prev.appendChild(h('img',{alt:'',src:v}));else prev.appendChild(h('span',{text:'No image'}))}
+    show(value);
+    var id='f'+(++uid);
+    var file=h('input',{id:id,type:'file',accept:'image/*'});
+    var msg=h('p',{class:'hint',text:opts.hint||''});
+    file.addEventListener('change',function(){
+      var f=file.files&&file.files[0];if(!f)return;
+      msg.textContent='Processing…';
+      resizeImage(f,opts.max||256,opts.mime||'image/webp',opts.q||.9).then(function(url){
+        onChange(url);show(url);markDirty();
+        msg.textContent='Ready ('+Math.round(url.length/1024)+' KB). Press “Save changes”.';
+      }).catch(function(){msg.textContent='Could not read this image. Try a PNG or JPG.'});
+      file.value='';
+    });
+    var rm=h('button',{class:'btn small danger',type:'button',text:'Remove',onclick:function(){onChange('');show('');markDirty();msg.textContent='Removed. Press “Save changes”.'}});
+    return h('div',{},[h('label',{for:id,text:label}),h('div',{class:'imgrow'},[prev,h('div',{},[file,h('div',{style:'margin-top:8px'},[rm])])]),msg]);
+  }
+  function featuresEditor(it){
+    if(!Array.isArray(it.features))it.features=[];
+    var box=h('div',{class:'sub'});
+    function draw(){
+      box.textContent='';
+      box.appendChild(h('label',{text:'Focus cards (shown under “What it stands for” — up to 3 are displayed)'}));
+      it.features.forEach(function(f,i){
+        var row=h('div',{class:'frow'},[
+          field('Title',f.title,function(v){f.title=v}),
+          field('Description',f.desc,function(v){f.desc=v},{area:true}),
+          h('button',{class:'btn small danger',type:'button',text:'Remove this card',onclick:function(){it.features.splice(i,1);markDirty();draw()}})
+        ]);
+        box.appendChild(row);
+      });
+      if(it.features.length<3)box.appendChild(h('button',{class:'btn small',type:'button',style:'margin-top:10px',text:'+ Add focus card',onclick:function(){it.features.push({title:'',desc:''});markDirty();draw()}}));
+    }
+    draw();
+    return box;
+  }
+  function orgExtra(it){
+    var wrap=h('div',{});
+    wrap.appendChild(imageField('Logo (shows on the home page, its own page and the menu)',it.logo,function(v){it.logo=v},{max:256,mime:'image/webp',q:.9,hint:'Square logos look best. PNG with transparent background is fine.'}));
+    wrap.appendChild(featuresEditor(it));
+    var slug=it.slug||slugify(it.name)||'(set after you type a name)';
+    var addr=STATIC_SLUGS.indexOf(slug)>=0?slug+'.html':'organization.html?o='+slug;
+    wrap.appendChild(h('p',{class:'pgaddr',text:'Page address: '+addr}));
+    return wrap;
+  }
+
   /* generic list editor */
-  function listEditor(key,fields,blank,nameOf,addLabel){
+  function listEditor(key,fields,blank,nameOf,addLabel,extra){
     var wrap=h('div',{class:'panel'});
     function draw(){
       wrap.textContent='';
@@ -224,6 +327,7 @@ textarea{min-height:84px;resize:vertical}
           g.appendChild(el);
         });
         card.appendChild(g);
+        if(extra)card.appendChild(extra(it));
         wrap.appendChild(card);
       });
       wrap.appendChild(h('button',{class:'btn',type:'button',text:addLabel,onclick:function(){
@@ -247,6 +351,10 @@ textarea{min-height:84px;resize:vertical}
       field('Paragraph 1',p.about1,function(v){p.about1=v},{area:true}),
       field('Paragraph 2',p.about2,function(v){p.about2=v},{area:true})
     ]);
+    var photo=h('div',{class:'item'},[
+      h('strong',{text:'Your photo (home page)'}),
+      imageField('Upload photo',p.photo,function(v){p.photo=v},{max:900,mime:'image/jpeg',q:.85,wide:true,hint:'Portrait photo, face near the top works best.'})
+    ]);
     var contact=h('div',{class:'item'},[
       h('strong',{text:'Contact'}),
       field('Email',p.email,function(v){p.email=v},{type:'email'}),
@@ -268,7 +376,31 @@ textarea{min-height:84px;resize:vertical}
     [['linkedin','LinkedIn'],['facebook','Facebook'],['github','GitHub'],['x','X / Twitter'],['youtube','YouTube']].forEach(function(n){
       soc.appendChild(field(n[1],data.social[n[0]],function(v){data.social[n[0]]=v},{type:'url',placeholder:'https://'}));
     });
-    [about,contact,stats,soc].forEach(function(e){wrap.appendChild(e)});
+    [photo,about,contact,stats,soc].forEach(function(e){wrap.appendChild(e)});
+    return wrap;
+  }
+
+  function sitePanel(){
+    var t=data.site,wrap=h('div',{class:'panel'});
+    wrap.appendChild(h('div',{class:'item'},[
+      h('strong',{text:'Top of the home page'}),
+      field('Small label above the name',t.heroPill,function(v){t.heroPill=v}),
+      field('Tagline',t.heroSub,function(v){t.heroSub=v}),
+      field('Intro text',t.heroLead,function(v){t.heroLead=v},{area:true})
+    ]));
+    wrap.appendChild(h('div',{class:'item'},[
+      h('strong',{text:'Organizations section'}),
+      field('Heading',t.orgTitle,function(v){t.orgTitle=v}),
+      field('Line under the heading',t.orgTag,function(v){t.orgTag=v})
+    ]));
+    wrap.appendChild(h('div',{class:'item'},[
+      h('strong',{text:'Contact section'}),
+      field('Heading',t.contactTitle,function(v){t.contactTitle=v}),
+      field('Text',t.contactText,function(v){t.contactText=v},{area:true})
+    ]));
+    var sk=listEditor('skills',[{key:'name',label:'Skill',name:true,wide:true}],{name:''},function(i){return i.name},'+ Add skill');
+    sk.insertBefore(h('strong',{text:'Skills & Expertise'}),sk.firstChild);
+    wrap.appendChild(sk);
     return wrap;
   }
 
@@ -285,12 +417,17 @@ textarea{min-height:84px;resize:vertical}
       return w;
     }},
     {id:'orgs',label:'Organizations',build:function(){
-      return listEditor('orgs',[
+      var w=listEditor('orgs',[
         {key:'name',label:'Name',name:true,wide:true},
-        {key:'mono',label:'Badge letters (2)',ph:'TV'},
-        {key:'url',label:'Link',type:'url',ph:'https://'},
-        {key:'tagline',label:'Tagline',wide:true}
-      ],{name:'',mono:'',tagline:'',url:''},function(i){return i.name},'+ Add organization');
+        {key:'mono',label:'Badge letters (2) — used if no logo',ph:'TV'},
+        {key:'url',label:'Website / social link (button on its page)',type:'url',ph:'https://'},
+        {key:'tagline',label:'Tagline',wide:true},
+        {key:'lead',label:'Intro line (top of its page)',area:true},
+        {key:'about1',label:'About — paragraph 1',area:true},
+        {key:'about2',label:'About — paragraph 2',area:true}
+      ],{name:'',slug:'',mono:'',tagline:'',url:'',logo:'',lead:'',about1:'',about2:'',features:[]},function(i){return i.name},'+ Add organization',orgExtra);
+      w.insertBefore(h('p',{class:'hint',text:'Each organization has its own page and appears in the site menu. New organizations get a page automatically.'}),w.firstChild);
+      return w;
     }},
     {id:'achievements',label:'Achievements',build:function(){
       return listEditor('achievements',[
@@ -306,6 +443,7 @@ textarea{min-height:84px;resize:vertical}
         {key:'desc',label:'Details',area:true}
       ],{period:'',title:'',desc:''},function(i){return i.title},'+ Add education');
     }},
+    {id:'site',label:'Site texts',build:sitePanel},
     {id:'profile',label:'Profile & Links',build:profilePanel}
   ];
 
@@ -328,7 +466,18 @@ textarea{min-height:84px;resize:vertical}
   function merge(saved){
     var d=JSON.parse(JSON.stringify(DEFAULTS));
     if(!saved)return d;
-    ['orgs','projects','education','achievements'].forEach(function(k){if(Array.isArray(saved[k]))d[k]=saved[k]});
+    ['projects','education','achievements'].forEach(function(k){if(Array.isArray(saved[k]))d[k]=saved[k]});
+    if(Array.isArray(saved.skills))d.skills=saved.skills.map(function(x){return typeof x==='string'?{name:x}:x});
+    if(Array.isArray(saved.orgs)){
+      d.orgs=saved.orgs.map(function(o){
+        var base=DEFAULTS.orgs.filter(function(b){return (o.slug&&b.slug===o.slug)||b.name===o.name})[0]||{};
+        var m=Object.assign({name:'',slug:'',mono:'',tagline:'',url:'',logo:'',lead:'',about1:'',about2:'',features:[]},JSON.parse(JSON.stringify(base)),o);
+        if(!Array.isArray(o.features))m.features=JSON.parse(JSON.stringify(base.features||[]));
+        if(!m.slug)m.slug=slugify(m.name);
+        return m;
+      });
+    }
+    if(saved.site)Object.keys(d.site).forEach(function(k){if(typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
     if(saved.profile){
       Object.keys(d.profile).forEach(function(k){if(saved.profile[k]!==undefined)d.profile[k]=saved.profile[k]});
       if(!Array.isArray(d.profile.stats)||d.profile.stats.length<4)d.profile.stats=DEFAULTS.profile.stats;
@@ -387,6 +536,15 @@ textarea{min-height:84px;resize:vertical}
     b.disabled=true;s.className='status';s.textContent='Saving…';
     try{
       var out=JSON.parse(JSON.stringify(data));
+      var used={};
+      out.orgs.forEach(function(o,i){
+        var sg=o.slug||slugify(o.name)||('org-'+(i+1)),n=2,base=sg;
+        while(used[sg]){sg=base+'-'+(n++)}
+        used[sg]=1;o.slug=sg;
+      });
+      if(JSON.stringify(out).length>900000){
+        s.className='status dirty';s.textContent='Too much image data — use smaller logos/photo';b.disabled=false;return;
+      }
       out.updatedAt=Date.now();
       await fsM.setDoc(ref,out);
       dirty=false;s.className='status ok';s.textContent='Saved ✓ — live on the site';

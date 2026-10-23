@@ -298,6 +298,33 @@ h2{font-size:clamp(1.55rem,5vw,2.15rem);line-height:1.15;font-weight:800;letter-
 .contact :focus-visible{outline-color:#7FDDB0}
 footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem}
 
+/* organizations dropdown in the menu */
+.dd{position:relative}
+.dd>button{font-family:inherit;font-size:.82rem;font-weight:500;color:var(--muted);padding:8px 11px;border-radius:10px;border:0;background:none;cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .2s,background .2s}
+.dd>button .cv{font-size:.7rem;transition:transform .25s var(--ease)}
+.dd>button:hover,.dd.open>button{color:var(--text);background:color-mix(in srgb,var(--text) 7%,transparent)}
+.dd.open>button .cv{transform:rotate(180deg)}
+.dd.cur>button{color:var(--green-text)}
+.ddm{position:absolute;top:100%;left:0;min-width:260px;padding-top:8px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .2s var(--ease);z-index:70}
+.ddm-in{display:grid;gap:2px;padding:8px;border-radius:16px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-lg)}
+.dd.open .ddm{opacity:1;visibility:visible;transform:none}
+@media(hover:hover) and (min-width:961px){.dd:hover .ddm,.dd:focus-within .ddm{opacity:1;visibility:visible;transform:none}}
+.links .ddm a{display:flex;align-items:center;gap:10px;padding:10px 12px;font-size:.88rem;font-weight:600;color:var(--text);border-radius:10px;white-space:nowrap}
+.links .ddm a[data-all]{color:var(--muted);font-weight:500;font-size:.8rem}
+.links .ddm a:hover{background:color-mix(in srgb,var(--green) 12%,transparent);color:var(--green-text)}
+.links .ddm a[aria-current="page"]{color:var(--green-text);background:color-mix(in srgb,var(--green) 13%,transparent)}
+.ddm .lg{width:28px;height:28px;border-radius:9px;flex:none;display:grid;place-items:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.68rem;color:#fff;background:linear-gradient(135deg,var(--green),var(--green-2));overflow:hidden}
+.has-logo{background:#fff!important;color:transparent}
+.has-logo img{width:100%;height:100%;object-fit:contain;padding:3px}
+.org .mono.has-logo{padding:5px}
+@media(max-width:960px){
+  .dd{width:100%}
+  .dd>button{width:100%;justify-content:space-between;padding:14px;font-size:.95rem}
+  .ddm{position:static;opacity:1;visibility:visible;transform:none;padding:0;min-width:0;display:none}
+  .dd.open .ddm{display:block}
+  .ddm-in{border:0;box-shadow:none;background:none;padding:0 0 6px 10px}
+}
+
 /* reveal */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:var(--d,0s)}
 .reveal.show{opacity:1;transform:none}
@@ -332,11 +359,13 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
 .others a.card{display:block;padding:20px}
 .others h3{font-size:1.02rem}
 .others p{color:var(--muted);font-size:.86rem}
-.flinks{display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;margin-bottom:10px}
-.flinks a{text-decoration:underline;text-underline-offset:3px}
+.omono.has-logo{padding:30px;border:1px solid var(--border);font-size:0}
+.omono.has-logo img{padding:0}
+.vbtn[hidden]{display:none}
+.nf{padding:60px 0;text-align:center;color:var(--muted)}
 </style>
 </head>
-<body>
+<body data-slug="visionary-youth-alliance">
 <a class="skip" href="#main">Skip to main content</a>
 <header>
   <div class="navbox">
@@ -345,7 +374,13 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
       <div class="links" id="links">
         <a href="index.html#home">Home</a>
         <a href="index.html#about">About</a>
-        <a href="index.html#organizations">Organizations</a>
+        <div class="dd cur" id="orgDD">
+          <button type="button" id="orgBtn" aria-expanded="false" aria-controls="orgMenu" aria-haspopup="true">Organizations <span class="cv" aria-hidden="true">▾</span></button>
+          <div class="ddm" id="orgMenu"><div class="ddm-in">
+            <a href="index.html#organizations" data-all>All organizations</a>
+            <a href="talentverse-bangladesh.html"><span class="lg" aria-hidden="true">TV</span><span>TalentVerse Bangladesh</span></a><a href="nexera-youth-network.html"><span class="lg" aria-hidden="true">NY</span><span>NexEra Youth Network</span></a><a href="visionary-youth-alliance.html" aria-current="page"><span class="lg" aria-hidden="true">VY</span><span>Visionary Youth Alliance</span></a>
+          </div></div>
+        </div>
         <a href="index.html#projects">Projects</a>
         <a href="index.html#contact">Contact</a>
       </div>
@@ -360,34 +395,35 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
 <main id="main">
 <section class="ohero" aria-labelledby="org-h1">
   <div class="wrap">
-    <p class="crumb"><a href="index.html">Home</a> / <a href="index.html#organizations">Organizations</a> / Visionary Youth Alliance</p>
+    <p class="crumb"><a href="index.html">Home</a> / <a href="index.html#organizations">Organizations</a> / <span id="crumbName">Visionary Youth Alliance</span></p>
     <div class="hero-grid">
       <div>
         <span class="pill"><i aria-hidden="true"></i>Founded by Fahad Abdur Rahman</span>
         <h1 id="org-h1">Visionary Youth Alliance</h1>
-        <p class="sub">Where Vision Meets Action</p>
-        <p class="lead">Visionary Youth Alliance is a youth organization founded and chaired by Fahad Abdur Rahman, built around turning vision into action.</p>
+        <p class="sub" id="orgTag">Where Vision Meets Action</p>
+        <p class="lead" id="orgLead">Visionary Youth Alliance is a youth organization founded and chaired by Fahad Abdur Rahman, built around turning vision into action.</p>
         <div class="cta">
           <a href="index.html#contact" class="btn primary">Get in Touch <span class="ar" aria-hidden="true">→</span></a>
           <a href="index.html#organizations" class="btn">All Organizations</a>
+          <a href="#" class="btn vbtn" id="visitBtn" target="_blank" rel="noopener noreferrer" hidden>Visit website <span class="ar" aria-hidden="true">↗</span></a>
         </div>
       </div>
-      <div class="omono" aria-hidden="true">VY</div>
+      <div class="omono" id="orgLogo" aria-hidden="true">VY</div>
     </div>
   </div>
 </section>
 
 <section style="padding-top:24px" aria-labelledby="about-h">
   <div class="wrap reveal">
-    <div class="sh"><div><div class="eyebrow">About</div><h2 id="about-h">About Visionary Youth Alliance</h2></div></div>
-    <div class="card box"><p style="margin-top:0">Visionary Youth Alliance unites young people who have ideas for a better future and the drive to act on them. It was founded by Fahad Abdur Rahman, who serves as its founder and chairman.</p><p>It is one of the three youth organizations built by Fahad Abdur Rahman, alongside TalentVerse Bangladesh and NexEra Youth Network, all guided by the belief in &quot;Better Youth, Better Tomorrow&quot;.</p></div>
+    <div class="sh"><div><div class="eyebrow">About</div><h2 id="about-h">About <span id="aboutName">Visionary Youth Alliance</span></h2></div></div>
+    <div class="card box"><p style="margin-top:0" id="aboutP1">Visionary Youth Alliance unites young people who have ideas for a better future and the drive to act on them. It was founded by Fahad Abdur Rahman, who serves as its founder and chairman.</p><p id="aboutP2">It is one of the three youth organizations built by Fahad Abdur Rahman, alongside TalentVerse Bangladesh and NexEra Youth Network, all guided by the belief in &quot;Better Youth, Better Tomorrow&quot;.</p></div>
   </div>
 </section>
 
-<section style="padding-top:8px" aria-labelledby="stand-h">
+<section style="padding-top:8px" aria-labelledby="stand-h" id="featSection">
   <div class="wrap">
     <div class="sh reveal"><div><div class="eyebrow">Focus</div><h2 id="stand-h">What it stands for</h2></div></div>
-    <div class="feat" style="--n:3"><div class="card reveal" style="--d:0.00s"><h3>Vision</h3><p>Encouraging young people to imagine a better tomorrow for their communities.</p></div><div class="card reveal" style="--d:0.07s"><h3>Action</h3><p>Turning ideas into real projects, programs and initiatives.</p></div><div class="card reveal" style="--d:0.14s"><h3>Alliance</h3><p>Bringing young changemakers together so they achieve more as a team.</p></div></div>
+    <div class="feat" id="featWrap" style="--n:3"><div class="card reveal" style="--d:0.00s"><h3>Vision</h3><p>Encouraging young people to imagine a better tomorrow for their communities.</p></div><div class="card reveal" style="--d:0.07s"><h3>Action</h3><p>Turning ideas into real projects, programs and initiatives.</p></div><div class="card reveal" style="--d:0.14s"><h3>Alliance</h3><p>Bringing young changemakers together so they achieve more as a team.</p></div></div>
   </div>
 </section>
 
@@ -405,14 +441,12 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
 <section style="padding-top:8px" aria-labelledby="more-h">
   <div class="wrap reveal">
     <div class="sh"><div><div class="eyebrow">More</div><h2 id="more-h">Other organizations</h2></div></div>
-    <div class="others"><a class="card" href="talentverse-bangladesh.html"><h3>TalentVerse Bangladesh</h3><p>Where Talent Meets Opportunity</p></a><a class="card" href="nexera-youth-network.html"><h3>NexEra Youth Network</h3><p>Learn · Connect · Grow</p></a></div>
+    <div class="others" id="othersWrap"><a class="card" href="talentverse-bangladesh.html"><h3>TalentVerse Bangladesh</h3><p>Where Talent Meets Opportunity</p></a><a class="card" href="nexera-youth-network.html"><h3>NexEra Youth Network</h3><p>Learn · Connect · Grow</p></a></div>
   </div>
 </section>
 </main>
 
-<footer><div class="wrap">
-  <div class="flinks" role="group" aria-label="Organizations"><a href="index.html">Home</a><a href="talentverse-bangladesh.html">TalentVerse Bangladesh</a><a href="nexera-youth-network.html">NexEra Youth Network</a><a href="visionary-youth-alliance.html">Visionary Youth Alliance</a></div>
-  © <span id="yr">2026</span> Fahad Abdur Rahman. All rights reserved.
+<footer><div class="wrap">© <span id="yr">2026</span> Fahad Abdur Rahman. All rights reserved.
 </div></footer>
 
 <script>
@@ -426,8 +460,16 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
   var links=document.getElementById('links'),menu=document.getElementById('menu');
   function closeMenu(){links.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.setAttribute('aria-label','Open menu')}
   menu.addEventListener('click',function(){var o=links.classList.toggle('open');menu.setAttribute('aria-expanded',o?'true':'false');menu.setAttribute('aria-label',o?'Close menu':'Open menu')});
-  links.addEventListener('click',function(e){if(e.target.tagName==='A')closeMenu()});
+  links.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('a'))closeMenu()});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()});
+  (function(){
+    var dd=document.getElementById('orgDD');if(!dd)return;
+    var b=dd.querySelector('button');
+    function setOpen(o){dd.classList.toggle('open',o);b.setAttribute('aria-expanded',o?'true':'false')}
+    b.addEventListener('click',function(e){e.stopPropagation();setOpen(!dd.classList.contains('open'))});
+    document.addEventListener('click',function(e){if(!dd.contains(e.target))setOpen(false)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')setOpen(false)});
+  })();
   document.getElementById('yr').textContent=new Date().getFullYear();
   var els=[].slice.call(document.querySelectorAll('.reveal'));
   if(!('IntersectionObserver' in window)){els.forEach(function(x){x.classList.add('show')});return}
@@ -435,5 +477,6 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
   els.forEach(function(x){io.observe(x)});
 })();
 </script>
+<script type="module" src="org-page.js"></script>
 </body>
 </html>

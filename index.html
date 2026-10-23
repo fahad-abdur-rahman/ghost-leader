@@ -294,6 +294,33 @@ h2{font-size:clamp(1.55rem,5vw,2.15rem);line-height:1.15;font-weight:800;letter-
 .contact :focus-visible{outline-color:#7FDDB0}
 footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem}
 
+/* organizations dropdown in the menu */
+.dd{position:relative}
+.dd>button{font-family:inherit;font-size:.82rem;font-weight:500;color:var(--muted);padding:8px 11px;border-radius:10px;border:0;background:none;cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .2s,background .2s}
+.dd>button .cv{font-size:.7rem;transition:transform .25s var(--ease)}
+.dd>button:hover,.dd.open>button{color:var(--text);background:color-mix(in srgb,var(--text) 7%,transparent)}
+.dd.open>button .cv{transform:rotate(180deg)}
+.dd.cur>button{color:var(--green-text)}
+.ddm{position:absolute;top:100%;left:0;min-width:260px;padding-top:8px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .2s var(--ease);z-index:70}
+.ddm-in{display:grid;gap:2px;padding:8px;border-radius:16px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-lg)}
+.dd.open .ddm{opacity:1;visibility:visible;transform:none}
+@media(hover:hover) and (min-width:961px){.dd:hover .ddm,.dd:focus-within .ddm{opacity:1;visibility:visible;transform:none}}
+.links .ddm a{display:flex;align-items:center;gap:10px;padding:10px 12px;font-size:.88rem;font-weight:600;color:var(--text);border-radius:10px;white-space:nowrap}
+.links .ddm a[data-all]{color:var(--muted);font-weight:500;font-size:.8rem}
+.links .ddm a:hover{background:color-mix(in srgb,var(--green) 12%,transparent);color:var(--green-text)}
+.links .ddm a[aria-current="page"]{color:var(--green-text);background:color-mix(in srgb,var(--green) 13%,transparent)}
+.ddm .lg{width:28px;height:28px;border-radius:9px;flex:none;display:grid;place-items:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.68rem;color:#fff;background:linear-gradient(135deg,var(--green),var(--green-2));overflow:hidden}
+.has-logo{background:#fff!important;color:transparent}
+.has-logo img{width:100%;height:100%;object-fit:contain;padding:3px}
+.org .mono.has-logo{padding:5px}
+@media(max-width:960px){
+  .dd{width:100%}
+  .dd>button{width:100%;justify-content:space-between;padding:14px;font-size:.95rem}
+  .ddm{position:static;opacity:1;visibility:visible;transform:none;padding:0;min-width:0;display:none}
+  .dd.open .ddm{display:block}
+  .ddm-in{border:0;box-shadow:none;background:none;padding:0 0 6px 10px}
+}
+
 /* intro / loading screen */
 #intro{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;background:var(--bg);transition:opacity .6s var(--ease),transform .8s var(--ease),visibility .8s}
 #intro.out{opacity:0;visibility:hidden;transform:scale(1.05);pointer-events:none}
@@ -346,7 +373,15 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
         <a href="#about">About</a>
         <a href="#education">Education</a>
         <a href="#skills">Skills</a>
-        <a href="#organizations">Organizations</a>
+        <div class="dd" id="orgDD">
+          <button type="button" id="orgBtn" aria-expanded="false" aria-controls="orgMenu" aria-haspopup="true">Organizations <span class="cv" aria-hidden="true">▾</span></button>
+          <div class="ddm" id="orgMenu"><div class="ddm-in">
+            <a href="#organizations" data-all>All organizations</a>
+            <a href="talentverse-bangladesh.html"><span class="lg" aria-hidden="true">TV</span><span>TalentVerse Bangladesh</span></a>
+            <a href="nexera-youth-network.html"><span class="lg" aria-hidden="true">NY</span><span>NexEra Youth Network</span></a>
+            <a href="visionary-youth-alliance.html"><span class="lg" aria-hidden="true">VY</span><span>Visionary Youth Alliance</span></a>
+          </div></div>
+        </div>
         <a href="#projects">Projects</a>
         <a href="#achievements">Achievements</a>
         <a href="#contact">Contact</a>
@@ -371,10 +406,10 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
   <div class="wrap">
     <div class="hero-grid">
       <div class="reveal">
-        <span class="pill"><i aria-hidden="true"></i>Founder &amp; Chairman · Youth Leader</span>
+        <span class="pill"><i aria-hidden="true"></i><span id="heroPill">Founder &amp; Chairman · Youth Leader</span></span>
         <h1 id="hero-title">Fahad Abdur <span>Rahman</span></h1>
-        <p class="sub">Ideas into Impact.</p>
-        <p class="lead">I am a youth leader, organization builder, and passionate about creating opportunities for the next generation.</p>
+        <p class="sub" id="heroSub">Ideas into Impact.</p>
+        <p class="lead" id="heroLead">I am a youth leader, organization builder, and passionate about creating opportunities for the next generation.</p>
         <div class="cta">
           <a href="#organizations" class="btn primary">Explore My Journey <span class="ar" aria-hidden="true">→</span></a>
           <a href="#contact" class="btn">Contact Me</a>
@@ -425,7 +460,7 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
   <div class="wrap reveal">
     <div class="band">
       <div class="sh" style="margin-bottom:0"><span class="num" aria-hidden="true">01</span><div><div class="eyebrow">Organizations</div><h2 id="org-title">My Organizations</h2></div></div>
-      <p class="tag">Building People · Creating Opportunities · Shaping the Future</p>
+      <p class="tag" id="orgTag">Building People · Creating Opportunities · Shaping the Future</p>
       <div class="org-grid" id="orgGrid">
         <a class="card org" href="talentverse-bangladesh.html"><span class="go" aria-hidden="true">→</span><div class="mono" aria-hidden="true">TV</div><h3>TalentVerse Bangladesh</h3><p>Where Talent Meets Opportunity</p></a>
         <a class="card org" href="nexera-youth-network.html"><span class="go" aria-hidden="true">→</span><div class="mono" aria-hidden="true">NY</div><h3>NexEra Youth Network</h3><p>Learn · Connect · Grow</p></a>
@@ -447,7 +482,7 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
       </div>
       <div class="card box" id="skills" aria-labelledby="skills-title">
         <div class="sh" style="margin-bottom:0"><span class="num" aria-hidden="true">03</span><div><div class="eyebrow">Skills</div><h2 id="skills-title">Skills &amp; Expertise</h2></div></div>
-        <ul class="chips" style="list-style:none">
+        <ul class="chips" id="skillsList" style="list-style:none">
           <li class="chip">Leadership</li>
           <li class="chip">Communication</li>
           <li class="chip">Content Creation</li>
@@ -512,7 +547,7 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
     <div class="contact">
       <div>
         <h2 id="contact-title">Let's Work Together</h2>
-        <p>Have a project, collaboration or just want to say hello? Feel free to reach out!</p>
+        <p id="contactText">Have a project, collaboration or just want to say hello? Feel free to reach out!</p>
       </div>
       <div class="info">
         <a id="mailLink" href="mailto:fahad.ar.official@gmail.com"><span aria-hidden="true">✉</span> <span id="mailText">fahad.ar.official@gmail.com</span></a>
@@ -542,7 +577,7 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
 </section>
 </main>
 
-<footer><div class="wrap"><div role="group" aria-label="Organizations" style="display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;margin-bottom:10px"><a href="talentverse-bangladesh.html" style="text-decoration:underline;text-underline-offset:3px">TalentVerse Bangladesh</a><a href="nexera-youth-network.html" style="text-decoration:underline;text-underline-offset:3px">NexEra Youth Network</a><a href="visionary-youth-alliance.html" style="text-decoration:underline;text-underline-offset:3px">Visionary Youth Alliance</a></div>© <span id="yr">2026</span> Fahad Abdur Rahman. All rights reserved. · <a href="admin.html" rel="nofollow" style="text-decoration:underline;text-underline-offset:3px">Admin</a></div></footer>
+<footer><div class="wrap">© <span id="yr">2026</span> Fahad Abdur Rahman. All rights reserved. · <a href="admin.html" rel="nofollow" style="text-decoration:underline;text-underline-offset:3px">Admin</a></div></footer>
 
 <script>
 (function(){
@@ -572,8 +607,19 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
     menu.setAttribute('aria-expanded',o?'true':'false');
     menu.setAttribute('aria-label',o?'Close menu':'Open menu');
   });
-  links.addEventListener('click',function(e){if(e.target.tagName==='A')closeMenu()});
+  links.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('a'))closeMenu()});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()});
+
+  /* organizations dropdown */
+  (function(){
+    var dd=document.getElementById('orgDD');if(!dd)return;
+    var b=dd.querySelector('button');
+    function setOpen(o){dd.classList.toggle('open',o);b.setAttribute('aria-expanded',o?'true':'false')}
+    b.addEventListener('click',function(e){e.stopPropagation();setOpen(!dd.classList.contains('open'))});
+    document.addEventListener('click',function(e){if(!dd.contains(e.target))setOpen(false)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')setOpen(false)});
+    dd.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('.ddm a'))setOpen(false)});
+  })();
 
   document.getElementById('yr').textContent=new Date().getFullYear();
 
@@ -726,8 +772,8 @@ footer{padding:26px 0 40px;text-align:center;color:var(--muted);font-size:.84rem
 /* Loads content saved from admin.html (Firebase). If Firebase is not set up,
    or anything fails, the built-in content above simply stays as it is. */
 window.faContent=(async function(){
-  var cfg;
-  try{cfg=await import('./firebase-config.js')}catch(e){return}
+  var cfg,SH;
+  try{cfg=await import('./firebase-config.js');SH=await import('./site-shared.js')}catch(e){return}
   var c=cfg.firebaseConfig;
   if(!c||!c.apiKey||/YOUR/i.test(c.apiKey))return;
 
@@ -767,19 +813,32 @@ window.faContent=(async function(){
     });
     window.faSetupFilters();
   }
-  var ORG_PAGES={'talentverse bangladesh':'talentverse-bangladesh.html','nexera youth network':'nexera-youth-network.html','visionary youth alliance':'visionary-youth-alliance.html'};
   function renderOrgs(list){
     if(!Array.isArray(list))return;
     var g=document.getElementById('orgGrid');g.textContent='';
     list.forEach(function(o){
-      var a=h('a','card org');var pg=ORG_PAGES[String(o.name||'').trim().toLowerCase()];if(pg)a.href=pg;else setExternal(a,o.url);
+      if(!o||!o.name)return;
+      var a=h('a','card org');a.href=SH.orgHref(o);
       var go=h('span','go','→');go.setAttribute('aria-hidden','true');
-      var mono=h('div','mono',String(o.mono||o.name||'').slice(0,2).toUpperCase());mono.setAttribute('aria-hidden','true');
+      var mono=h('div','mono');mono.setAttribute('aria-hidden','true');
+      SH.logoInto(mono,o);
       a.appendChild(go);a.appendChild(mono);
       a.appendChild(h('h3',null,o.name||''));
       a.appendChild(h('p',null,o.tagline||''));
       g.appendChild(a);
     });
+    SH.fillNav(list);
+  }
+  function renderSite(s,skills){
+    if(s){
+      txt('heroPill',s.heroPill);txt('heroSub',s.heroSub);txt('heroLead',s.heroLead);
+      txt('org-title',s.orgTitle);txt('orgTag',s.orgTag);
+      txt('contact-title',s.contactTitle);txt('contactText',s.contactText);
+    }
+    if(Array.isArray(skills)){
+      var ul=document.getElementById('skillsList');ul.textContent='';
+      skills.forEach(function(k){var n=String(k&&k.name||'').trim();if(n)ul.appendChild(h('li','chip',n))});
+    }
   }
   function renderTimeline(id,list,key){
     if(!Array.isArray(list))return;
@@ -804,6 +863,11 @@ window.faContent=(async function(){
   function renderProfile(p){
     if(!p)return;
     txt('aboutP1',p.about1);txt('aboutP2',p.about2);txt('locText',p.location);
+    var ph=SH.safeImg(p.photo);
+    if(ph){
+      var im=document.querySelector('.photo img'),box=document.querySelector('.photo');
+      if(im&&box){im.style.display='';im.src=ph;im.onload=function(){box.classList.remove('nophoto')}}
+    }
     if(p.email&&/^[^\s@]+@[^\s@]+$/.test(p.email)){
       txt('mailText',p.email);
       ['mailLink','sendLink'].forEach(function(id){var e=document.getElementById(id);if(e)e.href='mailto:'+p.email});
@@ -833,6 +897,7 @@ window.faContent=(async function(){
     renderTimeline('eduList',d.education,'period');
     renderTimeline('achList',d.achievements,'year');
     renderSocial(d.social);
+    renderSite(d.site,d.skills);
   }catch(e){console.warn('Admin content not loaded:',e)}
 })();
 </script>
