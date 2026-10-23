@@ -800,7 +800,7 @@ html{background:var(--bg)}
 
 <script>
 /* Intro screen: the bar follows what is really loading (page, fonts, images, saved admin content).
-   It stays at least ~2.2 s (the intro animation), and never longer than ~6 s even on a slow connection. */
+   It stays at least ~3.6 s (the intro animation), and never longer than ~8 s even on a slow connection. */
 (function(){
   var el=document.getElementById('intro');
   if(!el)return;
@@ -811,7 +811,7 @@ html{background:var(--bg)}
   root.classList.add('intro-on');
   var bar=document.getElementById('introBar'),pct=document.getElementById('introPct');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var MIN=reduce?300:2200,MAX=6000,t0=performance.now();
+  var MIN=reduce?300:3600,MAX=8000,t0=performance.now();
   var done={dom:false,fonts:false,load:false,content:false};
   var W={dom:15,fonts:25,load:35,content:25};
   function mark(k){done[k]=true}
