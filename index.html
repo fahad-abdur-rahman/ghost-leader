@@ -805,7 +805,14 @@ html{background:var(--bg)}
   var el=document.getElementById('intro');
   if(!el)return;
   /* already shown during this visit: skip it (e.g. when coming back from an organization page) */
-  try{if(sessionStorage.getItem('fa-intro')){el.hidden=true;el.style.display='none';return}}catch(e){}
+  try{
+    var nav=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};
+    var reloaded=nav.type==='reload';
+    var fromInside=false;
+    try{fromInside=!!document.referrer&&new URL(document.referrer).origin===location.origin}catch(e){}
+    /* skip only when coming back from another page of this site (not on reload / fresh visit) */
+    if(sessionStorage.getItem('fa-intro')&&fromInside&&!reloaded){el.hidden=true;el.style.display='none';return}
+  }catch(e){}
   try{sessionStorage.setItem('fa-intro','1')}catch(e){}
   var root=document.documentElement;
   root.classList.add('intro-on');
