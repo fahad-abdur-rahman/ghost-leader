@@ -365,6 +365,9 @@ html{background:var(--bg)}
 .in-fx .g1{width:420px;height:420px;left:-120px;top:-60px;background:#287A50;opacity:.38;animation:inFloat 9s ease-in-out infinite}
 .in-fx .g2{width:380px;height:380px;right:-110px;bottom:-40px;background:#3FAE7C;opacity:.26;animation:inFloat 11s ease-in-out infinite reverse}
 .in-fx .gr{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0,transparent 68%);mask-image:radial-gradient(circle at 50% 50%,#000 0,transparent 68%)}
+#intro .in-fx .gs{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84' fill='none' stroke='%237FDDB0' stroke-width='1.1'%3E%3Crect x='17' y='17' width='50' height='50'/%3E%3Cpath d='M42 6.6L77.4 42L42 77.4L6.6 42Z'/%3E%3Ccircle cx='42' cy='42' r='6'/%3E%3C/svg%3E");background-size:84px 84px;opacity:.1;-webkit-mask-image:radial-gradient(circle at 50% 46%,#000 0,transparent 62%);mask-image:radial-gradient(circle at 50% 46%,#000 0,transparent 62%);animation:inDrift 40s linear infinite}
+@keyframes inDrift{to{background-position:84px 84px}}
+.in-motto{font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6F7C76;opacity:0;animation:inUp .9s 1.5s cubic-bezier(.2,.8,.2,1) both}
 @keyframes inFloat{50%{transform:translate(34px,-26px) scale(1.1)}}
 .intro-in{position:relative;z-index:2;text-align:center;padding:20px;width:min(520px,92vw);transition:opacity .45s,transform .9s cubic-bezier(.77,0,.18,1)}
 #intro.out .intro-in{opacity:0;transform:scale(1.06)}
@@ -411,7 +414,7 @@ html{background:var(--bg)}
 <body>
 <div id="intro" role="status" aria-label="Loading Fahad Abdur Rahman's website">
   <div class="cp top" aria-hidden="true"></div><div class="cp bot" aria-hidden="true"></div>
-  <div class="in-fx" aria-hidden="true"><span class="g1"></span><span class="g2"></span><span class="gr"></span></div>
+  <div class="in-fx" aria-hidden="true"><span class="g1"></span><span class="g2"></span><span class="gs"></span><span class="gr"></span></div>
   <div class="intro-in">
     <div class="in-mark" aria-hidden="true"><b>F</b></div>
     <div class="in-name" aria-hidden="true"><span class="w"><i style="--i:0">F</i><i style="--i:1">a</i><i style="--i:2">h</i><i style="--i:3">a</i><i style="--i:4">d</i></span> <span class="w"><i style="--i:6">A</i><i style="--i:7">b</i><i style="--i:8">d</i><i style="--i:9">u</i><i style="--i:10">r</i></span> <span class="w acc"><i style="--i:12">R</i><i style="--i:13">a</i><i style="--i:14">h</i><i style="--i:15">m</i><i style="--i:16">a</i><i style="--i:17">n</i></span></div>
@@ -419,6 +422,7 @@ html{background:var(--bg)}
     <div class="in-role">Youth Leader · Founder · Chairman</div>
   </div>
   <div class="in-foot" aria-hidden="true">
+    <div class="in-motto">Better Youth, Better Tomorrow</div>
     <div class="intro-pct" id="introPct">0%</div>
     <div class="intro-track"><div class="intro-bar" id="introBar"></div></div>
   </div>
@@ -1013,6 +1017,7 @@ window.faContent=(async function(){
     renderTimeline('achList',d.achievements,'year');
     renderSocial(d.social);
     renderSite(d.site,d.skills);
+    try{var nz=d.site||{};localStorage.setItem('fa-notice',JSON.stringify({t:String(nz.noticeText||'').trim(),l:String(nz.noticeLink||'').trim(),b:String(nz.noticeLabel||'').trim()}));if(window.faNotice)window.faNotice()}catch(e){}
     SH.fillConnect(d);
   }
   SH.onLangChange(function(){if(LAST)renderAll(LAST)});

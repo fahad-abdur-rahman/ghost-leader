@@ -514,6 +514,13 @@ input[type=file]{padding:8px;font-size:.85rem}
   function sitePanel(){
     var t=data.site,wrap=h('div',{class:'panel'});
     wrap.appendChild(h('div',{class:'item'},[
+      h('strong',{text:'Notice bar (top of every page)'}),
+      h('p',{class:'hint',text:'Write a short announcement. Leave the text empty to hide the bar. Link is optional (https://...).'}),
+      tf('Notice text',t,'noticeText'),
+      field('Link (optional)',t.noticeLink,function(v){t.noticeLink=v},{type:'url',placeholder:'https://'}),
+      tf('Link button label (optional)',t,'noticeLabel')
+    ]));
+    wrap.appendChild(h('div',{class:'item'},[
       h('strong',{text:'Top of the home page'}),
       tf('Small label above the name',t,'heroPill'),
       tf('Tagline',t,'heroSub'),

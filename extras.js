@@ -16,6 +16,7 @@
       "<circle cx='0' cy='0' r='2.5'/><circle cx='84' cy='0' r='2.5'/><circle cx='0' cy='84' r='2.5'/><circle cx='84' cy='84' r='2.5'/></svg>";
   }
   var GEO_G = 'data:image/svg+xml,' + encodeURIComponent(geoSvg('#287A50'));
+  var GRAIN = 'data:image/svg+xml,' + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(#n)'/></svg>");
   var GEO_L = 'data:image/svg+xml,' + encodeURIComponent(geoSvg('#7FDDB0'));
 
   /* ================= styles ================= */
@@ -40,6 +41,30 @@
     '.aq-ar{margin:10px 0 6px;font-family:"Amiri","Noto Naskh Arabic","Scheherazade New",serif;font-size:clamp(1.5rem,5.6vw,2.2rem);line-height:2;font-weight:700;color:var(--text)}',
     '.aq-tr{max-width:560px;margin:6px auto 0;color:var(--muted);font-size:1.02rem}',
     '.aq figcaption{margin-top:12px;font-size:.8rem;font-weight:600;letter-spacing:.04em;color:var(--green-text)}',
+    /* PREMIUM layer */
+    '::selection{background:color-mix(in srgb,var(--green) 28%,transparent);color:inherit}',
+    'html{scrollbar-color:color-mix(in srgb,var(--green) 55%,transparent) transparent;scrollbar-width:thin}',
+    'body::after{content:"";position:fixed;inset:0;z-index:2147483000;pointer-events:none;opacity:.035;background-image:url("' + GRAIN + '");background-size:160px 160px}',
+    'html[data-theme="dark"] body::after{opacity:.05}',
+    'header nav{transition:box-shadow .35s,background .35s,border-color .35s,transform .45s cubic-bezier(.2,.8,.2,1)}',
+    'html.fa-scrolled header nav{box-shadow:0 1px 2px rgba(28,30,31,.06),0 14px 40px rgba(28,30,31,.14);border-color:color-mix(in srgb,var(--green) 22%,var(--border))}',
+    '.card{position:relative;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .35s}',
+    '.card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),color-mix(in srgb,var(--green-2) 20%,transparent),transparent 62%)}',
+    '@media(hover:hover){.card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--green) 40%,var(--border));box-shadow:var(--shadow-lg,var(--shadow))}.card:hover::before{opacity:1}}',
+    '.card.fa-glow::before{opacity:1}',
+    '.btn.primary{position:relative;overflow:hidden;isolation:isolate}',
+    '.btn.primary::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;z-index:-1;background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);transform:skewX(-20deg);transition:left .7s cubic-bezier(.2,.8,.2,1)}',
+    '@media(hover:hover){.btn.primary:hover::after{left:130%}}',
+    '.btn:active,.ibtn:active,.chip:active,.filter:active{transform:scale(.97)}',
+    '.eyebrow{background:linear-gradient(90deg,var(--green-text),var(--green-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}',
+    '.photo{position:relative}',
+    'img{-webkit-user-drag:none}',
+    '@media(prefers-reduced-motion:reduce){.card,.card:hover{transform:none!important}.btn.primary::after{display:none}}',
+    /* notice bar */
+    '.notice{position:relative;z-index:60;display:flex;align-items:center;justify-content:center;gap:12px;padding:9px 46px 9px 16px;background:var(--green);color:#fff;font-size:.86rem;font-weight:500;line-height:1.45;text-align:center}',
+    '.notice a{color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}',
+    '.notice button{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:#fff;font-size:1.2rem;line-height:1;cursor:pointer}',
+    '.notice button:hover{background:rgba(255,255,255,.18)}',
     /* back to top */
     '.totop{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));width:48px;height:48px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--green-text);box-shadow:var(--shadow-lg,0 10px 30px rgba(0,0,0,.15));display:grid;place-items:center;cursor:pointer;z-index:55;opacity:0;visibility:hidden;transform:translateY(14px) scale(.9);transition:opacity .3s,transform .3s cubic-bezier(.2,.8,.2,1),visibility .3s}',
     '.totop.show{opacity:1;visibility:visible;transform:none}',
@@ -422,6 +447,45 @@
   }
   function idle(fn) { (window.requestIdleCallback || function (f) { setTimeout(f, 300); })(fn, { timeout: 2500 }); }
 
+  /* ================= PREMIUM: nav state on scroll + soft glow that follows the finger/cursor ================= */
+  function mountPremium() {
+    var ticking = false;
+    function sc() { root.classList.toggle('fa-scrolled', (window.scrollY || 0) > 24); ticking = false; }
+    addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(sc); } }, { passive: true });
+    sc();
+    var last = null;
+    function move(e) {
+      var t = e.target && e.target.closest ? e.target.closest('.card') : null;
+      if (last && last !== t) last.classList.remove('fa-glow');
+      last = t; if (!t) return;
+      var r = t.getBoundingClientRect();
+      t.style.setProperty('--mx', (e.clientX - r.left) + 'px'); t.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      if (e.pointerType !== 'mouse') t.classList.add('fa-glow');
+    }
+    document.addEventListener('pointermove', move, { passive: true });
+    document.addEventListener('pointerdown', move, { passive: true });
+    document.addEventListener('pointerup', function () { if (last) setTimeout(function () { last && last.classList.remove('fa-glow'); }, 450); }, { passive: true });
+  }
+
+  /* ================= notice bar (text comes from Admin > Site texts) ================= */
+  function mountNotice() {
+    var old = document.getElementById('faNotice'); if (old) old.remove();
+    var n = null; try { n = JSON.parse(localStorage.getItem('fa-notice') || 'null'); } catch (e) {}
+    if (!n || !n.t) return;
+    var key = n.t + '|' + n.l;
+    try { if (sessionStorage.getItem('fa-notice-x') === key) return; } catch (e) {}
+    var bar = document.createElement('div'); bar.className = 'notice'; bar.id = 'faNotice'; bar.setAttribute('role', 'status');
+    var sp = document.createElement('span'); sp.textContent = n.t; bar.appendChild(sp);
+    if (/^https?:\/\//i.test(n.l)) {
+      var a = document.createElement('a'); a.href = n.l; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = n.b || (LANG === 'bn' ? 'বিস্তারিত' : 'Learn more'); bar.appendChild(a);
+    }
+    var x = document.createElement('button'); x.type = 'button'; x.setAttribute('aria-label', 'Close'); x.textContent = '×';
+    x.addEventListener('click', function () { try { sessionStorage.setItem('fa-notice-x', key); } catch (e) {} bar.remove(); });
+    bar.appendChild(x);
+    document.body.insertBefore(bar, document.body.firstChild);
+  }
+  window.faNotice = mountNotice;
+
   /* ================= pattern overlays ================= */
   function addGeo(el, cls) {
     if (el.querySelector(':scope > .geo')) return;
@@ -437,6 +501,8 @@
   /* ================= start ================= */
   function init() {
     mountGeo();
+    mountNotice();
+    mountPremium();
     mountToggle();
     mountTop();
     mountTyping();

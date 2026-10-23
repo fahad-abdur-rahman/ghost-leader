@@ -18,6 +18,7 @@
     '#plo .pc{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.2em;color:#9AA7A1;font-variant-numeric:tabular-nums}' +
     '#plo .tr{width:min(260px,64vw);height:2px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}' +
     '#plo .br{height:100%;width:0;background:linear-gradient(90deg,#287A50,#7FDDB0);border-radius:inherit;box-shadow:0 0 14px rgba(127,221,176,.8)}' +
+    '#plo .gs{position:absolute;inset:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'84\' height=\'84\' viewBox=\'0 0 84 84\' fill=\'none\' stroke=\'%237FDDB0\' stroke-width=\'1.1\'%3E%3Crect x=\'17\' y=\'17\' width=\'50\' height=\'50\'/%3E%3Cpath d=\'M42 6.6L77.4 42L42 77.4L6.6 42Z\'/%3E%3Ccircle cx=\'42\' cy=\'42\' r=\'6\'/%3E%3C/svg%3E");background-size:84px 84px;opacity:.09;-webkit-mask-image:radial-gradient(circle at 50% 46%,#000 0,transparent 62%);mask-image:radial-gradient(circle at 50% 46%,#000 0,transparent 62%)}' +
     '.plo-on,.plo-on body{overflow:hidden}' +
     '@keyframes ploP{50%{transform:scale(1.07)}}' +
     '@keyframes ploR{0%{opacity:.8;transform:scale(.94)}100%{opacity:0;transform:scale(1.2)}}' +
@@ -27,7 +28,7 @@
 
   var el = document.createElement('div');
   el.id = 'plo'; el.setAttribute('role', 'status'); el.setAttribute('aria-label', 'Loading page');
-  el.innerHTML = '<span class="g g1"></span><span class="g g2"></span>' +
+  el.innerHTML = '<span class="g g1"></span><span class="g g2"></span><span class="gs"></span>' +
     '<div class="in"><div class="mk" aria-hidden="true">F</div>' +
     '<div class="nm" aria-hidden="true">Fahad Abdur Rahman</div>' +
     '<div class="tg" aria-hidden="true">Ideas into Impact.</div></div>' +
