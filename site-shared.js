@@ -104,3 +104,12 @@ export function onLangChange(fn) {
   new MutationObserver(function () { if (isBn() !== last) { last = isBn(); fn(); } })
     .observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 }
+
+// Notice bar text (Admin > Site texts) is kept for the whole site, in both languages.
+export function saveNotice(d) {
+  try {
+    var n = (d && d.site) || {}, t = function (k) { return String(n[k] || '').trim(); };
+    localStorage.setItem('fa-notice', JSON.stringify({ t: t('noticeText'), tb: t('noticeTextBn'), l: t('noticeLink'), b: t('noticeLabel'), bb: t('noticeLabelBn') }));
+    if (window.faNotice) window.faNotice();
+  } catch (e) {}
+}

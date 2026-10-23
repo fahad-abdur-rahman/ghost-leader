@@ -1,5 +1,5 @@
 // Contact page: shows saved contact details and saves messages to Firestore (collection "messages").
-import { fillNav, fillConnect } from './site-shared.js';
+import { fillNav, fillConnect, saveNotice } from './site-shared.js';
 var $ = function (id) { return document.getElementById(id); };
 var FALLBACK_MAIL = 'fahad.ar.official@gmail.com';
 var mail = FALLBACK_MAIL, db = null, fs = null;
@@ -23,6 +23,7 @@ window.faContent = (async function () {
         var d = snap.data();
         if (Array.isArray(d.orgs)) fillNav(d.orgs);
         fillConnect(d);
+        saveNotice(d);
         var p = d.profile || {};
         if (p.email && /^[^\s@]+@[^\s@]+$/.test(p.email)) { mail = p.email; var m = $('cMail'); m.textContent = mail; m.href = 'mailto:' + mail; }
         if (typeof p.location === 'string' && p.location.trim()) $('cLoc').textContent = p.location.trim();

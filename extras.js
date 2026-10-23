@@ -121,7 +121,7 @@
     'Projects': 'প্রকল্প', 'Achievements': 'অর্জন', 'Contact': 'যোগাযোগ',
     'Explore': 'ঘুরে দেখুন', 'Connect': 'সংযোগ', 'Email': 'ইমেইল',
     'Youth Leader & Founder — Ideas into Impact.': 'যুব নেতা ও প্রতিষ্ঠাতা — ভাবনা থেকে প্রভাব।',
-    'Better Youth · Better Tomorrow': 'উন্নত যুবসমাজ · উন্নত আগামী',
+    'Better Youth, Better Tomorrow': 'উন্নত যুবসমাজ · উন্নত আগামী', 'Better Youth · Better Tomorrow': 'উন্নত যুবসমাজ · উন্নত আগামী',
     'Ideas into Impact.': 'ভাবনা থেকে প্রভাব।',
     'Youth Leader · Founder · Chairman': 'যুব নেতা · প্রতিষ্ঠাতা · চেয়ারম্যান',
     'Fahad Abdur Rahman': 'ফাহাদ আব্দুর রহমান',
@@ -372,6 +372,7 @@
     walk(document.body);
     paintBtn();
     typingRestart();
+    try { mountNotice(); } catch (e) {}
   }
 
   /* ================= back to top ================= */
@@ -528,7 +529,9 @@
   function mountNotice() {
     var old = document.getElementById('faNotice'); if (old) old.remove();
     var n = null; try { n = JSON.parse(localStorage.getItem('fa-notice') || 'null'); } catch (e) {}
-    if (!n || !n.t) return;
+    if (!n) return;
+    var tx = (LANG === 'bn' && n.tb) ? n.tb : n.t, lb = (LANG === 'bn' && n.bb) ? n.bb : n.b;
+    if (!tx) return;
     var key = n.t + '|' + n.l;
     try { if (sessionStorage.getItem('fa-notice-x') === key) return; } catch (e) {}
     var bar = document.createElement('div'); bar.className = 'notice'; bar.id = 'faNotice'; bar.setAttribute('role', 'status');
@@ -536,9 +539,9 @@
     var nm = document.createElement('div'); nm.className = 'nm';
     function unit(clone) {
       var u = document.createElement('span'); if (clone) u.setAttribute('aria-hidden', 'true');
-      var t = document.createElement('span'); t.textContent = n.t; u.appendChild(t);
+      var t = document.createElement('span'); t.textContent = tx; u.appendChild(t);
       if (/^https?:\/\//i.test(n.l)) {
-        var a = document.createElement('a'); a.href = n.l; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = n.b || (LANG === 'bn' ? 'বিস্তারিত' : 'Learn more');
+        var a = document.createElement('a'); a.href = n.l; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = lb || (LANG === 'bn' ? 'বিস্তারিত' : 'Learn more');
         if (clone) a.tabIndex = -1; u.appendChild(a);
       }
       u.appendChild(Object.assign(document.createElement('span'), { textContent: '✦', className: 'sep' }));

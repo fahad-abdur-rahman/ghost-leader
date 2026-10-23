@@ -1017,7 +1017,7 @@ window.faContent=(async function(){
     renderTimeline('achList',d.achievements,'year');
     renderSocial(d.social);
     renderSite(d.site,d.skills);
-    try{var nz=d.site||{};localStorage.setItem('fa-notice',JSON.stringify({t:String(nz.noticeText||'').trim(),l:String(nz.noticeLink||'').trim(),b:String(nz.noticeLabel||'').trim()}));if(window.faNotice)window.faNotice()}catch(e){}
+    SH.saveNotice(raw);
     SH.fillConnect(d);
   }
   SH.onLangChange(function(){if(LAST)renderAll(LAST)});
@@ -1061,5 +1061,6 @@ window.faContent=(async function(){
 </script>
 <script src="site-footer.js"></script>
 <script src="extras.js"></script>
+<script src="premium-fx.js"></script>
 </body>
 </html>

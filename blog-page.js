@@ -1,5 +1,5 @@
 // Blog page: lists the posts saved from the admin panel (Blog tab), or shows one post (blog.html?p=slug).
-import { fillNav, fillConnect } from './site-shared.js';
+import { fillNav, fillConnect, saveNotice } from './site-shared.js';
 var $ = function (id) { return document.getElementById(id); };
 function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
 var ALL = [];                    /* posts loaded from the admin panel */
@@ -95,7 +95,7 @@ window.faContent = (async function () {
   } catch (e) { d = null; }
 
   if (d && Array.isArray(d.orgs)) fillNav(d.orgs);
-  if (d) fillConnect(d);
+  if (d) { fillConnect(d); saveNotice(d); }
   ALL = (d && Array.isArray(d.posts) ? d.posts : []).filter(function (p) { return p && p.slug && (String(p.title || '').trim() || String(p.titleBn || '').trim()); });
   ALL.sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); });
   draw(true);
