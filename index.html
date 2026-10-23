@@ -69,6 +69,12 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="modulepreload" href="firebase-config.js">
+<link rel="modulepreload" href="site-shared.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js">
+<link rel="preload" as="image" href="photo.jpg" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -794,7 +800,7 @@ html{background:var(--bg)}
 
 <script>
 /* Intro screen: the bar follows what is really loading (page, fonts, images, saved admin content).
-   It stays at least ~2.6 s, and never longer than ~7 s even on a slow connection. */
+   It stays at least ~2.2 s (the intro animation), and never longer than ~6 s even on a slow connection. */
 (function(){
   var el=document.getElementById('intro');
   if(!el)return;
@@ -805,7 +811,7 @@ html{background:var(--bg)}
   root.classList.add('intro-on');
   var bar=document.getElementById('introBar'),pct=document.getElementById('introPct');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var MIN=reduce?300:2600,MAX=7000,t0=performance.now();
+  var MIN=reduce?300:2200,MAX=6000,t0=performance.now();
   var done={dom:false,fonts:false,load:false,content:false};
   var W={dom:15,fonts:25,load:35,content:25};
   function mark(k){done[k]=true}
@@ -855,7 +861,13 @@ html{background:var(--bg)}
    or anything fails, the built-in content above simply stays as it is. */
 window.faContent=(async function(){
   var cfg,SH;
-  try{cfg=await import('./firebase-config.js');SH=await import('./site-shared.js')}catch(e){return}
+  /* start downloading the Firebase files right away, in parallel with our own files */
+  var sdkP=Promise.all([
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+  ]);
+  sdkP.catch(function(){});
+  try{var mods=await Promise.all([import('./firebase-config.js'),import('./site-shared.js')]);cfg=mods[0];SH=mods[1]}catch(e){return}
   var c=cfg.firebaseConfig;
   if(!c||!c.apiKey||/YOUR/i.test(c.apiKey))return;
 
@@ -966,13 +978,8 @@ window.faContent=(async function(){
     }
   }
 
-  try{
-    var app=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-    var fs=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-    var db=fs.getFirestore(app.initializeApp(c));
-    var snap=await fs.getDoc(fs.doc(db,'site','content'));
-    if(!snap.exists())return;
-    var d=snap.data();
+  var CK='fa-content-v1';
+  function renderAll(d){
     renderProfile(d.profile);
     renderOrgs(d.orgs);
     renderProjects(d.projects);
@@ -981,8 +988,45 @@ window.faContent=(async function(){
     renderSocial(d.social);
     renderSite(d.site,d.skills);
     SH.fillConnect(d);
+  }
+  function readCache(){try{var s=localStorage.getItem(CK);return s?{s:s,d:JSON.parse(s)}:null}catch(e){return null}}
+  function writeCache(s){try{if(s.length<1500000)localStorage.setItem(CK,s);else localStorage.removeItem(CK)}catch(e){}}
+  function fetchFresh(){
+    return sdkP.then(function(m){
+      var db=m[1].getFirestore(m[0].initializeApp(c));
+      return m[1].getDoc(m[1].doc(db,'site','content'));
+    }).then(function(snap){return snap.exists()?snap.data():null});
+  }
+  /* the loading screen also waits for the photo and logos, so nothing pops in afterwards */
+  function waitImages(){
+    var imgs=[].slice.call(document.querySelectorAll('.photo img,#orgGrid img')).filter(function(i){return i.getAttribute('src')&&!i.complete});
+    if(!imgs.length)return Promise.resolve();
+    return Promise.race([
+      Promise.all(imgs.map(function(i){return new Promise(function(r){i.addEventListener('load',r,{once:true});i.addEventListener('error',r,{once:true})})})),
+      new Promise(function(r){setTimeout(r,2500)})
+    ]);
+  }
+  try{
+    var cached=readCache();
+    if(cached){
+      /* repeat visit: show the saved content immediately, then quietly check for newer content */
+      renderAll(cached.d);
+      fetchFresh().then(function(d){
+        if(!d)return;
+        var s=JSON.stringify(d);
+        if(s!==cached.s){renderAll(d);writeCache(s)}
+      }).catch(function(){});
+      await waitImages();
+      return;
+    }
+    var d=await fetchFresh();
+    if(!d)return;
+    renderAll(d);
+    writeCache(JSON.stringify(d));
+    await waitImages();
   }catch(e){console.warn('Admin content not loaded:',e)}
 })();
 </script>
+<script src="extras.js"></script>
 </body>
 </html>
