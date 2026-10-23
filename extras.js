@@ -61,7 +61,13 @@
     'img{-webkit-user-drag:none}',
     '@media(prefers-reduced-motion:reduce){.card,.card:hover{transform:none!important}.btn.primary::after{display:none}}',
     /* notice bar */
-    '.notice{position:relative;z-index:60;display:flex;align-items:center;justify-content:center;gap:12px;padding:9px 46px 9px 16px;background:var(--green);color:#fff;font-size:.86rem;font-weight:500;line-height:1.45;text-align:center}',
+    '.notice{position:relative;z-index:60;display:flex;align-items:center;gap:12px;padding:9px 46px 9px 0;overflow:hidden;background:var(--green);color:#fff;font-size:.86rem;font-weight:500;line-height:1.45;text-align:center}',
+    '.notice .nt{flex:1;overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}',
+    '.notice .nm{display:inline-flex;align-items:center;will-change:transform;animation:faMarq var(--dur,18s) linear infinite}',
+    '.notice .nm>span{display:inline-flex;align-items:center;gap:12px;padding-right:56px}',
+    '.notice:hover .nm,.notice:active .nm{animation-play-state:paused}',
+    '@keyframes faMarq{to{transform:translateX(-50%)}}',
+    '@media(prefers-reduced-motion:reduce){.notice .nm{animation:none}.notice .nm>span+span{display:none}.notice .nt{overflow:auto;white-space:normal;text-align:center}}',
     '.notice a{color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}',
     '.notice button{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:#fff;font-size:1.2rem;line-height:1;cursor:pointer}',
     '.notice button:hover{background:rgba(255,255,255,.18)}',
@@ -475,14 +481,28 @@
     var key = n.t + '|' + n.l;
     try { if (sessionStorage.getItem('fa-notice-x') === key) return; } catch (e) {}
     var bar = document.createElement('div'); bar.className = 'notice'; bar.id = 'faNotice'; bar.setAttribute('role', 'status');
-    var sp = document.createElement('span'); sp.textContent = n.t; bar.appendChild(sp);
-    if (/^https?:\/\//i.test(n.l)) {
-      var a = document.createElement('a'); a.href = n.l; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = n.b || (LANG === 'bn' ? 'বিস্তারিত' : 'Learn more'); bar.appendChild(a);
+    var nt = document.createElement('div'); nt.className = 'nt';
+    var nm = document.createElement('div'); nm.className = 'nm';
+    function unit(clone) {
+      var u = document.createElement('span'); if (clone) u.setAttribute('aria-hidden', 'true');
+      var t = document.createElement('span'); t.textContent = n.t; u.appendChild(t);
+      if (/^https?:\/\//i.test(n.l)) {
+        var a = document.createElement('a'); a.href = n.l; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = n.b || (LANG === 'bn' ? 'বিস্তারিত' : 'Learn more');
+        if (clone) a.tabIndex = -1; u.appendChild(a);
+      }
+      u.appendChild(Object.assign(document.createElement('span'), { textContent: '✦', className: 'sep' }));
+      return u;
     }
+    /* repeat the message enough times that two identical halves always fill the bar, then slide by exactly one half */
+    var a1 = unit(false); nm.appendChild(a1); nt.appendChild(nm); bar.appendChild(nt);
     var x = document.createElement('button'); x.type = 'button'; x.setAttribute('aria-label', 'Close'); x.textContent = '×';
     x.addEventListener('click', function () { try { sessionStorage.setItem('fa-notice-x', key); } catch (e) {} bar.remove(); });
     bar.appendChild(x);
     document.body.insertBefore(bar, document.body.firstChild);
+    var w = a1.offsetWidth || 300, need = Math.max(1, Math.ceil((nt.offsetWidth || 360) / w));
+    for (var i = 1; i < need; i++) nm.appendChild(unit(true));
+    var half = nm.children.length; for (var j = 0; j < half; j++) nm.appendChild(nm.children[j].cloneNode(true));
+    nm.style.setProperty('--dur', Math.max(10, (nm.scrollWidth / 2) / 55) + 's');
   }
   window.faNotice = mountNotice;
 
