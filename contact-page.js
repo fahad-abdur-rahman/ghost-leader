@@ -11,7 +11,7 @@ function mailFallback(text) {
   o.appendChild(a); o.appendChild(document.createTextNode('.'));
 }
 
-(async function () {
+window.faContent = (async function () {
   try {
     var cfg = await import('./firebase-config.js'); var c = cfg.firebaseConfig;
     if (c && c.apiKey && !/YOUR/i.test(c.apiKey)) {

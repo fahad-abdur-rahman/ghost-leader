@@ -94,7 +94,7 @@ function renderOthers(all) {
   var sec = w.closest('section'); if (sec) sec.hidden = !w.children.length;
 }
 
-(async function () {
+window.faContent = (async function () {
   var mainEl = document.querySelector('main');
   if (isTemplate && mainEl) mainEl.style.visibility = 'hidden';
   var d = null;

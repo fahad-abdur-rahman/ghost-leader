@@ -5,7 +5,7 @@ function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.cl
 var PLACEHOLDERS = ['institution name', 'previous institution', 'achievement title', 'another milestone'];
 function real(it) { var t = String((it && it.title) || '').trim().toLowerCase(); return t && PLACEHOLDERS.indexOf(t) < 0; }
 
-(async function () {
+window.faContent = (async function () {
   var d = null;
   try {
     var cfg = await import('./firebase-config.js'); var c = cfg.firebaseConfig;
