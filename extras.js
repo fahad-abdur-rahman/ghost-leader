@@ -205,10 +205,17 @@
     for (var i = 0; i < RULES.length; i++) { var m = RULES[i][0].exec(key); if (m) return RULES[i][1](m); }
     return null;
   }
+  /* the person's name stays in English on the Bangla site (to show the name in Bangla, delete this function's body: just `return t;`) */
+  function keepName(t) {
+    return t.replace(/\u09ab\u09be\u09b9\u09be\u09a6/g, 'Fahad')
+            .replace(/\u0986\u09ac\u09cd\u09a6\u09c1\u09b0/g, 'Abdur')
+            .replace(/\u09b0\u09b9\u09ae\u09be\u09a8(\u09c7\u09b0|\u098f\u09b0|\u0995\u09c7|\u09b0)?/g, function (m, sfx) { return 'Rahman' + (sfx ? '-' + (sfx === '\u09c7\u09b0' ? '\u098f\u09b0' : sfx) : ''); });
+  }
   /* translate a raw string, keeping its leading/trailing spaces; returns raw when there is no translation */
   function xl(raw) {
     var k = norm(raw); if (!k) return raw;
     var t = tr(k); if (t == null) return raw;
+    t = keepName(t);
     var m = /^(\s*)[\s\S]*?(\s*)$/.exec(raw);
     return m[1] + t + m[2];
   }

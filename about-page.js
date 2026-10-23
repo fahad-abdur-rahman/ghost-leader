@@ -1,5 +1,5 @@
 // About page: keeps the built-in text, and swaps in what was saved from the admin panel.
-import { orgHref, safeImg, logoInto, fillNav, fillConnect } from './site-shared.js';
+import { orgHref, safeImg, logoInto, fillNav, fillConnect, localize, onLangChange } from './site-shared.js';
 var $ = function (id) { return document.getElementById(id); };
 function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
 var PLACEHOLDERS = ['institution name', 'previous institution', 'achievement title', 'another milestone'];
@@ -18,6 +18,9 @@ window.faContent = (async function () {
     d = snap.data();
   } catch (e) { return; }
 
+  var raw = d;
+  function draw() {
+  var d = localize(raw);
   if (Array.isArray(d.orgs)) fillNav(d.orgs);
   fillConnect(d);
   var p = d.profile || {};
@@ -62,4 +65,7 @@ window.faContent = (async function () {
   }
   timeline('abEdu', 'abEduSec', d.education, 'period');
   timeline('abAch', 'abAchSec', d.achievements, 'year');
+  }
+  draw();
+  onLangChange(draw);
 })();

@@ -78,3 +78,29 @@ export function fillConnect(d) {
   });
   draw();
 }
+
+// Bangla / English content: admin saves English in "key" and Bangla in "keyBn".
+// localize() returns a copy where, on the Bangla site, every non-empty "keyBn" replaces "key".
+export function isBn() { return document.documentElement.getAttribute('lang') === 'bn'; }
+export function localize(d) {
+  var bn = isBn();
+  function walk(v) {
+    if (Array.isArray(v)) return v.map(walk);
+    if (v && typeof v === 'object') {
+      var o = {};
+      Object.keys(v).forEach(function (k) { if (!/.Bn$/.test(k)) o[k] = walk(v[k]); });
+      if (bn) Object.keys(v).forEach(function (k) {
+        if (/.Bn$/.test(k) && typeof v[k] === 'string' && v[k].trim()) o[k.slice(0, -2)] = v[k];
+      });
+      return o;
+    }
+    return v;
+  }
+  return walk(d);
+}
+// Run fn again whenever the visitor switches বাংলা / EN.
+export function onLangChange(fn) {
+  var last = isBn();
+  new MutationObserver(function () { if (isBn() !== last) { last = isBn(); fn(); } })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+}

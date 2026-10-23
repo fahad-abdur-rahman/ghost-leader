@@ -988,7 +988,9 @@ window.faContent=(async function(){
   }
 
   var CK='fa-content-v1';
-  function renderAll(d){
+  var LAST=null;
+  function renderAll(raw){
+    LAST=raw;var d=SH.localize(raw);
     renderProfile(d.profile);
     renderOrgs(d.orgs);
     renderProjects(d.projects);
@@ -998,6 +1000,7 @@ window.faContent=(async function(){
     renderSite(d.site,d.skills);
     SH.fillConnect(d);
   }
+  SH.onLangChange(function(){if(LAST)renderAll(LAST)});
   function readCache(){try{var s=localStorage.getItem(CK);return s?{s:s,d:JSON.parse(s)}:null}catch(e){return null}}
   function writeCache(s){try{if(s.length<1500000)localStorage.setItem(CK,s);else localStorage.removeItem(CK)}catch(e){}}
   function fetchFresh(){

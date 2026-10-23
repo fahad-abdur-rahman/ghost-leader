@@ -1,7 +1,7 @@
 // Fills an organization page with the content saved from the admin panel.
 // The page already contains readable default text (so search engines see it);
 // this only replaces it when the admin has saved something for this organization.
-import { slugify, orgSlug, orgHref, safeImg, logoInto, fillNav, fillConnect } from './site-shared.js';
+import { slugify, orgSlug, orgHref, safeImg, logoInto, fillNav, fillConnect, localize, onLangChange } from './site-shared.js';
 
 var $ = function (id) { return document.getElementById(id); };
 var BASE = 'https://fahad-abdur-rahman.github.io/ghost-leader/';
@@ -110,15 +110,23 @@ window.faContent = (async function () {
   } catch (e) { /* keep the built-in content */ }
 
   if (isTemplate && mainEl) mainEl.style.visibility = '';
-  var orgs = d && Array.isArray(d.orgs) ? d.orgs : null;
-  if (!orgs) { if (isTemplate) notFound(); return; }
-  var me = orgs.filter(function (o) { return o && o.name && orgSlug(o) === slug; })[0];
-  fillNav(orgs, slug);
-  fillConnect(d);
-  if (!me) { if (isTemplate) notFound(); return; }
-  render(me, orgs);
-  renderOthers(orgs);
-  if (d.profile && typeof d.profile.location === 'string' && d.profile.location.trim()) {
-    var lc = document.querySelector('.lead-card p'); if (lc) lc.textContent = 'Youth leader and organization builder from ' + d.profile.location.trim() + '.';
+  var raw = d;
+  var orgs0 = raw && Array.isArray(raw.orgs) ? raw.orgs : null;
+  if (!orgs0) { if (isTemplate) notFound(); return; }
+  var found = orgs0.filter(function (o) { return o && o.name && orgSlug(o) === slug; })[0];
+  if (!found) { if (isTemplate) notFound(); return; }
+  function draw() {
+    var d = localize(raw);
+    var orgs = d.orgs;
+    var me = orgs.filter(function (o) { return o && o.name && orgSlug(o) === slug; })[0];
+    fillNav(orgs, slug);
+    fillConnect(d);
+    render(me, orgs);
+    renderOthers(orgs);
+    if (d.profile && typeof d.profile.location === 'string' && d.profile.location.trim()) {
+      var lc = document.querySelector('.lead-card p'); if (lc) lc.textContent = 'Youth leader and organization builder from ' + d.profile.location.trim() + '.';
+    }
   }
+  draw();
+  onLangChange(draw);
 })();

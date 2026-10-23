@@ -28,6 +28,10 @@ button,input,textarea{font:inherit;color:inherit}
 .btn.primary{background:var(--green);border-color:var(--green);color:#fff}
 .btn.primary:hover{background:var(--green-hover)}
 .btn.small{padding:6px 10px;font-size:.85rem;border-radius:9px}
+.langbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 12px;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}
+.langbar strong{margin-right:4px}
+.langbar .btn[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.langbar .hint{flex-basis:100%;margin:2px 0 0}
 .btn.danger{color:var(--danger)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
 a{color:var(--green-text)}
@@ -239,6 +243,21 @@ input[type=file]{padding:8px;font-size:.85rem}
   }
 
 
+  /* editing language: English texts live in "key", Bangla texts in "keyBn" (same item) */
+  var AL='en';
+  try{AL=localStorage.getItem('fa-admin-lang')==='bn'?'bn':'en'}catch(e){}
+  function tf(label,obj,key,opts){
+    opts=Object.assign({},opts||{});
+    var k=AL==='bn'?key+'Bn':key;
+    if(AL==='bn'){
+      var en=String(obj[key]||'').trim();
+      opts.placeholder=en?en.slice(0,120):(opts.placeholder||'');
+      label='বাংলা — '+label;
+    }
+    return field(label,obj[k],function(v){obj[k]=v},opts);
+  }
+  function shownName(it,key){return String(it[key]||'').trim()||String(it[key+'Bn']||'').trim()}
+
   function slugify(t){return String(t||'').toLowerCase().trim().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)}
   var STATIC_SLUGS=['talentverse-bangladesh','nexera-youth-network','visionary-youth-alliance'];
 
@@ -385,8 +404,8 @@ input[type=file]{padding:8px;font-size:.85rem}
       box.appendChild(h('label',{text:'Focus cards (shown under “What it stands for” — up to 3 are displayed)'}));
       it.features.forEach(function(f,i){
         var row=h('div',{class:'frow'},[
-          field('Title',f.title,function(v){f.title=v}),
-          field('Description',f.desc,function(v){f.desc=v},{area:true}),
+          tf('Title',f,'title'),
+          tf('Description',f,'desc',{area:true}),
           h('button',{class:'btn small danger',type:'button',text:'Remove this card',onclick:function(){it.features.splice(i,1);markDirty();draw()}})
         ]);
         box.appendChild(row);
@@ -412,7 +431,9 @@ input[type=file]{padding:8px;font-size:.85rem}
     function draw(){
       wrap.textContent='';
       data[key].forEach(function(it,i){
-        var title=h('strong',{text:(i+1)+'. '+(nameOf(it)||'New item')});
+        var nameKey=(fields.filter(function(f){return f.name})[0]||{}).key;
+        function label(){return (i+1)+'. '+((nameKey?shownName(it,nameKey):nameOf(it))||'New item')}
+        var title=h('strong',{text:label()});
         var acts=h('span',{class:'acts'},[
           h('button',{class:'btn small',type:'button','aria-label':'Move up',text:'↑',onclick:function(){move(i,-1)}}),
           h('button',{class:'btn small',type:'button','aria-label':'Move down',text:'↓',onclick:function(){move(i,1)}}),
@@ -423,10 +444,16 @@ input[type=file]{padding:8px;font-size:.85rem}
         var card=h('div',{class:'item'},[h('div',{class:'ihead'},[title,acts])]);
         var g=h('div',{class:'grid2'});
         fields.forEach(function(f){
-          var el=field(f.label,it[f.key],function(v){
-            it[f.key]=v;
-            if(f.name)title.textContent=(i+1)+'. '+(nameOf(it)||'New item');
-          },{area:f.area,type:f.type,placeholder:f.ph});
+          var el;
+          if(f.nt){
+            el=field(f.label,it[f.key],function(v){
+              it[f.key]=v;
+              if(f.name)title.textContent=label();
+            },{area:f.area,type:f.type,placeholder:f.ph});
+          }else{
+            el=tf(f.label,it,f.key,{area:f.area,type:f.type,placeholder:f.ph});
+            el.addEventListener('input',function(){if(f.name)title.textContent=label()});
+          }
           if(f.area||f.wide)el.style.gridColumn='1 / -1';
           g.appendChild(el);
         });
@@ -452,8 +479,8 @@ input[type=file]{padding:8px;font-size:.85rem}
     var p=data.profile,wrap=h('div',{class:'panel'});
     var about=h('div',{class:'item'},[
       h('strong',{text:'About text'}),
-      field('Paragraph 1',p.about1,function(v){p.about1=v},{area:true}),
-      field('Paragraph 2',p.about2,function(v){p.about2=v},{area:true})
+      tf('Paragraph 1',p,'about1',{area:true}),
+      tf('Paragraph 2',p,'about2',{area:true})
     ]);
     var photo=h('div',{class:'item'},[
       h('strong',{text:'Your photo (home page)'}),
@@ -462,14 +489,14 @@ input[type=file]{padding:8px;font-size:.85rem}
     var contact=h('div',{class:'item'},[
       h('strong',{text:'Contact'}),
       field('Email',p.email,function(v){p.email=v},{type:'email'}),
-      field('Location',p.location,function(v){p.location=v})
+      tf('Location',p,'location')
     ]);
     var stats=h('div',{class:'item'},[h('strong',{text:'Numbers on the home page'})]);
     p.stats.forEach(function(s,i){
       var g=h('div',{class:'grid2'},[
         field('Number '+(i+1),s.n,function(v){s.n=v===''?0:Number(v)},{type:'number'}),
         field('Suffix (+ or %)',s.suf,function(v){s.suf=v}),
-        (function(){var e=field('Label',s.label,function(v){s.label=v});e.style.gridColumn='1 / -1';return e})()
+        (function(){var e=tf('Label',s,'label');e.style.gridColumn='1 / -1';return e})()
       ]);
       stats.appendChild(g);
     });
@@ -488,19 +515,19 @@ input[type=file]{padding:8px;font-size:.85rem}
     var t=data.site,wrap=h('div',{class:'panel'});
     wrap.appendChild(h('div',{class:'item'},[
       h('strong',{text:'Top of the home page'}),
-      field('Small label above the name',t.heroPill,function(v){t.heroPill=v}),
-      field('Tagline',t.heroSub,function(v){t.heroSub=v}),
-      field('Intro text',t.heroLead,function(v){t.heroLead=v},{area:true})
+      tf('Small label above the name',t,'heroPill'),
+      tf('Tagline',t,'heroSub'),
+      tf('Intro text',t,'heroLead',{area:true})
     ]));
     wrap.appendChild(h('div',{class:'item'},[
       h('strong',{text:'Organizations section'}),
-      field('Heading',t.orgTitle,function(v){t.orgTitle=v}),
-      field('Line under the heading',t.orgTag,function(v){t.orgTag=v})
+      tf('Heading',t,'orgTitle'),
+      tf('Line under the heading',t,'orgTag')
     ]));
     wrap.appendChild(h('div',{class:'item'},[
       h('strong',{text:'Contact section'}),
-      field('Heading',t.contactTitle,function(v){t.contactTitle=v}),
-      field('Text',t.contactText,function(v){t.contactText=v},{area:true})
+      tf('Heading',t,'contactTitle'),
+      tf('Text',t,'contactText',{area:true})
     ]));
     var sk=listEditor('skills',[{key:'name',label:'Skill',name:true,wide:true}],{name:''},function(i){return i.name},'+ Add skill');
     sk.insertBefore(h('strong',{text:'Skills & Expertise'}),sk.firstChild);
@@ -551,18 +578,18 @@ input[type=file]{padding:8px;font-size:.85rem}
       var w=listEditor('projects',[
         {key:'title',label:'Title',name:true,wide:true},
         {key:'category',label:'Category',ph:'Organization / Website / Event / Other'},
-        {key:'tag',label:'Badge text (max 8)',ph:'TVBD'},
+        {key:'tag',label:'Badge text (max 8)',ph:'TVBD',nt:true},
         {key:'sub',label:'Short description',wide:true},
-        {key:'url',label:'Link',type:'url',ph:'https://',wide:true}
+        {key:'url',label:'Link',type:'url',ph:'https://',wide:true,nt:true}
       ],{title:'',category:'Other',sub:'',tag:'',url:''},function(i){return i.title},'+ Add project');
       w.insertBefore(h('p',{class:'hint',text:'The filter buttons on the site are built from the categories you type here.'}),w.firstChild);
       return w;
     }},
     {id:'orgs',label:'Organizations',build:function(){
       var w=listEditor('orgs',[
-        {key:'name',label:'Name',name:true,wide:true},
-        {key:'mono',label:'Badge letters (2) — used if no logo',ph:'TV'},
-        {key:'url',label:'Website / social link (button on its page)',type:'url',ph:'https://'},
+        {key:'name',label:'Name',name:true,wide:true,nt:true},
+        {key:'mono',label:'Badge letters (2) — used if no logo',ph:'TV',nt:true},
+        {key:'url',label:'Website / social link (button on its page)',type:'url',ph:'https://',nt:true},
         {key:'tagline',label:'Tagline',wide:true},
         {key:'lead',label:'Intro line (top of its page)',area:true},
         {key:'about1',label:'About — paragraph 1',area:true},
@@ -574,30 +601,26 @@ input[type=file]{padding:8px;font-size:.85rem}
     {id:'achievements',label:'Achievements',build:function(){
       return listEditor('achievements',[
         {key:'title',label:'Title',name:true,wide:true},
-        {key:'year',label:'Year'},
+        {key:'year',label:'Year',nt:true},
         {key:'desc',label:'Details',area:true}
       ],{year:'',title:'',desc:''},function(i){return i.title},'+ Add achievement');
     }},
     {id:'education',label:'Education',build:function(){
       return listEditor('education',[
         {key:'title',label:'Institution / Degree',name:true,wide:true},
-        {key:'period',label:'Period',ph:'2020 – 2024'},
+        {key:'period',label:'Period',ph:'2020 – 2024',nt:true},
         {key:'desc',label:'Details',area:true}
       ],{period:'',title:'',desc:''},function(i){return i.title},'+ Add education');
     }},
     {id:'blog',label:'Blog',build:function(){
       var w=listEditor('posts',[
-        {key:'title',label:'English — Title',name:true,wide:true},
-        {key:'date',label:'Date',type:'date'},
-        {key:'tag',label:'English — Topic (optional)',ph:'Leadership'},
-        {key:'summary',label:'English — Short summary (shown on the blog list)',area:true},
-        {key:'body',label:'English — Full article',area:true},
-        {key:'titleBn',label:'বাংলা — শিরোনাম (Bangla title)',wide:true},
-        {key:'tagBn',label:'বাংলা — বিষয় (Bangla topic, optional)',ph:'নেতৃত্ব'},
-        {key:'summaryBn',label:'বাংলা — সংক্ষিপ্ত বিবরণ (Bangla summary)',area:true},
-        {key:'bodyBn',label:'বাংলা — পুরো লেখা (Bangla full article)',area:true}
+        {key:'title',label:'Title',name:true,wide:true},
+        {key:'date',label:'Date',type:'date',nt:true},
+        {key:'tag',label:'Topic (optional)',ph:'Leadership'},
+        {key:'summary',label:'Short summary (shown on the blog list)',area:true},
+        {key:'body',label:'Full article',area:true}
       ],{title:'',slug:'',date:new Date().toISOString().slice(0,10),tag:'',summary:'',body:'',titleBn:'',tagBn:'',summaryBn:'',bodyBn:''},function(i){return i.title},'+ Add post');
-      w.insertBefore(h('p',{class:'hint',text:'Write the English version in the English boxes and the Bangla version in the বাংলা boxes. You can fill one or both: visitors see the language they chose (if one is empty, the other is shown). Leave an empty line between paragraphs. Start a line with ## to make a heading. Newest date shows first. Press Save at the bottom to publish.'}),w.firstChild);
+      w.insertBefore(h('p',{class:'hint',text:'Use the language switch at the top to write the English or the Bangla version. Leave an empty line between paragraphs. Start a line with ## to make a heading. Newest date shows first. Press Save at the bottom to publish.'}),w.firstChild);
       return w;
     }},
     {id:'site',label:'Site texts',build:sitePanel},
@@ -605,20 +628,38 @@ input[type=file]{padding:8px;font-size:.85rem}
     {id:'profile',label:'Profile & Links',build:profilePanel}
   ];
 
-  function showApp(){
+  var curTab=0;
+  function langBar(){
+    var bar=$('langbar');
+    if(!bar){bar=h('div',{class:'langbar',id:'langbar'});$('app').insertBefore(bar,$('tabs'))}
+    bar.textContent='';
+    bar.appendChild(h('strong',{text:'Editing language / ভাষা:'}));
+    [['en','English'],['bn','বাংলা']].forEach(function(l){
+      bar.appendChild(h('button',{class:'btn small',type:'button',text:l[1],'aria-pressed':AL===l[0]?'true':'false',onclick:function(){
+        if(AL===l[0])return;
+        AL=l[0];try{localStorage.setItem('fa-admin-lang',AL)}catch(e){}
+        showApp(curTab);
+      }}));
+    });
+    bar.appendChild(h('p',{class:'hint',text:AL==='bn'
+      ?'বাংলা মোড: এখানে যা লিখবেন তা শুধু বাংলা সাইটে দেখাবে। খালি রাখলে ইংরেজি লেখাই দেখাবে। (নাম, লিংক, ইমেইল, সাল আর তারিখ দুই ভাষায় একই।)'
+      :'English mode: what you write here shows on the English site. Switch to বাংলা to write the Bangla version of the same items.'}));
+  }
+  function showApp(keep){
     var tabs=$('tabs'),panels=$('panels');
+    langBar();
     tabs.textContent='';panels.textContent='';
     var btns=[],pans=[];
     function select(k){
       btns.forEach(function(b,i){b.setAttribute('aria-selected',i===k?'true':'false');pans[i].hidden=i!==k});
-      $('savebar').hidden=(TABS[k].id==='messages');
+      $('savebar').hidden=(TABS[k].id==='messages');curTab=k;
     }
     TABS.forEach(function(t,i){
       var b=h('button',{class:'tab',type:'button',role:'tab',text:t.label,onclick:function(){select(i)}});
       var p=h('div',{role:'tabpanel'},[t.build()]);
       btns.push(b);pans.push(p);tabs.appendChild(b);panels.appendChild(p);
     });
-    select(0);
+    select(typeof keep==='number'?keep:0);
     $('app').hidden=false;$('savebar').hidden=false;
   }
 
@@ -637,9 +678,13 @@ input[type=file]{padding:8px;font-size:.85rem}
       });
     }
     if(Array.isArray(saved.posts))d.posts=saved.posts;
-    if(saved.site)Object.keys(d.site).forEach(function(k){if(typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
+    if(saved.site){
+      Object.keys(d.site).forEach(function(k){if(typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
+      Object.keys(saved.site).forEach(function(k){if(/.Bn$/.test(k)&&typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
+    }
     if(saved.profile){
       Object.keys(d.profile).forEach(function(k){if(saved.profile[k]!==undefined)d.profile[k]=saved.profile[k]});
+      Object.keys(saved.profile).forEach(function(k){if(/.Bn$/.test(k)&&typeof saved.profile[k]==='string')d.profile[k]=saved.profile[k]});
       if(!Array.isArray(d.profile.stats)||d.profile.stats.length<4)d.profile.stats=DEFAULTS.profile.stats;
     }
     if(saved.social)Object.keys(d.social).forEach(function(k){if(saved.social[k]!==undefined)d.social[k]=saved.social[k]});
