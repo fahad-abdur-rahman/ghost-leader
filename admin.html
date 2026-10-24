@@ -207,6 +207,7 @@ input[type=file]{padding:8px;font-size:.85rem}
       contactText:'Have a project, collaboration or just want to say hello? Feel free to reach out!'
     },
     posts:[],
+    quotes:[],
     skills:[{name:'Leadership'},{name:'Communication'},{name:'Content Creation'},{name:'Web Design'},{name:'Event Management'},{name:'Problem Solving'}]
   };
 
@@ -630,6 +631,14 @@ input[type=file]{padding:8px;font-size:.85rem}
       w.insertBefore(h('p',{class:'hint',text:'Use the language switch at the top to write the English or the Bangla version. Leave an empty line between paragraphs. Start a line with ## to make a heading. Newest date shows first. Press Save at the bottom to publish.'}),w.firstChild);
       return w;
     }},
+    {id:'quotes',label:'Quotes',build:function(){
+      var w=listEditor('quotes',[
+        {key:'text',label:'Quote',name:true,area:true,wide:true},
+        {key:'by',label:'By (author or source)',ph:'Rabindranath Tagore'}
+      ],{text:'',by:''},function(i){return i.text},'+ Add quote');
+      w.insertBefore(h('p',{class:'hint',text:'One quote is shown per day on the home page and changes at midnight. Visitors can tap "Another quote" for more. If you add none here, the built-in quotes are used. Use the language switch at the top for the Bangla version.'}),w.firstChild);
+      return w;
+    }},
     {id:'site',label:'Site texts',build:sitePanel},
     {id:'messages',label:'Messages',build:messagesPanel},
     {id:'profile',label:'Profile & Links',build:profilePanel}
@@ -685,6 +694,7 @@ input[type=file]{padding:8px;font-size:.85rem}
       });
     }
     if(Array.isArray(saved.posts))d.posts=saved.posts;
+    if(Array.isArray(saved.quotes))d.quotes=saved.quotes;
     if(saved.site){
       Object.keys(d.site).forEach(function(k){if(typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
       Object.keys(saved.site).forEach(function(k){if(/.Bn$/.test(k)&&typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
@@ -754,6 +764,7 @@ input[type=file]{padding:8px;font-size:.85rem}
         while(used[sg]){sg=base+'-'+(n++)}
         used[sg]=1;o.slug=sg;
       });
+      out.quotes=(out.quotes||[]).filter(function(x){return x&&(String(x.text||'').trim()||String(x.textBn||'').trim())});
       var usedP={};
       out.posts=(out.posts||[]).filter(function(x){return x&&(String(x.title||'').trim()||String(x.titleBn||'').trim())});
       out.posts.forEach(function(x,i){

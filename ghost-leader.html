@@ -31,7 +31,7 @@ a{color:inherit}
 #dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
 /* flashlight: dark everywhere except around the pointer / finger */
 .dark{position:fixed;inset:0;pointer-events:none;z-index:8;opacity:0;transition:opacity 1.2s;
-  background:radial-gradient(circle 210px at var(--x,50%) var(--y,40%),rgba(0,0,0,0) 0,rgba(0,0,0,.42) 55%,rgba(0,0,0,.9) 100%)}
+  background:radial-gradient(circle var(--lr,210px) at var(--x,50%) var(--y,40%),rgba(0,0,0,0) 0,rgba(0,0,0,.42) 55%,rgba(0,0,0,.9) 100%)}
 body.lit .dark{opacity:1}
 body.nolight .dark{opacity:0}
 /* the whole page flickers like a failing bulb (slow and soft, never a strobe) */
@@ -52,7 +52,7 @@ body.alive main,body.alive .top{animation:bulb 9s linear infinite}
 .calm{display:block;margin-top:16px;background:none;border:0;color:var(--mute);font:inherit;font-size:.88rem;text-decoration:underline;cursor:pointer}
 
 /* ---------- top bar ---------- */
-.top{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 18px 12px;background:linear-gradient(180deg,rgba(0,0,0,.85),transparent)}
+.top{position:fixed;top:0;left:0;right:0;z-index:20;flex-wrap:wrap;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 18px 12px;background:linear-gradient(180deg,rgba(0,0,0,.85),transparent)}
 .top a,.top button{font:600 .86rem inherit;color:var(--ink);text-decoration:none;background:none;border:1px solid rgba(255,255,255,.14);border-radius:99px;padding:7px 14px;cursor:pointer;transition:border-color .2s,color .2s,box-shadow .2s}
 .top a:hover,.top button:hover,.top a:focus-visible,.top button:focus-visible{border-color:var(--g);color:var(--g);box-shadow:0 0 16px rgba(127,221,176,.25);outline:none}
 .top .grp{display:flex;gap:8px;flex-wrap:wrap}
@@ -60,7 +60,7 @@ body.alive main,body.alive .top{animation:bulb 9s linear infinite}
 
 /* ---------- hero ---------- */
 main{position:relative;z-index:5}
-.hero{min-height:100vh;min-height:100svh;display:grid;place-items:center;text-align:center;padding:90px 20px 60px}
+.hero{position:relative;min-height:100vh;min-height:100svh;display:grid;place-items:center;text-align:center;padding:90px 20px 60px}
 .ghost{width:min(210px,52vw);margin:0 auto 10px;display:block;filter:drop-shadow(0 0 34px rgba(127,221,176,.4));animation:float 5.5s ease-in-out infinite}
 @keyframes float{50%{transform:translateY(-16px)}}
 .ghost .eye{fill:#baffdf;filter:drop-shadow(0 0 9px var(--g)) drop-shadow(0 0 18px var(--g))}
@@ -79,6 +79,8 @@ main{position:relative;z-index:5}
 .down{margin-top:30px;color:var(--mute);font-size:.82rem;letter-spacing:.3em;text-transform:uppercase;animation:float 3s ease-in-out infinite}
 
 /* ---------- content ---------- */
+section.s,.end,.hero{overflow-x:clip}
+section.s,.end{position:relative}
 section.s{max-width:880px;margin:0 auto;padding:70px 22px}
 .eyebrow{font-size:.74rem;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--g)}
 h2{margin:10px 0 16px;font-size:clamp(1.6rem,5vw,2.4rem);line-height:1.2}
@@ -110,12 +112,53 @@ footer{position:relative;z-index:5;text-align:center;padding:22px 16px calc(28px
 .face.go{animation:face 3.2s ease-in-out forwards}
 @keyframes face{0%{opacity:0}28%{opacity:1}36%{opacity:1;transform:scale(1.04)}62%{opacity:.9}100%{opacity:0;transform:scale(1.14)}}
 
+
+/* ---------- hidden signs ---------- */
+.sig{position:absolute;z-index:7;width:46px;height:46px;display:grid;place-items:center;font-size:1.6rem;line-height:1;background:none;border:0;color:var(--g);opacity:.32;cursor:pointer;filter:drop-shadow(0 0 8px var(--g));transition:opacity .4s,transform .5s var(--ease)}
+.sig:hover,.sig:focus-visible{opacity:1;transform:scale(1.3) rotate(8deg);outline:none}
+.sig.got{opacity:0;transform:scale(2.4);pointer-events:none}
+.cnt{font:700 .84rem inherit;color:var(--mute);padding:7px 4px;white-space:nowrap}
+.cnt.done{color:var(--g);cursor:pointer;text-decoration:underline}
+.secret{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:24px;text-align:center;background:radial-gradient(circle at 50% 40%,rgba(10,30,22,.96),rgba(0,0,0,.98));opacity:0;visibility:hidden;transition:opacity .9s,visibility .9s}
+.secret.on{opacity:1;visibility:visible}
+.secret .box{max-width:520px}
+.secret .key{font-size:3.2rem;filter:drop-shadow(0 0 22px var(--g));animation:float 3.5s ease-in-out infinite}
+.secret h2{margin:12px 0 10px}
+.secret p{color:#c3d0c9;margin:0 0 18px}
+.secret .sealed{font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:.12em;color:var(--g);margin-bottom:20px}
+
+/* ---------- nightmare mode ---------- */
+.drips{position:fixed;top:0;left:0;right:0;height:0;z-index:12;pointer-events:none;display:none}
+.drips i{position:absolute;top:-4px;width:7px;height:0;background:linear-gradient(180deg,#7d0c1a,#d3263a);border-radius:0 0 8px 8px;animation:drip var(--d,8s) ease-in infinite;animation-delay:var(--dl,0s)}
+@keyframes drip{0%{height:0;opacity:0}8%{opacity:1}58%{height:var(--h,120px)}100%{height:calc(var(--h,120px) + 36px);opacity:0}}
+.cracks{position:fixed;inset:0;width:100%;height:100%;z-index:13;pointer-events:none;opacity:0;transition:opacity 2s;display:block}
+.cracks path{fill:none;stroke:rgba(255,255,255,.4);stroke-width:.25;vector-effect:non-scaling-stroke}
+body.nm{--g:#ff5468;--g2:#d3263a;--lr:150px}
+body.nm .drips{display:block}
+body.nm .cracks{opacity:.55}
+body.nm .fog{background:radial-gradient(40% 30% at 20% 30%,rgba(211,38,58,.24),transparent 70%),radial-gradient(35% 28% at 78% 62%,rgba(150,10,30,.22),transparent 70%),radial-gradient(45% 30% at 50% 90%,rgba(90,0,10,.3),transparent 70%)}
+body.nm .vig{background:radial-gradient(ellipse at center,transparent 20%,rgba(45,0,8,.9) 100%);animation:beat 1.2s ease-in-out infinite}
+@keyframes beat{0%,100%{opacity:.85}12%{opacity:1}24%{opacity:.88}36%{opacity:1}60%{opacity:.85}}
+body.nm .ghost{filter:drop-shadow(0 0 40px rgba(255,60,80,.5))}
+body.nm .ghost .eye{fill:#ffc4cb}
+body.nm .glitch{text-shadow:0 0 26px rgba(255,60,80,.55);letter-spacing:.14em}
+body.nm .glitch::after{color:#ff9aa6}
+body.nm .glitch::before{animation-duration:2.1s}body.nm .glitch::after{animation-duration:1.8s}
+body.nm .whisper{text-shadow:0 0 16px rgba(255,60,80,.85)}
+body.nm .rule{border-color:rgba(255,84,104,.26)}
+body.nm .rule:hover{border-color:rgba(255,84,104,.65);box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 40px rgba(255,60,80,.2)}
+body.nm .gbtn:not(.red){border-color:rgba(255,84,104,.5);background:rgba(255,84,104,.08)}
+body.nm .hero>div{animation:shake 7s linear infinite}
+@keyframes shake{0%,90%,100%{transform:none}91%{transform:translate(-3px,1px)}92%{transform:translate(3px,-2px)}93%{transform:translate(-2px,2px)}94%{transform:translate(2px,0)}95%{transform:translate(-1px,-1px)}96%{transform:none}}
+
 @media(max-width:560px){.top{padding-left:12px;padding-right:12px}.top a,.top button{padding:6px 11px;font-size:.8rem}section.s{padding:56px 18px}}
 @media(prefers-reduced-motion:reduce){
   .fog,.grain,.ghost,.gate .skull,.down,.glitch::before,.glitch::after,.cursor,.ghost .blink{animation:none!important}
   body.alive main,body.alive .top{animation:none}
   .rv{opacity:1;transform:none;filter:none;transition:none}
-  .face,.whisper{display:none}
+  .face,.whisper,.drips{display:none}
+  body.nm .vig,body.nm .hero>div{animation:none}
+  .sig,.secret .key{animation:none}
 }
 </style>
 </head>
@@ -138,6 +181,19 @@ footer{position:relative;z-index:5;text-align:center;padding:22px 16px calc(28px
 <canvas id="dust" aria-hidden="true"></canvas>
 <div class="dark" id="dark" aria-hidden="true"></div>
 <div class="vig" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div>
+<div class="drips" aria-hidden="true"><i style="left:5%;--h:110px;--d:7s;--dl:0s"></i><i style="left:17%;--h:70px;--d:9s;--dl:2s"></i><i style="left:31%;--h:150px;--d:8s;--dl:4s"></i><i style="left:46%;--h:90px;--d:10s;--dl:1s"></i><i style="left:61%;--h:130px;--d:7.5s;--dl:5s"></i><i style="left:74%;--h:80px;--d:9.5s;--dl:3s"></i><i style="left:88%;--h:120px;--d:8.5s;--dl:6s"></i></div>
+<svg class="cracks" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 8 L9 13 L14 10 L22 19 L27 17 M9 13 L8 24 L13 31 M22 19 L26 28 L24 36 M14 10 L18 4"/><path d="M100 90 L91 84 L87 88 L79 79 L75 82 M91 84 L92 74 L86 68 M79 79 L76 70 L79 62 M87 88 L83 96"/><path d="M100 14 L92 17 L88 13 L81 20 M92 17 L94 26"/></svg>
+<div class="secret" id="secret" role="dialog" aria-modal="true" aria-labelledby="secT">
+  <div class="box">
+    <div class="key" aria-hidden="true">🗝️</div>
+    <h2 id="secT" data-en="The door opens…" data-bn="দরজা খুলে গেল…">The door opens…</h2>
+    <p data-en="You found all three hidden signs. Very few ever do. A real Ghost Leader notices what everyone else walks past." data-bn="আপনি তিনটা লুকানো চিহ্নই খুঁজে পেয়েছেন। খুব কম মানুষই পারে। আসল ঘোস্ট লিডার সেটাই দেখে, যা অন্যরা পাশ কাটিয়ে চলে যায়।">You found all three hidden signs. Very few ever do. A real Ghost Leader notices what everyone else walks past.</p>
+    <p class="sealed" data-en="THE SECRET: THE GHOST WAS NEVER ALONE." data-bn="গোপন কথা: ভুতটা কখনো একা ছিল না।">THE SECRET: THE GHOST WAS NEVER ALONE.</p>
+    <p data-en="Every leader you never saw was carried by a team you never counted. Now go and be that team for someone." data-bn="যে নেতাদের আপনি কখনো দেখেননি, তাদের পেছনে ছিল এমন এক দল, যাদের কেউ গোনেনি। এবার আপনি কারও জন্য সেই দল হোন।">Every leader you never saw was carried by a team you never counted. Now go and be that team for someone.</p>
+    <button class="gbtn" id="secClose" type="button" data-en="Close the door" data-bn="দরজা বন্ধ করুন">Close the door</button>
+    <button class="gbtn red" id="secNm" type="button" data-en="💀 Turn on Nightmare" data-bn="💀 নাইটমেয়ার চালু করুন">💀 Turn on Nightmare</button>
+  </div>
+</div>
 
 <div class="face" id="face" aria-hidden="true">
   <svg viewBox="0 0 200 260"><defs><linearGradient id="fg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9fff4"/><stop offset="1" stop-color="#7FDDB0" stop-opacity=".1"/></linearGradient></defs>
@@ -150,6 +206,8 @@ footer{position:relative;z-index:5;text-align:center;padding:22px 16px calc(28px
 <header class="top">
   <a href="index.html" data-en="← Home" data-bn="← হোম">← Home</a>
   <div class="grp">
+    <span class="cnt" id="secCnt" role="status" aria-live="polite" title="Hidden signs">👁 0/3</span>
+    <button id="bNm" type="button" aria-pressed="false" data-en="💀 Nightmare" data-bn="💀 নাইটমেয়ার">💀 Nightmare</button>
     <button id="bLight" type="button" aria-pressed="true" data-en="🔦 Light" data-bn="🔦 আলো">🔦 Light</button>
     <button id="bSound" type="button" aria-pressed="false" data-en="🔊 Sound" data-bn="🔊 সাউন্ড">🔊 Sound</button>
     <button id="bLang" type="button" aria-label="Switch language">বাংলা</button>
@@ -173,6 +231,7 @@ footer{position:relative;z-index:5;text-align:center;padding:22px 16px calc(28px
       <p class="sub"><span id="typed"></span><span class="cursor" aria-hidden="true"></span></p>
       <div class="down" aria-hidden="true">▼</div>
     </div>
+    <button class="sig" data-id="a" style="left:9%;bottom:14%" type="button" aria-label="A hidden sign" data-ar-en="A hidden sign" data-ar-bn="একটা লুকানো চিহ্ন">🕯️</button>
   </section>
 
   <section class="s rv">
@@ -189,10 +248,12 @@ footer{position:relative;z-index:5;text-align:center;padding:22px 16px calc(28px
       <div class="rule"><div class="n">02</div><h3 data-en="Never leave anyone in the dark" data-bn="কাউকে অন্ধকারে ফেলে যেয়ো না">Never leave anyone in the dark</h3><p data-en="Hold the light for your team, even when you stand outside it." data-bn="নিজে আলোর বাইরে থাকলেও দলের জন্য আলো ধরে রাখো।">Hold the light for your team, even when you stand outside it.</p></div>
       <div class="rule"><div class="n">03</div><h3 data-en="Haunt the problem" data-bn="সমস্যাকে তাড়া করো">Haunt the problem</h3><p data-en="Return again and again, until the problem is gone for good." data-bn="সমস্যা চিরতরে শেষ না হওয়া পর্যন্ত বারবার ফিরে এসো।">Return again and again, until the problem is gone for good.</p></div>
     </div>
+    <button class="sig" data-id="b" style="right:5%;top:46%" type="button" aria-label="A hidden sign">👁️</button>
     <blockquote class="quote" data-en="“A ghost never dies. Ideas that change lives never do either.”" data-bn="“ভুত কখনো মরে না। জীবন বদলে দেওয়া ধারণাও কখনো মরে না।”">“A ghost never dies. Ideas that change lives never do either.”</blockquote>
   </section>
 
   <section class="end rv">
+    <button class="sig" data-id="c" style="left:14%;bottom:18%" type="button" aria-label="A hidden sign">🗝️</button>
     <h2 data-en="Still here?" data-bn="এখনো আছেন?">Still here?</h2>
     <p class="lead" data-en="Then you are braver than most. Go back to the living world, or meet the human behind the ghost." data-bn="তাহলে আপনি অনেকের চেয়ে সাহসী। জীবিতদের জগতে ফিরে যান, অথবা ভুতের পেছনের মানুষটার সাথে পরিচিত হন।">Then you are braver than most. Go back to the living world, or meet the human behind the ghost.</p>
     <p><a class="gbtn" href="about.html" data-en="Meet the human" data-bn="মানুষটাকে চিনুন">Meet the human</a> <a class="gbtn red" href="index.html" data-en="Back to the living" data-bn="জীবিতদের জগতে">Back to the living</a></p>
@@ -286,14 +347,14 @@ footer{position:relative;z-index:5;text-align:center;padding:22px 16px calc(28px
       var wg=ac.createGain();wg.gain.value=.05;var lfo=ac.createOscillator(),lg=ac.createGain();lfo.frequency.value=.11;lg.gain.value=260;
       lfo.connect(lg);lg.connect(bp.frequency);n.connect(bp);bp.connect(wg);wg.connect(master);n.start();lfo.start();nodes.push(n,lfo);
       master.gain.linearRampToValueAtTime(.9,ac.currentTime+3);
-      soundOn=true;scheduleCreak();
+      soundOn=true;scheduleCreak();heartbeat();
     }catch(e){soundOn=false}
     $('bSound').setAttribute('aria-pressed',soundOn?'true':'false');
   }
   function stopSound(){
     if(!ac||!master)return;var m=master;m.gain.cancelScheduledValues(ac.currentTime);m.gain.linearRampToValueAtTime(0,ac.currentTime+.8);
     var ns=nodes;nodes=[];setTimeout(function(){ns.forEach(function(n){try{n.stop()}catch(e){}});try{m.disconnect()}catch(e){}},1000);
-    soundOn=false;clearTimeout(creakT);$('bSound').setAttribute('aria-pressed','false');
+    soundOn=false;clearTimeout(creakT);clearTimeout(beatT);$('bSound').setAttribute('aria-pressed','false');
   }
   function scheduleCreak(){
     clearTimeout(creakT);creakT=setTimeout(function(){
@@ -312,11 +373,74 @@ footer{position:relative;z-index:5;text-align:center;padding:22px 16px calc(28px
   var whT=0;
   function whisper(){
     var d=document.createElement('div');d.className='whisper';d.setAttribute('aria-hidden','true');
-    var L=WH[LANG];d.textContent=L[Math.floor(Math.random()*L.length)];
+    var L=(nm&&Math.random()<.75)?NW[LANG]:WH[LANG];d.textContent=L[Math.floor(Math.random()*L.length)];
     d.style.left=(6+Math.random()*60)+'vw';d.style.top=(12+Math.random()*70)+'vh';
     document.body.appendChild(d);setTimeout(function(){d.remove()},6200);
-    whT=setTimeout(whisper,3800+Math.random()*5200);
+    whT=setTimeout(whisper,nm?1800+Math.random()*2800:3800+Math.random()*5200);
   }
+
+  /* ---------- hidden signs (find all three) ---------- */
+  var found=[];try{found=JSON.parse(localStorage.getItem('gl-found')||'[]')}catch(e){}
+  var secEl=$('secret');
+  function openSecret(){secEl.classList.add('on');try{$('secClose').focus()}catch(e){}}
+  function showCount(){
+    var c=$('secCnt');c.textContent='👁 '+found.length+'/3';
+    c.classList.toggle('done',found.length>=3);
+    if(found.length>=3){c.setAttribute('role','button');c.tabIndex=0}
+    [].forEach.call(document.querySelectorAll('.sig'),function(b){if(found.indexOf(b.getAttribute('data-id'))>-1)b.classList.add('got')});
+  }
+  [].forEach.call(document.querySelectorAll('.sig'),function(b){
+    b.addEventListener('click',function(){
+      var id=b.getAttribute('data-id');if(found.indexOf(id)<0){found.push(id);try{localStorage.setItem('gl-found',JSON.stringify(found))}catch(e){}}
+      b.classList.add('got');showCount();blip();
+      if(found.length>=3)setTimeout(openSecret,900);
+      else say(LANG==='bn'?'একটা পেলে… আরও '+(3-found.length)+'টা লুকিয়ে আছে':'one found… '+(3-found.length)+' more hide in the dark');
+    });
+  });
+  $('secCnt').addEventListener('click',function(){if(found.length>=3)openSecret()});
+  $('secCnt').addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&found.length>=3){e.preventDefault();openSecret()}});
+  $('secClose').addEventListener('click',function(){secEl.classList.remove('on')});
+  $('secNm').addEventListener('click',function(){secEl.classList.remove('on');setNm(true)});
+  addEventListener('keydown',function(e){if(e.key==='Escape')secEl.classList.remove('on')});
+  function say(t){
+    var d=document.createElement('div');d.className='whisper';d.setAttribute('aria-hidden','true');d.textContent=t;
+    d.style.left='50%';d.style.top='46vh';d.style.transform='translateX(-50%)';document.body.appendChild(d);setTimeout(function(){d.remove()},6200);
+  }
+  function blip(){
+    if(!soundOn||!ac||!master)return;
+    var t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(520,t);o.frequency.exponentialRampToValueAtTime(190,t+.7);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.2,t+.04);g.gain.exponentialRampToValueAtTime(.0001,t+.9);o.connect(g);g.connect(master);o.start(t);o.stop(t+1);
+  }
+  /* poke the ghost 5 times, or type "ghost" */
+  var pokes=0;
+  ghost.addEventListener('click',function(){pokes++;if(pokes>=5){pokes=0;say(LANG==='bn'?'খোঁচানো বন্ধ করো…':'stop poking me…');ghost.style.transition='transform .15s';ghost.style.transform='translateX(6px) rotate(3deg)';setTimeout(function(){ghost.style.transform=''},150)}});
+  var typed='';addEventListener('keydown',function(e){if(e.key.length!==1)return;typed=(typed+e.key.toLowerCase()).slice(-5);if(typed==='ghost'){say(LANG==='bn'?'আমাকে ডাকলে?':'you called?')}});
+
+  /* ---------- nightmare mode ---------- */
+  var nm=false,beatT=0,faceT=0;
+  var NW={en:['run…','you cannot leave','it is right behind you','do not turn around','too late…','I can hear you breathing'],
+          bn:['পালাও…','তুমি আর ফিরতে পারবে না','ও ঠিক তোমার পেছনে','পেছনে তাকিও না','অনেক দেরি হয়ে গেছে…','আমি তোমার নিঃশ্বাস শুনতে পাচ্ছি']};
+  function heartbeat(){
+    clearTimeout(beatT);
+    if(!nm||!soundOn||!ac||!master)return;
+    var t=ac.currentTime;
+    [0,.3].forEach(function(dt,i){var o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(70,t+dt);o.frequency.exponentialRampToValueAtTime(38,t+dt+.18);
+      g.gain.setValueAtTime(.0001,t+dt);g.gain.exponentialRampToValueAtTime(i?.3:.5,t+dt+.03);g.gain.exponentialRampToValueAtTime(.0001,t+dt+.3);o.connect(g);g.connect(master);o.start(t+dt);o.stop(t+dt+.35)});
+    beatT=setTimeout(heartbeat,1200);
+  }
+  function scareFace(){
+    clearTimeout(faceT);
+    if(!nm||reduce)return;
+    var f=$('face');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');
+    faceT=setTimeout(scareFace,30000+Math.random()*20000);
+  }
+  function setNm(on){
+    nm=!!on;body.classList.toggle('nm',nm);$('bNm').setAttribute('aria-pressed',nm?'true':'false');
+    try{localStorage.setItem('gl-nm',nm?'1':'0')}catch(e){}
+    clearTimeout(beatT);clearTimeout(faceT);
+    if(nm){heartbeat();if(!reduce)faceT=setTimeout(scareFace,12000)}
+  }
+  $('bNm').addEventListener('click',function(){setNm(!nm)});
 
   /* ---------- scroll reveal ---------- */
   if('IntersectionObserver' in window){
@@ -336,6 +460,8 @@ footer{position:relative;z-index:5;text-align:center;padding:22px 16px calc(28px
     if(opts.sound)startSound();
   }
   document.body.style.overflow='hidden';
+  try{if(localStorage.getItem('gl-nm')==='1')setNm(true)}catch(e){}
+  showCount();
   $('enter').addEventListener('click',function(){enter({})});
   $('enterSound').addEventListener('click',function(){enter({sound:true})});
   $('calm').addEventListener('click',function(){enter({calm:true})});

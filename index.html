@@ -409,6 +409,9 @@ html{background:var(--bg)}
   .blob,.track,.chipf,.pill i,.proj.pop{animation:none}
   html{scroll-behavior:auto}
 }
+.qod-next{margin-top:14px;background:none;border:1px solid var(--border);border-radius:99px;padding:7px 16px;font:600 .85rem inherit;color:var(--green-text);cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+.qod-next:hover{border-color:var(--green);background:color-mix(in srgb,var(--green) 10%,transparent);transform:translateY(-2px)}
+.qod-next[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -653,6 +656,19 @@ html{background:var(--bg)}
       <blockquote class="aq-ar" lang="ar" dir="rtl" data-no-i18n>إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّىٰ يُغَيِّرُوا مَا بِأَنفُسِهِمْ</blockquote>
       <p class="aq-tr">“Indeed, Allah will not change the condition of a people until they change what is in themselves.”</p>
       <figcaption>Surah Ar-Ra’d · 13:11</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- QUOTE OF THE DAY (one quote per day; edit in Admin > Quotes) -->
+<section class="ayah" id="qod" aria-label="Quote of the day" style="padding:8px 0 28px">
+  <div class="wrap reveal">
+    <figure class="aq">
+      <div class="orn" aria-hidden="true"><i></i><b>✦</b><i></i></div>
+      <div class="eyebrow">Quote of the Day</div>
+      <p class="aq-tr" id="qodText"></p>
+      <figcaption id="qodBy"></figcaption>
+      <button type="button" class="qod-next" id="qodNext">↻ Another quote</button>
     </figure>
   </div>
 </section>
@@ -1009,9 +1025,45 @@ window.faContent=(async function(){
   }
 
   var CK='fa-content-v1';
+
+  /* ---------- quote of the day ---------- */
+  var QDEF=[
+    {text:'Faith is the bird that feels the light when the dawn is still dark.',textBn:'\u09ac\u09bf\u09b6\u09cd\u09ac\u09be\u09b8 \u09b9\u09b2\u09cb \u09b8\u09c7\u0987 \u09aa\u09be\u0996\u09bf, \u09af\u09c7 \u09ad\u09cb\u09b0\u09c7\u09b0 \u0985\u09a8\u09cd\u09a7\u0995\u09be\u09b0\u09c7\u0993 \u0986\u09b2\u09cb \u0985\u09a8\u09c1\u09ad\u09ac \u0995\u09b0\u09c7\u0964',by:'Rabindranath Tagore',byBn:'\u09b0\u09ac\u09c0\u09a8\u09cd\u09a6\u09cd\u09b0\u09a8\u09be\u09a5 \u09a0\u09be\u0995\u09c1\u09b0'},
+    {text:'Let me not pray to be sheltered from dangers, but to be fearless in facing them.',textBn:'\u09ac\u09bf\u09aa\u09a6 \u09a5\u09c7\u0995\u09c7 \u09b0\u0995\u09cd\u09b7\u09be \u09aa\u09c7\u09a4\u09c7 \u09a8\u09af\u09bc, \u09ac\u09bf\u09aa\u09a6\u09c7\u09b0 \u09ae\u09c1\u0996\u09cb\u09ae\u09c1\u0996\u09bf \u09a8\u09bf\u09b0\u09cd\u09ad\u09c0\u0995 \u09b9\u09a4\u09c7 \u0986\u09ae\u09be\u0995\u09c7 \u09b6\u0995\u09cd\u09a4\u09bf \u09a6\u09be\u0993\u0964',by:'Rabindranath Tagore',byBn:'\u09b0\u09ac\u09c0\u09a8\u09cd\u09a6\u09cd\u09b0\u09a8\u09be\u09a5 \u09a0\u09be\u0995\u09c1\u09b0'},
+    {text:'Darkness cannot drive out darkness; only light can do that.',textBn:'\u0985\u09a8\u09cd\u09a7\u0995\u09be\u09b0 \u09a6\u09bf\u09af\u09bc\u09c7 \u0985\u09a8\u09cd\u09a7\u0995\u09be\u09b0 \u09a4\u09be\u09a1\u09bc\u09be\u09a8\u09cb \u09af\u09be\u09af\u09bc \u09a8\u09be; \u09b6\u09c1\u09a7\u09c1 \u0986\u09b2\u09cb\u0987 \u09a4\u09be \u09aa\u09be\u09b0\u09c7\u0964',by:'Martin Luther King Jr.',byBn:'\u09ae\u09be\u09b0\u09cd\u099f\u09bf\u09a8 \u09b2\u09c1\u09a5\u09be\u09b0 \u0995\u09bf\u0982 \u099c\u09c1\u09a8\u09bf\u09af\u09bc\u09b0'},
+    {text:'Alone we can do so little; together we can do so much.',textBn:'\u098f\u0995\u09be \u0986\u09ae\u09b0\u09be \u098f\u09a4\u099f\u09c1\u0995\u09c1\u0987 \u0995\u09b0\u09a4\u09c7 \u09aa\u09be\u09b0\u09bf; \u098f\u0995\u09b8\u09be\u09a5\u09c7 \u0986\u09ae\u09b0\u09be \u0995\u09a4 \u0995\u09bf\u099b\u09c1 \u0995\u09b0\u09a4\u09c7 \u09aa\u09be\u09b0\u09bf\u0964',by:'Helen Keller',byBn:'\u09b9\u09c7\u09b2\u09c7\u09a8 \u0995\u09c7\u09b2\u09be\u09b0'},
+    {text:'Dream, dream, dream. Dreams transform into thoughts, and thoughts result in action.',textBn:'\u09b8\u09cd\u09ac\u09aa\u09cd\u09a8 \u09a6\u09c7\u0996\u09cb, \u09b8\u09cd\u09ac\u09aa\u09cd\u09a8 \u09a6\u09c7\u0996\u09cb, \u09b8\u09cd\u09ac\u09aa\u09cd\u09a8 \u09a6\u09c7\u0996\u09cb\u0964 \u09b8\u09cd\u09ac\u09aa\u09cd\u09a8 \u099a\u09bf\u09a8\u09cd\u09a4\u09be\u09af\u09bc \u09b0\u09c2\u09aa \u09a8\u09c7\u09af\u09bc, \u0986\u09b0 \u099a\u09bf\u09a8\u09cd\u09a4\u09be \u09a5\u09c7\u0995\u09c7 \u0995\u09be\u099c \u099c\u09a8\u09cd\u09ae\u09be\u09af\u09bc\u0964',by:'A. P. J. Abdul Kalam',byBn:'\u098f. \u09aa\u09bf. \u099c\u09c7. \u0986\u09ac\u09a6\u09c1\u09b2 \u0995\u09be\u09b2\u09be\u09ae'},
+    {text:'Indeed, with hardship comes ease.',textBn:'\u09a8\u09bf\u09b6\u09cd\u099a\u09af\u09bc\u0987 \u0995\u09b7\u09cd\u099f\u09c7\u09b0 \u09b8\u09be\u09a5\u09c7\u0987 \u09b8\u09cd\u09ac\u09b8\u09cd\u09a4\u09bf \u0986\u099b\u09c7\u0964',by:'Quran 94:6',byBn:'\u0995\u09c1\u09b0\u0986\u09a8 \u09e8\u09ea:\u09ec'},
+    {text:'A human being will have only what they strive for.',textBn:'\u09ae\u09be\u09a8\u09c1\u09b7 \u09a4\u09be-\u0987 \u09aa\u09be\u09af\u09bc, \u09af\u09be\u09b0 \u099c\u09a8\u09cd\u09af \u09b8\u09c7 \u099a\u09c7\u09b7\u09cd\u099f\u09be \u0995\u09b0\u09c7\u0964',by:'Quran 53:39',byBn:'\u0995\u09c1\u09b0\u0986\u09a8 \u09eb\u09e9:\u09e9\u09ef'},
+    {text:'Allah does not burden a soul beyond what it can bear.',textBn:'\u0986\u09b2\u09cd\u09b2\u09be\u09b9 \u0995\u09cb\u09a8\u09cb \u09ae\u09be\u09a8\u09c1\u09b7\u09c7\u09b0 \u0993\u09aa\u09b0 \u09a4\u09be\u09b0 \u09b8\u09be\u09a7\u09cd\u09af\u09c7\u09b0 \u09ac\u09be\u0987\u09b0\u09c7 \u09ac\u09cb\u099d\u09be \u099a\u09be\u09aa\u09be\u09a8 \u09a8\u09be\u0964',by:'Quran 2:286',byBn:'\u0995\u09c1\u09b0\u0986\u09a8 \u09e8:\u09e8\u09ee\u09ec'},
+    {text:'Patience bears sweet fruit.',textBn:'\u09b8\u09ac\u09c1\u09b0\u09c7 \u09ae\u09c7\u0993\u09af\u09bc\u09be \u09ab\u09b2\u09c7\u0964',by:'Bangla proverb',byBn:'\u09ac\u09be\u0982\u09b2\u09be \u09aa\u09cd\u09b0\u09ac\u09be\u09a6'},
+    {text:'Lead like a lamp: never loud, always there.',textBn:'\u09aa\u09cd\u09b0\u09a6\u09c0\u09aa\u09c7\u09b0 \u09ae\u09a4\u09cb \u09a8\u09c7\u09a4\u09c3\u09a4\u09cd\u09ac \u09a6\u09be\u0993: \u0995\u0996\u09a8\u09cb \u0989\u099a\u09cd\u099a\u09b8\u09cd\u09ac\u09b0\u09c7 \u09a8\u09af\u09bc, \u0995\u09bf\u09a8\u09cd\u09a4\u09c1 \u09b8\u09ac\u09b8\u09ae\u09af\u09bc \u09aa\u09be\u09b6\u09c7\u0964',by:'Ghost Leader',byBn:'\u0998\u09cb\u09b8\u09cd\u099f \u09b2\u09bf\u09a1\u09be\u09b0'},
+    {text:'A leader who builds other leaders never really disappears.',textBn:'\u09af\u09c7 \u09a8\u09c7\u09a4\u09be \u0985\u09a8\u09cd\u09af \u09a8\u09c7\u09a4\u09be \u0997\u09a1\u09bc\u09c7 \u09a4\u09cb\u09b2\u09c7, \u09b8\u09c7 \u0995\u0996\u09a8\u09cb \u09b8\u09a4\u09cd\u09af\u09bf\u0987 \u09b9\u09be\u09b0\u09bf\u09af\u09bc\u09c7 \u09af\u09be\u09af\u09bc \u09a8\u09be\u0964',by:'Ghost Leader',byBn:'\u0998\u09cb\u09b8\u09cd\u099f \u09b2\u09bf\u09a1\u09be\u09b0'},
+    {text:'Small steps in the dark still lead to the light.',textBn:'\u0985\u09a8\u09cd\u09a7\u0995\u09be\u09b0\u09c7 \u099b\u09cb\u099f \u099b\u09cb\u099f \u09aa\u09a6\u0995\u09cd\u09b7\u09c7\u09aa\u0993 \u0986\u09b2\u09cb\u09b0 \u09a6\u09bf\u0995\u09c7\u0987 \u09a8\u09bf\u09af\u09bc\u09c7 \u09af\u09be\u09af\u09bc\u0964',by:'Ghost Leader',byBn:'\u0998\u09cb\u09b8\u09cd\u099f \u09b2\u09bf\u09a1\u09be\u09b0'},
+    {text:'Do not wait for the stage. Start where your people are.',textBn:'\u09ae\u099e\u09cd\u099a\u09c7\u09b0 \u0985\u09aa\u09c7\u0995\u09cd\u09b7\u09be \u0995\u09cb\u09b0\u09cb \u09a8\u09be\u0964 \u09af\u09c7\u0996\u09be\u09a8\u09c7 \u09a4\u09cb\u09ae\u09be\u09b0 \u09ae\u09be\u09a8\u09c1\u09b7 \u0986\u099b\u09c7, \u09b8\u09c7\u0996\u09be\u09a8 \u09a5\u09c7\u0995\u09c7\u0987 \u09b6\u09c1\u09b0\u09c1 \u0995\u09b0\u09cb\u0964',by:'Ghost Leader',byBn:'\u0998\u09cb\u09b8\u09cd\u099f \u09b2\u09bf\u09a1\u09be\u09b0'},
+    {text:'Youth is not an age; it is a decision to build.',textBn:'\u09a4\u09be\u09b0\u09c1\u09a3\u09cd\u09af \u09ac\u09af\u09bc\u09b8 \u09a8\u09af\u09bc; \u098f\u099f\u09be \u0997\u09a1\u09bc\u09c7 \u09a4\u09cb\u09b2\u09be\u09b0 \u09b8\u09bf\u09a6\u09cd\u09a7\u09be\u09a8\u09cd\u09a4\u0964',by:'Ghost Leader',byBn:'\u0998\u09cb\u09b8\u09cd\u099f \u09b2\u09bf\u09a1\u09be\u09b0'}
+  ];
+  var qodShift=0;
+  function renderQuote(list){
+    var el=document.getElementById('qodText'),by=document.getElementById('qodBy');
+    if(!el||!by)return;
+    var bn=SH.isBn();
+    var src=(Array.isArray(list)?list:[]).filter(function(q){return q&&String(q.text||'').trim()});
+    if(!src.length)src=QDEF.map(function(q){return bn?{text:q.textBn,by:q.byBn}:{text:q.text,by:q.by}});
+    var day=Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5);
+    var q=src[(day+qodShift)%src.length];
+    el.textContent='\u201c'+String(q.text).trim()+'\u201d';
+    by.textContent=q.by?String(q.by).trim():'';
+    by.hidden=!q.by;
+    var nb=document.getElementById('qodNext');if(nb)nb.hidden=src.length<2;
+    window.__qodN=src.length;
+  }
+  (function(){var nb=document.getElementById('qodNext');if(nb)nb.addEventListener('click',function(){qodShift=(qodShift+1)%(window.__qodN||1);renderQuote(LASTQ)})})();
+  var LASTQ=null;
   var LAST=null;
   function renderAll(raw){
     LAST=raw;var d=SH.localize(raw);
+    LASTQ=d.quotes;renderQuote(d.quotes);
     renderProfile(d.profile);
     renderOrgs(d.orgs);
     renderProjects(d.projects);
