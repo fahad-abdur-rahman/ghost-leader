@@ -59,7 +59,7 @@
   wrap.appendChild(top); wrap.appendChild(bot); ft.appendChild(wrap);
 
   /* Explore links */
-  [['Home', 'index.html#home'], ['About', 'about.html'], ['Blog', 'blog.html'], ['Projects', 'index.html#projects'], ['Contact', 'contact.html']]
+  [['Home', 'index.html#home'], ['About', 'about.html'], ['Blog', 'blog.html'], ['👻 Ghost Leader', 'ghost-leader.html'], ['Projects', 'index.html#projects'], ['Contact', 'contact.html']]
     .forEach(function (x) { cE.lastChild.appendChild(a(x[1], x[0])); });
 
   /* Organizations + Connect: copy from the site menu (which is filled from the admin panel) */

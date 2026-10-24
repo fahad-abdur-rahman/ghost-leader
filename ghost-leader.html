@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ghost Leader | Fahad Abdur Rahman</title>
+<meta name="description" content="Ghost Leader — the leader you never see, but always feel. Enter if you dare.">
+<meta name="author" content="Fahad Abdur Rahman">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://fahad-abdur-rahman.github.io/ghost-leader/ghost-leader.html">
+<meta name="theme-color" content="#040605">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23040605'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle'%3E%F0%9F%91%BB%3C/text%3E%3C/svg%3E">
+<noscript><style>.gate{display:none!important}.dark{display:none!important}</style></noscript>
+<style>
+:root{--bg:#040605;--ink:#d9e4de;--mute:#8d9a93;--g:#7FDDB0;--g2:#3FAE7C;--r:#d3263a;--ease:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Bengali",sans-serif;line-height:1.7;overflow-x:hidden;min-height:100vh}
+a{color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- atmosphere ---------- */
+.fog{position:fixed;inset:-20%;pointer-events:none;z-index:0;opacity:.55;mix-blend-mode:screen;
+  background:radial-gradient(40% 30% at 20% 30%,rgba(127,221,176,.16),transparent 70%),radial-gradient(35% 28% at 78% 62%,rgba(63,174,124,.14),transparent 70%),radial-gradient(45% 30% at 50% 90%,rgba(190,210,200,.1),transparent 70%);
+  animation:drift 26s ease-in-out infinite alternate}
+.fog.b{opacity:.4;animation-duration:38s;animation-direction:alternate-reverse;transform:scale(1.2)}
+@keyframes drift{from{transform:translate3d(-4%,-2%,0) scale(1.05)}to{transform:translate3d(5%,3%,0) scale(1.18)}}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:9;background:radial-gradient(ellipse at center,transparent 38%,rgba(0,0,0,.78) 100%)}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:10;opacity:.11;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1.4s steps(5) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}100%{transform:translate(3%,3%)}}
+#dust{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+/* flashlight: dark everywhere except around the pointer / finger */
+.dark{position:fixed;inset:0;pointer-events:none;z-index:8;opacity:0;transition:opacity 1.2s;
+  background:radial-gradient(circle 210px at var(--x,50%) var(--y,40%),rgba(0,0,0,0) 0,rgba(0,0,0,.42) 55%,rgba(0,0,0,.9) 100%)}
+body.lit .dark{opacity:1}
+body.nolight .dark{opacity:0}
+/* the whole page flickers like a failing bulb (slow and soft, never a strobe) */
+body.alive main,body.alive .top{animation:bulb 9s linear infinite}
+@keyframes bulb{0%,100%{opacity:1}41%{opacity:1}42%{opacity:.82}43%{opacity:1}44%{opacity:.9}45%{opacity:1}78%{opacity:1}79%{opacity:.86}80%{opacity:1}}
+
+/* ---------- gate ---------- */
+.gate{position:fixed;inset:0;z-index:50;background:#000;display:grid;place-items:center;text-align:center;padding:24px;transition:opacity 1.1s ease,visibility 1.1s}
+.gate.out{opacity:0;visibility:hidden;pointer-events:none}
+.gate .box{max-width:460px}
+.gate .skull{font-size:3.4rem;filter:drop-shadow(0 0 18px rgba(127,221,176,.6));animation:float 4s ease-in-out infinite}
+.gate h1{margin:14px 0 6px;font-size:clamp(1.6rem,6vw,2.3rem);letter-spacing:.02em}
+.gate p{margin:0 0 22px;color:var(--mute)}
+.gbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 26px;margin:5px;border-radius:99px;border:1px solid rgba(127,221,176,.5);background:rgba(127,221,176,.08);color:var(--g);font:700 1rem inherit;cursor:pointer;transition:transform .25s var(--ease),background .25s,box-shadow .25s}
+.gbtn:hover,.gbtn:focus-visible{background:rgba(127,221,176,.18);box-shadow:0 0 28px rgba(127,221,176,.35);transform:translateY(-2px);outline:none}
+.gbtn.red{border-color:rgba(211,38,58,.6);background:rgba(211,38,58,.1);color:#ff6b7d}
+.gbtn.red:hover,.gbtn.red:focus-visible{background:rgba(211,38,58,.2);box-shadow:0 0 28px rgba(211,38,58,.35)}
+.calm{display:block;margin-top:16px;background:none;border:0;color:var(--mute);font:inherit;font-size:.88rem;text-decoration:underline;cursor:pointer}
+
+/* ---------- top bar ---------- */
+.top{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 18px 12px;background:linear-gradient(180deg,rgba(0,0,0,.85),transparent)}
+.top a,.top button{font:600 .86rem inherit;color:var(--ink);text-decoration:none;background:none;border:1px solid rgba(255,255,255,.14);border-radius:99px;padding:7px 14px;cursor:pointer;transition:border-color .2s,color .2s,box-shadow .2s}
+.top a:hover,.top button:hover,.top a:focus-visible,.top button:focus-visible{border-color:var(--g);color:var(--g);box-shadow:0 0 16px rgba(127,221,176,.25);outline:none}
+.top .grp{display:flex;gap:8px;flex-wrap:wrap}
+.top button[aria-pressed="true"]{border-color:var(--g);color:var(--g)}
+
+/* ---------- hero ---------- */
+main{position:relative;z-index:5}
+.hero{min-height:100vh;min-height:100svh;display:grid;place-items:center;text-align:center;padding:90px 20px 60px}
+.ghost{width:min(210px,52vw);margin:0 auto 10px;display:block;filter:drop-shadow(0 0 34px rgba(127,221,176,.4));animation:float 5.5s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-16px)}}
+.ghost .eye{fill:#baffdf;filter:drop-shadow(0 0 9px var(--g)) drop-shadow(0 0 18px var(--g))}
+.ghost .blink{transform-origin:center;transform-box:fill-box;animation:blink 6.5s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.06)}}
+.glitch{position:relative;margin:6px 0 4px;font-weight:800;letter-spacing:.1em;font-size:clamp(2.3rem,11vw,5.6rem);line-height:1.05;text-transform:uppercase;color:#eaf5ef;text-shadow:0 0 22px rgba(127,221,176,.35)}
+.glitch::before,.glitch::after{content:attr(data-t);position:absolute;left:0;right:0;top:0;pointer-events:none;overflow:hidden}
+.glitch::before{color:var(--r);transform:translate(3px,0);clip-path:inset(0 0 62% 0);animation:gl1 4.2s steps(1) infinite;opacity:.8}
+.glitch::after{color:var(--g);transform:translate(-3px,0);clip-path:inset(60% 0 0 0);animation:gl2 3.6s steps(1) infinite;opacity:.8}
+@keyframes gl1{0%,88%,100%{transform:translate(0,0);opacity:0}90%{transform:translate(5px,-2px);opacity:.85}93%{transform:translate(-4px,1px);opacity:.85}96%{transform:translate(0,0);opacity:0}}
+@keyframes gl2{0%,70%,100%{transform:translate(0,0);opacity:0}72%{transform:translate(-5px,2px);opacity:.85}75%{transform:translate(4px,-1px);opacity:.85}78%{transform:translate(0,0);opacity:0}}
+.sub{margin:10px auto 0;max-width:560px;color:var(--mute);font-size:1.08rem;min-height:3.4em}
+.sub b{color:var(--g);font-weight:700}
+.cursor{display:inline-block;width:.55em;height:1.05em;background:var(--g);vertical-align:-.15em;margin-left:3px;animation:cur 1s steps(1) infinite}
+@keyframes cur{50%{opacity:0}}
+.down{margin-top:30px;color:var(--mute);font-size:.82rem;letter-spacing:.3em;text-transform:uppercase;animation:float 3s ease-in-out infinite}
+
+/* ---------- content ---------- */
+section.s{max-width:880px;margin:0 auto;padding:70px 22px}
+.eyebrow{font-size:.74rem;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--g)}
+h2{margin:10px 0 16px;font-size:clamp(1.6rem,5vw,2.4rem);line-height:1.2}
+.lead{font-size:1.1rem;color:#c3d0c9}
+.rules{display:grid;gap:16px;margin-top:26px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.rule{padding:24px;border:1px solid rgba(127,221,176,.18);border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));backdrop-filter:blur(4px);transition:transform .4s var(--ease),border-color .4s,box-shadow .4s}
+.rule:hover{transform:translateY(-6px);border-color:rgba(127,221,176,.55);box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 40px rgba(127,221,176,.15)}
+.rule .n{font-size:2.4rem;font-weight:800;color:transparent;-webkit-text-stroke:1px rgba(127,221,176,.55);line-height:1}
+.rule h3{margin:10px 0 6px;font-size:1.15rem}
+.rule p{margin:0;color:var(--mute);font-size:.95rem}
+.quote{margin:34px 0 0;padding:26px 26px;border-left:3px solid var(--r);background:rgba(211,38,58,.06);border-radius:0 16px 16px 0;font-size:1.15rem;font-style:italic;color:#e8d5d8}
+.end{text-align:center;padding:50px 22px 90px}
+.end a.gbtn{text-decoration:none}
+footer{position:relative;z-index:5;text-align:center;padding:22px 16px calc(28px + env(safe-area-inset-bottom));color:var(--mute);font-size:.85rem;border-top:1px solid rgba(255,255,255,.08)}
+
+/* reveal on scroll (slow fade out of the darkness) */
+.rv{opacity:0;transform:translateY(26px);filter:blur(6px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease),filter 1s var(--ease)}
+.rv.in{opacity:1;transform:none;filter:none}
+.no-js .rv{opacity:1;transform:none;filter:none}
+
+/* whispers drifting in the fog */
+.whisper{position:fixed;z-index:11;pointer-events:none;font-style:italic;letter-spacing:.08em;color:rgba(190,230,210,.0);text-shadow:0 0 14px rgba(127,221,176,.6);font-size:clamp(1rem,3.4vw,1.5rem);animation:whisper 6s ease-in-out forwards;white-space:nowrap}
+@keyframes whisper{0%{opacity:0;transform:translateY(14px) scale(.96);filter:blur(6px)}25%{opacity:.75;filter:blur(0)}70%{opacity:.6}100%{opacity:0;transform:translateY(-26px) scale(1.04);filter:blur(5px)}}
+.whisper{opacity:0}
+
+/* one slow, silent scare */
+.face{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:radial-gradient(circle,rgba(0,0,0,.2),rgba(0,0,0,.92));opacity:0;pointer-events:none}
+.face svg{width:min(78vw,480px);filter:drop-shadow(0 0 60px rgba(127,221,176,.6))}
+.face.go{animation:face 3.2s ease-in-out forwards}
+@keyframes face{0%{opacity:0}28%{opacity:1}36%{opacity:1;transform:scale(1.04)}62%{opacity:.9}100%{opacity:0;transform:scale(1.14)}}
+
+@media(max-width:560px){.top{padding-left:12px;padding-right:12px}.top a,.top button{padding:6px 11px;font-size:.8rem}section.s{padding:56px 18px}}
+@media(prefers-reduced-motion:reduce){
+  .fog,.grain,.ghost,.gate .skull,.down,.glitch::before,.glitch::after,.cursor,.ghost .blink{animation:none!important}
+  body.alive main,body.alive .top{animation:none}
+  .rv{opacity:1;transform:none;filter:none;transition:none}
+  .face,.whisper{display:none}
+}
+</style>
+</head>
+<body class="no-js">
+<script>document.body.classList.remove('no-js');</script>
+
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gTitle">
+  <div class="box">
+    <div class="skull" aria-hidden="true">👻</div>
+    <h1 id="gTitle" data-en="Enter if you dare…" data-bn="সাহস থাকলে ঢুকুন…">Enter if you dare…</h1>
+    <p data-en="This page has dark, spooky effects: flickering light, fog, whispers and one slow ghostly surprise. Sound is optional." data-bn="এই পেজে অন্ধকার ভয়ের ইফেক্ট আছে: কাঁপা আলো, কুয়াশা, ফিসফিস আর একটা ধীর ভুতুড়ে চমক। সাউন্ড ঐচ্ছিক।">This page has dark, spooky effects: flickering light, fog, whispers and one slow ghostly surprise. Sound is optional.</p>
+    <button class="gbtn" id="enter" type="button" data-en="Enter" data-bn="ভেতরে যাব">Enter</button>
+    <button class="gbtn red" id="enterSound" type="button" data-en="Enter with sound 🔊" data-bn="সাউন্ডসহ 🔊">Enter with sound 🔊</button>
+    <button class="calm" id="calm" type="button" data-en="Calm view (no scary effects)" data-bn="শান্ত ভিউ (ভয়ের ইফেক্ট ছাড়া)">Calm view (no scary effects)</button>
+    <a class="calm" href="index.html" data-en="← Take me back to the living" data-bn="← জীবিতদের জগতে ফিরে যাই">← Take me back to the living</a>
+  </div>
+</div>
+
+<div class="fog" aria-hidden="true"></div><div class="fog b" aria-hidden="true"></div>
+<canvas id="dust" aria-hidden="true"></canvas>
+<div class="dark" id="dark" aria-hidden="true"></div>
+<div class="vig" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div>
+
+<div class="face" id="face" aria-hidden="true">
+  <svg viewBox="0 0 200 260"><defs><linearGradient id="fg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9fff4"/><stop offset="1" stop-color="#7FDDB0" stop-opacity=".1"/></linearGradient></defs>
+    <path d="M100 8C46 8 22 70 22 138v122q20-20 39 2 20-24 39 0 20-24 39 0 19-22 39-2V138C178 70 154 8 100 8z" fill="url(#fg2)"/>
+    <ellipse cx="72" cy="112" rx="17" ry="26" fill="#020403"/><ellipse cx="128" cy="112" rx="17" ry="26" fill="#020403"/>
+    <ellipse cx="100" cy="188" rx="22" ry="36" fill="#020403"/>
+    <circle cx="72" cy="116" r="4" fill="#7FDDB0"/><circle cx="128" cy="116" r="4" fill="#7FDDB0"/></svg>
+</div>
+
+<header class="top">
+  <a href="index.html" data-en="← Home" data-bn="← হোম">← Home</a>
+  <div class="grp">
+    <button id="bLight" type="button" aria-pressed="true" data-en="🔦 Light" data-bn="🔦 আলো">🔦 Light</button>
+    <button id="bSound" type="button" aria-pressed="false" data-en="🔊 Sound" data-bn="🔊 সাউন্ড">🔊 Sound</button>
+    <button id="bLang" type="button" aria-label="Switch language">বাংলা</button>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="gl">
+    <div>
+      <svg class="ghost" id="ghost" viewBox="0 0 200 270" role="img" aria-label="A hooded ghost with glowing eyes">
+        <defs>
+          <linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1fff8" stop-opacity=".95"/><stop offset=".7" stop-color="#9fe9c5" stop-opacity=".55"/><stop offset="1" stop-color="#7FDDB0" stop-opacity="0"/></linearGradient>
+        </defs>
+        <path d="M100 10C46 10 24 72 24 140v118q19-19 38 2 19-24 38 0 19-24 38 0 19-21 38-2V140C176 72 154 10 100 10z" fill="url(#gb)"/>
+        <ellipse cx="100" cy="112" rx="46" ry="54" fill="#020403"/>
+        <g class="blink"><ellipse class="eye" id="eyeL" cx="82" cy="108" rx="7" ry="10"/></g>
+        <g class="blink"><ellipse class="eye" id="eyeR" cx="118" cy="108" rx="7" ry="10"/></g>
+        <ellipse cx="100" cy="150" rx="8" ry="13" fill="#000" stroke="rgba(127,221,176,.35)" stroke-width="1.5"/>
+      </svg>
+      <h1 class="glitch" id="gl" data-t="Ghost Leader">Ghost Leader</h1>
+      <p class="sub"><span id="typed"></span><span class="cursor" aria-hidden="true"></span></p>
+      <div class="down" aria-hidden="true">▼</div>
+    </div>
+  </section>
+
+  <section class="s rv">
+    <div class="eyebrow" data-en="THE LEGEND" data-bn="কিংবদন্তি">THE LEGEND</div>
+    <h2 data-en="Who is the Ghost Leader?" data-bn="ঘোস্ট লিডার কে?">Who is the Ghost Leader?</h2>
+    <p class="lead" data-en="Every great movement has someone you never see on the stage. No spotlight. No applause. Just a quiet presence that builds, guides and disappears before the credit rolls. A leader who works in the shadows, so that others can walk in the light. That is the Ghost Leader." data-bn="প্রতিটা বড় আন্দোলনের পেছনে এমন একজন থাকে, যাকে মঞ্চে দেখা যায় না। কোনো স্পটলাইট নেই, হাততালি নেই। শুধু একটা নীরব উপস্থিতি, যে গড়ে তোলে, পথ দেখায় আর ক্রেডিট ওঠার আগেই মিলিয়ে যায়। অন্ধকারে কাজ করে, যাতে অন্যরা আলোয় হাঁটতে পারে। সেই হলো ঘোস্ট লিডার।">Every great movement has someone you never see on the stage. No spotlight. No applause. Just a quiet presence that builds, guides and disappears before the credit rolls. A leader who works in the shadows, so that others can walk in the light. That is the Ghost Leader.</p>
+  </section>
+
+  <section class="s rv">
+    <div class="eyebrow" data-en="THE THREE RULES" data-bn="তিনটি নিয়ম">THE THREE RULES</div>
+    <h2 data-en="How a ghost leads" data-bn="ভুতের নেতৃত্বের ধরন">How a ghost leads</h2>
+    <div class="rules">
+      <div class="rule"><div class="n">01</div><h3 data-en="Lead from the shadows" data-bn="ছায়া থেকে নেতৃত্ব">Lead from the shadows</h3><p data-en="Results speak louder than the name on the poster." data-bn="পোস্টারের নামের চেয়ে ফলাফল জোরে কথা বলে।">Results speak louder than the name on the poster.</p></div>
+      <div class="rule"><div class="n">02</div><h3 data-en="Never leave anyone in the dark" data-bn="কাউকে অন্ধকারে ফেলে যেয়ো না">Never leave anyone in the dark</h3><p data-en="Hold the light for your team, even when you stand outside it." data-bn="নিজে আলোর বাইরে থাকলেও দলের জন্য আলো ধরে রাখো।">Hold the light for your team, even when you stand outside it.</p></div>
+      <div class="rule"><div class="n">03</div><h3 data-en="Haunt the problem" data-bn="সমস্যাকে তাড়া করো">Haunt the problem</h3><p data-en="Return again and again, until the problem is gone for good." data-bn="সমস্যা চিরতরে শেষ না হওয়া পর্যন্ত বারবার ফিরে এসো।">Return again and again, until the problem is gone for good.</p></div>
+    </div>
+    <blockquote class="quote" data-en="“A ghost never dies. Ideas that change lives never do either.”" data-bn="“ভুত কখনো মরে না। জীবন বদলে দেওয়া ধারণাও কখনো মরে না।”">“A ghost never dies. Ideas that change lives never do either.”</blockquote>
+  </section>
+
+  <section class="end rv">
+    <h2 data-en="Still here?" data-bn="এখনো আছেন?">Still here?</h2>
+    <p class="lead" data-en="Then you are braver than most. Go back to the living world, or meet the human behind the ghost." data-bn="তাহলে আপনি অনেকের চেয়ে সাহসী। জীবিতদের জগতে ফিরে যান, অথবা ভুতের পেছনের মানুষটার সাথে পরিচিত হন।">Then you are braver than most. Go back to the living world, or meet the human behind the ghost.</p>
+    <p><a class="gbtn" href="about.html" data-en="Meet the human" data-bn="মানুষটাকে চিনুন">Meet the human</a> <a class="gbtn red" href="index.html" data-en="Back to the living" data-bn="জীবিতদের জগতে">Back to the living</a></p>
+  </section>
+</main>
+
+<footer>© <span id="yr">2026</span> Fahad Abdur Rahman · <a href="contact.html" data-en="Summon me" data-bn="আমাকে ডাকুন">Summon me</a></footer>
+
+<script>
+(function(){
+  var body=document.body, $=function(i){return document.getElementById(i)};
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var coarse=matchMedia('(pointer: coarse)').matches;
+  $('yr').textContent=new Date().getFullYear();
+
+  /* ---------- language (same switch as the rest of the site) ---------- */
+  var LANG='en'; try{LANG=localStorage.getItem('fa-lang')==='bn'?'bn':'en'}catch(e){}
+  function paint(){
+    document.documentElement.lang=LANG;
+    [].forEach.call(document.querySelectorAll('[data-en]'),function(n){n.textContent=n.getAttribute('data-'+LANG)||n.getAttribute('data-en')});
+    $('bLang').textContent=LANG==='bn'?'EN':'বাংলা';
+    startTyping();
+  }
+  $('bLang').addEventListener('click',function(){LANG=LANG==='bn'?'en':'bn';try{localStorage.setItem('fa-lang',LANG)}catch(e){}paint()});
+
+  /* ---------- typing whispers under the title ---------- */
+  var LINES={en:['I lead from the shadows…','You never see me, but you feel me.','Ideas never die.','Welcome. I have been waiting.'],
+             bn:['আমি ছায়া থেকে নেতৃত্ব দিই…','আমাকে দেখা যায় না, কিন্তু অনুভব করা যায়।','ধারণা কখনো মরে না।','স্বাগতম। আমি অপেক্ষায় ছিলাম।']};
+  var tt=null;
+  function startTyping(){
+    clearTimeout(tt);var el=$('typed'),L=LINES[LANG],li=0,ci=0,del=false,chars;
+    function step(){
+      chars=Array.from(L[li]);
+      if(reduce){el.textContent=L[0];return}
+      if(!del){ci++;el.textContent=chars.slice(0,ci).join('');if(ci>=chars.length){del=true;tt=setTimeout(step,2100);return}tt=setTimeout(step,70+Math.random()*60)}
+      else{ci--;el.textContent=chars.slice(0,ci).join('');if(ci<=0){del=false;li=(li+1)%L.length;tt=setTimeout(step,500);return}tt=setTimeout(step,28)}
+    }
+    el.textContent='';step();
+  }
+
+  /* ---------- floating dust / spores ---------- */
+  var cv=$('dust'),cx=cv.getContext('2d'),P=[],W,H;
+  function size(){W=cv.width=innerWidth;H=cv.height=innerHeight}
+  size();addEventListener('resize',size);
+  for(var i=0;i<(coarse?36:70);i++)P.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.4,vx:(Math.random()-.5)*.25,vy:-Math.random()*.35-.05,a:Math.random()*.5+.1});
+  function dust(){
+    cx.clearRect(0,0,W,H);
+    for(var i=0;i<P.length;i++){var p=P[i];p.x+=p.vx;p.y+=p.vy;if(p.y<-5){p.y=H+5;p.x=Math.random()*W}if(p.x<-5)p.x=W+5;if(p.x>W+5)p.x=-5;
+      cx.beginPath();cx.fillStyle='rgba(170,235,205,'+p.a+')';cx.arc(p.x,p.y,p.r,0,6.283);cx.fill()}
+    if(!document.hidden)requestAnimationFrame(dust);
+  }
+  if(!reduce)dust();
+  document.addEventListener('visibilitychange',function(){if(!document.hidden&&!reduce)requestAnimationFrame(dust)});
+
+  /* ---------- flashlight + eyes that follow you ---------- */
+  var dark=$('dark'),mx=innerWidth/2,my=innerHeight*.4,lx=mx,ly=my,idleT=0,wander=true;
+  function setLight(){lx+=(mx-lx)*.14;ly+=(my-ly)*.14;dark.style.setProperty('--x',lx.toFixed(0)+'px');dark.style.setProperty('--y',ly.toFixed(0)+'px');requestAnimationFrame(setLight)}
+  var eyeL=$('eyeL'),eyeR=$('eyeR'),ghost=$('ghost');
+  function look(x,y){
+    var r=ghost.getBoundingClientRect(),gx=r.left+r.width/2,gy=r.top+r.height*.4;
+    var dx=x-gx,dy=y-gy,d=Math.hypot(dx,dy)||1,k=Math.min(5,d/40);
+    var ox=dx/d*k,oy=dy/d*k;
+    eyeL.setAttribute('cx',82+ox);eyeL.setAttribute('cy',108+oy);eyeR.setAttribute('cx',118+ox);eyeR.setAttribute('cy',108+oy);
+  }
+  function move(x,y){mx=x;my=y;wander=false;clearTimeout(idleT);idleT=setTimeout(function(){wander=true},4000);look(x,y)}
+  addEventListener('pointermove',function(e){move(e.clientX,e.clientY)},{passive:true});
+  addEventListener('touchmove',function(e){var t=e.touches[0];if(t)move(t.clientX,t.clientY)},{passive:true});
+  var wt=0;
+  setInterval(function(){ /* the light wanders by itself when nobody touches the screen */
+    if(!wander)return;wt+=.5;mx=innerWidth*(.5+.32*Math.sin(wt*.9));my=innerHeight*(.45+.26*Math.sin(wt*1.3+1));look(mx,my);
+  },120);
+  $('bLight').addEventListener('click',function(){
+    var on=!body.classList.contains('nolight');body.classList.toggle('nolight',on);this.setAttribute('aria-pressed',on?'false':'true');
+  });
+
+  /* ---------- sound (only after a click; fully optional) ---------- */
+  var ac=null,master=null,soundOn=false,nodes=[],creakT=0;
+  function startSound(){
+    try{
+      ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+      if(ac.state==='suspended')ac.resume();
+      master=ac.createGain();master.gain.value=0;master.connect(ac.destination);
+      /* low drone */
+      [55,55.7,82.4].forEach(function(f,i){var o=ac.createOscillator(),g=ac.createGain(),lp=ac.createBiquadFilter();
+        o.type=i===2?'sine':'sawtooth';o.frequency.value=f;lp.type='lowpass';lp.frequency.value=180;g.gain.value=i===2?.05:.07;
+        o.connect(lp);lp.connect(g);g.connect(master);o.start();nodes.push(o)});
+      /* wind: filtered noise with a slow sweep */
+      var len=ac.sampleRate*2,buf=ac.createBuffer(1,len,ac.sampleRate),d=buf.getChannelData(0);for(var i=0;i<len;i++)d[i]=Math.random()*2-1;
+      var n=ac.createBufferSource();n.buffer=buf;n.loop=true;
+      var bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.value=420;bp.Q.value=.8;
+      var wg=ac.createGain();wg.gain.value=.05;var lfo=ac.createOscillator(),lg=ac.createGain();lfo.frequency.value=.11;lg.gain.value=260;
+      lfo.connect(lg);lg.connect(bp.frequency);n.connect(bp);bp.connect(wg);wg.connect(master);n.start();lfo.start();nodes.push(n,lfo);
+      master.gain.linearRampToValueAtTime(.9,ac.currentTime+3);
+      soundOn=true;scheduleCreak();
+    }catch(e){soundOn=false}
+    $('bSound').setAttribute('aria-pressed',soundOn?'true':'false');
+  }
+  function stopSound(){
+    if(!ac||!master)return;var m=master;m.gain.cancelScheduledValues(ac.currentTime);m.gain.linearRampToValueAtTime(0,ac.currentTime+.8);
+    var ns=nodes;nodes=[];setTimeout(function(){ns.forEach(function(n){try{n.stop()}catch(e){}});try{m.disconnect()}catch(e){}},1000);
+    soundOn=false;clearTimeout(creakT);$('bSound').setAttribute('aria-pressed','false');
+  }
+  function scheduleCreak(){
+    clearTimeout(creakT);creakT=setTimeout(function(){
+      if(!soundOn||!ac)return;
+      var t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain(),f=ac.createBiquadFilter();
+      o.type='sawtooth';o.frequency.setValueAtTime(90+Math.random()*60,t);o.frequency.exponentialRampToValueAtTime(40+Math.random()*30,t+1.6);
+      f.type='bandpass';f.frequency.value=320;f.Q.value=6;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.08,t+.2);g.gain.exponentialRampToValueAtTime(.001,t+1.8);
+      o.connect(f);f.connect(g);g.connect(master);o.start(t);o.stop(t+2);scheduleCreak();
+    },5000+Math.random()*8000);
+  }
+  $('bSound').addEventListener('click',function(){soundOn?stopSound():startSound()});
+
+  /* ---------- whispers that appear and fade in the fog ---------- */
+  var WH={en:['I see you…','you are not alone','keep walking','the light is behind you','…ideas never die','listen…'],
+          bn:['আমি তোমাকে দেখছি…','তুমি একা নও','হেঁটে যাও','আলো তোমার পেছনে','…ধারণা কখনো মরে না','শোনো…']};
+  var whT=0;
+  function whisper(){
+    var d=document.createElement('div');d.className='whisper';d.setAttribute('aria-hidden','true');
+    var L=WH[LANG];d.textContent=L[Math.floor(Math.random()*L.length)];
+    d.style.left=(6+Math.random()*60)+'vw';d.style.top=(12+Math.random()*70)+'vh';
+    document.body.appendChild(d);setTimeout(function(){d.remove()},6200);
+    whT=setTimeout(whisper,3800+Math.random()*5200);
+  }
+
+  /* ---------- scroll reveal ---------- */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+    [].forEach.call(document.querySelectorAll('.rv'),function(n){io.observe(n)});
+  }else{[].forEach.call(document.querySelectorAll('.rv'),function(n){n.classList.add('in')})}
+
+  /* ---------- the gate ---------- */
+  var gate=$('gate');
+  function enter(opts){
+    gate.classList.add('out');
+    document.body.style.overflow='';
+    if(opts.calm){body.classList.add('nolight');$('bLight').setAttribute('aria-pressed','false');return}
+    if(!reduce){body.classList.add('lit','alive');requestAnimationFrame(setLight);whT=setTimeout(whisper,2500);
+      setTimeout(function(){$('face').classList.add('go')},9000+Math.random()*5000); /* one slow ghostly face, once */}
+    else body.classList.add('nolight');
+    if(opts.sound)startSound();
+  }
+  document.body.style.overflow='hidden';
+  $('enter').addEventListener('click',function(){enter({})});
+  $('enterSound').addEventListener('click',function(){enter({sound:true})});
+  $('calm').addEventListener('click',function(){enter({calm:true})});
+  setTimeout(function(){try{$('enter').focus({preventScroll:true})}catch(e){}},50);
+  document.addEventListener('visibilitychange',function(){if(ac&&soundOn){document.hidden?ac.suspend():ac.resume()}});
+  paint();
+})();
+</script>
+</body>
+</html>

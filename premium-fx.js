@@ -26,6 +26,12 @@
     '.fx-dot{width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--green,#287A50);transition:opacity .3s}',
     '.fx-cur.on{opacity:.55}.fx-dot.on{opacity:.9}',
     '.fx-cur.hot{width:62px;height:62px;margin:-31px 0 0 -31px;opacity:.85;background:color-mix(in srgb,var(--green,#287A50) 13%,transparent)}',
+    'a.gl-link{color:#2f9d6c!important;font-weight:700;text-shadow:0 0 0 rgba(63,174,124,0)}',
+    'html[data-theme="dark"] a.gl-link{color:#7FDDB0!important}',
+    'a.gl-link:hover{text-shadow:0 0 14px rgba(63,174,124,.7)}',
+    'a.gl-link span{display:inline-block;animation:glBob 3.4s ease-in-out infinite}',
+    '@keyframes glBob{50%{transform:translateY(-3px) rotate(-6deg)}}',
+    '@media(prefers-reduced-motion:reduce){a.gl-link span{animation:none}}',
     '@media(prefers-reduced-motion:reduce){.fx,.fx.fx-in{opacity:1;transform:none;filter:none;transition:none}.sh h2.fx-h::after{transform:none;transition:none}#faProg{display:none}html.fa-leave{opacity:1}}'
   ].join('\n');
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
