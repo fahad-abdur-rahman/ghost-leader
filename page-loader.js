@@ -10,7 +10,7 @@
     '#plo .g1{width:380px;height:380px;left:-110px;top:-60px;background:#287A50;opacity:.38}' +
     '#plo .g2{width:340px;height:340px;right:-100px;bottom:-40px;background:#3FAE7C;opacity:.26}' +
     '#plo .in{position:relative;text-align:center;padding:20px;width:min(520px,92vw)}' +
-    '#plo .mk{position:relative;width:78px;height:78px;margin:0 auto 24px;border-radius:24px;display:grid;place-items:center;background:linear-gradient(135deg,#287A50,#3FAE7C);color:#fff;font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:800;font-size:2.1rem;animation:ploP 2s ease-in-out infinite}' +
+    '#plo .mk{position:relative;width:78px;height:78px;margin:0 auto 24px;border-radius:24px;display:grid;place-items:center;background:linear-gradient(135deg,#287A50,#3FAE7C);color:#fff;font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:800;font-size:1.75rem;letter-spacing:-.02em;animation:ploP 2s ease-in-out infinite}' +
     '#plo .mk::after{content:"";position:absolute;inset:-18px;border-radius:38px;border:1px solid rgba(127,221,176,.25);animation:ploR 2s ease-out infinite}' +
     '#plo .nm{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:800;font-size:clamp(1.5rem,7vw,2.2rem);letter-spacing:-.03em;line-height:1.1;opacity:0;animation:ploU .7s .15s cubic-bezier(.2,.8,.2,1) both}' +
     '#plo .tg{margin-top:12px;font-size:.95rem;font-weight:500;color:#B4BBB6;opacity:0;animation:ploU .7s .4s cubic-bezier(.2,.8,.2,1) both}' +
@@ -29,7 +29,7 @@
   var el = document.createElement('div');
   el.id = 'plo'; el.setAttribute('role', 'status'); el.setAttribute('aria-label', 'Loading page');
   el.innerHTML = '<span class="g g1"></span><span class="g g2"></span><span class="gs"></span>' +
-    '<div class="in"><div class="mk" aria-hidden="true">F</div>' +
+    '<div class="in"><div class="mk" aria-hidden="true">FA</div>' +
     '<div class="nm" aria-hidden="true">Fahad Abdur Rahman</div>' +
     '<div class="tg" aria-hidden="true">Ideas into Impact.</div></div>' +
     '<div class="ft" aria-hidden="true"><div class="pc" id="ploPct">0%</div><div class="tr"><div class="br" id="ploBar"></div></div></div>';

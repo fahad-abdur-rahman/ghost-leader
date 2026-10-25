@@ -39,7 +39,8 @@
   var top = document.createElement('div'); top.className = 'sf-top';
   var brand = document.createElement('div'); brand.className = 'sf-brand';
   var logo = a('index.html', ''); logo.className = 'logo'; logo.setAttribute('aria-label', 'Fahad Abdur Rahman — home');
-  var lb = document.createElement('b'); lb.textContent = 'F'; logo.appendChild(lb); logo.appendChild(document.createTextNode('FAHAD.'));
+  var lb = document.createElement('b'); lb.textContent = 'FA'; logo.appendChild(lb);
+  var lt = document.createElement('span'); lt.className = 'lt'; lt.appendChild(document.createTextNode('FAHAD')); var dt = document.createElement('i'); dt.textContent = '.'; lt.appendChild(dt); logo.appendChild(lt);
   var p1 = document.createElement('p'); p1.textContent = 'Ideas into Impact.';
   var p2 = document.createElement('p'); p2.className = 'sf-motto'; p2.textContent = 'Better Youth · Better Tomorrow';
   brand.appendChild(logo); brand.appendChild(p1); brand.appendChild(p2);
