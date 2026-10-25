@@ -22,7 +22,7 @@
 
   function a(href, text, ext) {
     var n = document.createElement('a'); n.href = href; n.textContent = text;
-    if (ext) { n.target = '_blank'; n.rel = 'noopener noreferrer'; }
+    if (ext) { n.target = '_blank'; n.rel = 'me noopener noreferrer'; }
     return n;
   }
   function col(title, id) {

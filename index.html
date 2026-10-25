@@ -20,6 +20,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fahad Abdur Rahman">
 <meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="bn_BD">
 <meta property="og:title" content="Fahad Abdur Rahman — Ideas into Impact">
 <meta property="og:description" content="Youth leader, organization builder and founder &amp; chairman from Joypurhat, Bangladesh. Better Youth, Better Tomorrow.">
 <meta property="og:image:alt" content="Portrait of Fahad Abdur Rahman, youth leader and founder">
@@ -35,16 +36,18 @@
       "@id":"#person",
       "name":"Fahad Abdur Rahman",
       "url":"https://fahad-abdur-rahman.github.io/ghost-leader/",
-      "alternateName":["Fahad Rahman","Fahad A. Rahman"],
+      "alternateName":["Fahad Rahman","Fahad A. Rahman","\u09ab\u09be\u09b9\u09be\u09a6 \u0986\u09ac\u09a6\u09c1\u09b0 \u09b0\u09b9\u09ae\u09be\u09a8","\u09ab\u09be\u09b9\u09be\u09a6 \u0986\u09ac\u09cd\u09a6\u09c1\u09b0 \u09b0\u09b9\u09ae\u09be\u09a8"],
+      "image":"https://fahad-abdur-rahman.github.io/ghost-leader/photo.jpg",
+      "knowsLanguage":["bn","en"],
       "jobTitle":"Founder & Chairman, Youth Leader",
       "description":"Youth leader and organization builder from Joypurhat, Bangladesh.",
       "email":"mailto:fahad.ar.official@gmail.com",
       "nationality":{"@type":"Country","name":"Bangladesh"},
       "address":{"@type":"PostalAddress","addressLocality":"Joypurhat","addressCountry":"BD"},
       "worksFor":[
-        {"@type":"Organization","name":"TalentVerse Bangladesh","slogan":"Where Talent Meets Opportunity"},
-        {"@type":"Organization","name":"NexEra Youth Network","slogan":"Learn · Connect · Grow"},
-        {"@type":"Organization","name":"Visionary Youth Alliance","slogan":"Where Vision Meets Action"}
+        {"@type":"Organization","name":"TalentVerse Bangladesh","url":"https://fahad-abdur-rahman.github.io/ghost-leader/talentverse-bangladesh.html","slogan":"Where Talent Meets Opportunity"},
+        {"@type":"Organization","name":"NexEra Youth Network","url":"https://fahad-abdur-rahman.github.io/ghost-leader/nexera-youth-network.html","slogan":"Learn · Connect · Grow"},
+        {"@type":"Organization","name":"Visionary Youth Alliance","url":"https://fahad-abdur-rahman.github.io/ghost-leader/visionary-youth-alliance.html","slogan":"Where Vision Meets Action"}
       ],
       "knowsAbout":["Youth development","Leadership","Web design","Event management","Content creation"]
     },
@@ -1064,7 +1067,7 @@ window.faContent=(async function(){
   var LAST=null;
   function renderAll(raw){
     LAST=raw;var d=SH.localize(raw);
-    LASTQ=d.quotes;renderQuote(d.quotes);
+    LASTQ=d.quotes;renderQuote(d.quotes);SH.applySeo(raw);
     renderProfile(d.profile);
     renderOrgs(d.orgs);
     renderProjects(d.projects);

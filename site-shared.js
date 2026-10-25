@@ -67,7 +67,7 @@ export function fillConnect(d) {
     box.textContent = '';
     items.forEach(function (it) {
       var a = document.createElement('a'); a.className = 'dl'; a.href = it[1]; a.textContent = it[0];
-      if (it[2]) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+      if (it[2]) { a.target = '_blank'; a.rel = 'me noopener noreferrer'; }
       box.appendChild(a);
     });
   }
@@ -111,5 +111,28 @@ export function saveNotice(d) {
     var n = (d && d.site) || {}, t = function (k) { return String(n[k] || '').trim(); };
     localStorage.setItem('fa-notice', JSON.stringify({ t: t('noticeText'), tb: t('noticeTextBn'), l: t('noticeLink'), b: t('noticeLabel'), bb: t('noticeLabelBn') }));
     if (window.faNotice) window.faNotice();
+  } catch (e) {}
+}
+
+// Search engines: tell Google which official profiles belong to the Person / Organization on this page.
+// Uses the social links and organization websites saved in the admin panel.
+export function applySeo(d, org) {
+  try {
+    var soc = (d && d.social) || {}, out = [];
+    ['linkedin', 'facebook', 'github', 'x', 'youtube'].forEach(function (k) { if (/^https?:\/\//i.test(soc[k] || '')) out.push(String(soc[k]).trim()); });
+    ((d && d.orgs) || []).forEach(function (o) { if (o && /^https?:\/\//i.test(o.url || '')) out.push(String(o.url).trim()); });
+    [].forEach.call(document.querySelectorAll('script[type="application/ld+json"]'), function (sc) {
+      var j; try { j = JSON.parse(sc.textContent); } catch (e) { return; }
+      var nodes = Array.isArray(j['@graph']) ? j['@graph'] : [j], changed = false;
+      nodes.forEach(function (n) {
+        if (n && n['@type'] === 'Person' && out.length) {
+          n.sameAs = (n.sameAs || []).concat(out).filter(function (u, i, a) { return a.indexOf(u) === i; }); changed = true;
+        }
+        if (n && n['@type'] === 'Organization' && org && /^https?:\/\//i.test(org.url || '')) {
+          n.sameAs = [String(org.url).trim()]; changed = true;
+        }
+      });
+      if (changed) sc.textContent = JSON.stringify(j);
+    });
   } catch (e) {}
 }

@@ -1,7 +1,7 @@
 // Fills an organization page with the content saved from the admin panel.
 // The page already contains readable default text (so search engines see it);
 // this only replaces it when the admin has saved something for this organization.
-import { slugify, orgSlug, orgHref, safeImg, logoInto, fillNav, fillConnect, localize, onLangChange, saveNotice } from './site-shared.js';
+import { slugify, orgSlug, orgHref, safeImg, logoInto, fillNav, fillConnect, localize, onLangChange, saveNotice, applySeo } from './site-shared.js';
 
 var $ = function (id) { return document.getElementById(id); };
 var BASE = 'https://fahad-abdur-rahman.github.io/ghost-leader/';
@@ -116,6 +116,7 @@ window.faContent = (async function () {
   if (!orgs0) { if (isTemplate) notFound(); return; }
   var found = orgs0.filter(function (o) { return o && o.name && orgSlug(o) === slug; })[0];
   if (!found) { if (isTemplate) notFound(); return; }
+  applySeo(raw, found);
   function draw() {
     var d = localize(raw);
     var orgs = d.orgs;
