@@ -55,6 +55,7 @@ $('cForm').addEventListener('submit', async function (ev) {
     try { localStorage.setItem('fa-last-msg', String(Date.now())); } catch (e) {}
     $('cForm').reset();
     out('Thank you! Your message has been sent.', 'ok');
+    try { window.faTrack && window.faTrack('contact_submit'); } catch (e) {}
   } catch (e) {
     mailFallback('Sorry, your message could not be sent.');
   }

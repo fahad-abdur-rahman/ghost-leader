@@ -7,7 +7,7 @@
 (function () {
   if (window.__faPremium) return; window.__faPremium = 1;
   var root = document.documentElement;
-  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduce = (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) || root.classList.contains('lite');
   var fine = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
   var E = 'cubic-bezier(.2,.8,.2,1)';
 

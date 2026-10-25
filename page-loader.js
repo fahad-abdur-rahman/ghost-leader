@@ -38,7 +38,7 @@
 
   var bar = document.getElementById('ploBar'), pct = document.getElementById('ploPct');
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var MIN = reduce ? 300 : 1400, MAX = 6000, t0 = performance.now();
+  var MIN = (reduce || root.classList.contains('lite')) ? 300 : 1400, MAX = 6000, t0 = performance.now();
   var done = { dom: false, fonts: false, load: false, content: false };
   var W = { dom: 15, fonts: 25, load: 35, content: 25 };
   function mark(k) { done[k] = true; }

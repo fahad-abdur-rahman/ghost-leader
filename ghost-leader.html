@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-nolite>
 <head>
 <meta charset="UTF-8">
+<script src="site-core.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ghost Leader | Fahad Abdur Rahman</title>
 <meta name="description" content="Ghost Leader — the leader you never see, but always feel. Enter if you dare.">
@@ -85,6 +86,10 @@ section.s{max-width:880px;margin:0 auto;padding:70px 22px}
 .eyebrow{font-size:.74rem;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--g)}
 h2{margin:10px 0 16px;font-size:clamp(1.6rem,5vw,2.4rem);line-height:1.2}
 .lead{font-size:1.1rem;color:#c3d0c9}
+.walks{margin:26px 0 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center;color:var(--mute);font-size:.92rem}
+.walks a{text-decoration:none;padding:7px 16px;border:1px solid rgba(127,221,176,.35);border-radius:99px;color:var(--g);font-weight:600;transition:background .25s,box-shadow .25s,transform .25s}
+.walks a:hover,.walks a:focus-visible{background:rgba(127,221,176,.12);box-shadow:0 0 22px rgba(127,221,176,.3);transform:translateY(-2px);outline:none}
+body.nm .walks a{border-color:rgba(255,84,104,.4)}
 .rules{display:grid;gap:16px;margin-top:26px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 .rule{padding:24px;border:1px solid rgba(127,221,176,.18);border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));backdrop-filter:blur(4px);transition:transform .4s var(--ease),border-color .4s,box-shadow .4s}
 .rule:hover{transform:translateY(-6px);border-color:rgba(127,221,176,.55);box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 40px rgba(127,221,176,.15)}
@@ -237,7 +242,9 @@ body.nm .hero>div{animation:shake 7s linear infinite}
   <section class="s rv">
     <div class="eyebrow" data-en="THE LEGEND" data-bn="কিংবদন্তি">THE LEGEND</div>
     <h2 data-en="Who is the Ghost Leader?" data-bn="ঘোস্ট লিডার কে?">Who is the Ghost Leader?</h2>
-    <p class="lead" data-en="Every great movement has someone you never see on the stage. No spotlight. No applause. Just a quiet presence that builds, guides and disappears before the credit rolls. A leader who works in the shadows, so that others can walk in the light. That is the Ghost Leader." data-bn="প্রতিটা বড় আন্দোলনের পেছনে এমন একজন থাকে, যাকে মঞ্চে দেখা যায় না। কোনো স্পটলাইট নেই, হাততালি নেই। শুধু একটা নীরব উপস্থিতি, যে গড়ে তোলে, পথ দেখায় আর ক্রেডিট ওঠার আগেই মিলিয়ে যায়। অন্ধকারে কাজ করে, যাতে অন্যরা আলোয় হাঁটতে পারে। সেই হলো ঘোস্ট লিডার।">Every great movement has someone you never see on the stage. No spotlight. No applause. Just a quiet presence that builds, guides and disappears before the credit rolls. A leader who works in the shadows, so that others can walk in the light. That is the Ghost Leader.</p>
+    <p class="lead" data-en="Ghost Leader is the name I give to the way I lead. I do not wait for the stage. I build what stands behind it: communities, organizations and teams where young people can learn, connect and turn their ideas into real impact. I began as a quiz participant. Today I build organizations. The lesson never changed: the best leaders are felt long before they are seen." data-bn="ঘোস্ট লিডার হলো আমার নেতৃত্ব দেওয়ার ধরনের নাম। আমি মঞ্চের অপেক্ষা করি না। মঞ্চের পেছনে যা দাঁড়িয়ে থাকে, আমি সেটা গড়ি: এমন কমিউনিটি, সংগঠন আর দল, যেখানে তরুণরা শিখতে, যুক্ত হতে আর নিজের আইডিয়াকে বাস্তব প্রভাবে বদলাতে পারে। আমি শুরু করেছিলাম একজন কুইজ প্রতিযোগী হিসেবে। আজ আমি সংগঠন গড়ি। শিক্ষাটা বদলায়নি: সেরা নেতাদের দেখার অনেক আগেই অনুভব করা যায়।">Ghost Leader is the name I give to the way I lead. I do not wait for the stage. I build what stands behind it: communities, organizations and teams where young people can learn, connect and turn their ideas into real impact. I began as a quiz participant. Today I build organizations. The lesson never changed: the best leaders are felt long before they are seen.</p>
+    <p class="walks"><span data-en="Where the ghost walks:" data-bn="যেখানে ভুতটা হাঁটে:">Where the ghost walks:</span>
+      <a href="talentverse-bangladesh.html">TalentVerse Bangladesh</a><a href="nexera-youth-network.html">NexEra Youth Network</a><a href="visionary-youth-alliance.html">Visionary Youth Alliance</a></p>
   </section>
 
   <section class="s rv">
@@ -392,8 +399,8 @@ body.nm .hero>div{animation:shake 7s linear infinite}
   [].forEach.call(document.querySelectorAll('.sig'),function(b){
     b.addEventListener('click',function(){
       var id=b.getAttribute('data-id');if(found.indexOf(id)<0){found.push(id);try{localStorage.setItem('gl-found',JSON.stringify(found))}catch(e){}}
-      b.classList.add('got');showCount();blip();
-      if(found.length>=3)setTimeout(openSecret,900);
+      b.classList.add('got');showCount();blip();track('secret_sign_found',{sign:id,total:found.length});
+      if(found.length>=3){track('secret_unlocked');setTimeout(openSecret,900)}
       else say(LANG==='bn'?'একটা পেলে… আরও '+(3-found.length)+'টা লুকিয়ে আছে':'one found… '+(3-found.length)+' more hide in the dark');
     });
   });
@@ -435,7 +442,7 @@ body.nm .hero>div{animation:shake 7s linear infinite}
     faceT=setTimeout(scareFace,30000+Math.random()*20000);
   }
   function setNm(on){
-    nm=!!on;body.classList.toggle('nm',nm);$('bNm').setAttribute('aria-pressed',nm?'true':'false');
+    nm=!!on;if(nm)track('nightmare_on');body.classList.toggle('nm',nm);$('bNm').setAttribute('aria-pressed',nm?'true':'false');
     try{localStorage.setItem('gl-nm',nm?'1':'0')}catch(e){}
     clearTimeout(beatT);clearTimeout(faceT);
     if(nm){heartbeat();if(!reduce)faceT=setTimeout(scareFace,12000)}
@@ -450,7 +457,9 @@ body.nm .hero>div{animation:shake 7s linear infinite}
 
   /* ---------- the gate ---------- */
   var gate=$('gate');
+  function track(n,p){try{window.faTrack&&window.faTrack(n,p)}catch(e){}}
   function enter(opts){
+    track('ghost_enter',{mode:opts.calm?'calm':(opts.sound?'sound':'normal')});
     gate.classList.add('out');
     document.body.style.overflow='';
     if(opts.calm){body.classList.add('nolight');$('bLight').setAttribute('aria-pressed','false');return}

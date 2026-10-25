@@ -15,7 +15,7 @@
     '.sf-list{display:flex;flex-direction:column;gap:9px}' +
     '.sf-list a{color:var(--muted);text-decoration:none;width:fit-content;transition:color .2s,transform .2s}' +
     '.sf-list a:hover{color:var(--green-text);transform:translateX(3px)}' +
-    '.sf-bot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px 0 calc(26px + env(safe-area-inset-bottom));border-top:1px solid var(--border);font-size:.84rem}' +
+    '.sf-r{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.sf-bot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px 0 calc(26px + env(safe-area-inset-bottom));border-top:1px solid var(--border);font-size:.84rem}' +
     '@media(max-width:900px){.sf-top{grid-template-columns:1fr 1fr;gap:30px}.sf-brand{grid-column:1/-1}}' +
     '@media(max-width:480px){.sf-top{grid-template-columns:1fr;padding:36px 0 26px}.sf-bot{flex-direction:column;padding-right:64px}}';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
@@ -54,7 +54,16 @@
   var yr = document.createElement('span'); yr.id = 'yr'; yr.textContent = new Date().getFullYear(); left.appendChild(yr);
   left.appendChild(document.createTextNode(' '));
   var rights = document.createElement('span'); rights.textContent = 'Fahad Abdur Rahman. All rights reserved.'; left.appendChild(rights);
-  var right = document.createElement('span'); right.textContent = 'Joypurhat, Bangladesh';
+  var right = document.createElement('span'); right.className = 'sf-r';
+  var loc = document.createElement('span'); loc.textContent = 'Joypurhat, Bangladesh'; right.appendChild(loc);
+  if (window.faLite) {
+    var lb2 = document.createElement('button'); lb2.type = 'button'; lb2.className = 'fa-lite-btn';
+    lb2.setAttribute('aria-pressed', window.faLite.on ? 'true' : 'false');
+    lb2.textContent = window.faLite.on ? 'Lite mode: On' : 'Lite mode: Off';
+    lb2.title = 'Turns off heavy effects. Good for slow phones.';
+    lb2.addEventListener('click', function () { window.faLite.set(!window.faLite.on); });
+    right.appendChild(lb2);
+  }
   bot.appendChild(left); bot.appendChild(right);
 
   wrap.appendChild(top); wrap.appendChild(bot); ft.appendChild(wrap);

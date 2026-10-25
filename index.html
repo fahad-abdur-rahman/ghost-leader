@@ -2,6 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
+<script src="site-core.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fahad Abdur Rahman | Youth Leader &amp; Founder, Joypurhat</title>
 <meta name="description" content="Fahad Abdur Rahman is a youth leader from Joypurhat, Bangladesh. Founder &amp; chairman of TalentVerse Bangladesh, NexEra Youth Network and Visionary Youth Alliance.">
@@ -857,7 +858,7 @@ html{background:var(--bg)}
   root.classList.add('intro-on');
   var bar=document.getElementById('introBar'),pct=document.getElementById('introPct');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var MIN=reduce?300:3600,MAX=8000,t0=performance.now();
+  var MIN=(reduce||document.documentElement.classList.contains('lite'))?300:3600,MAX=8000,t0=performance.now();
   var done={dom:false,fonts:false,load:false,content:false};
   var W={dom:15,fonts:25,load:35,content:25};
   function mark(k){done[k]=true}
