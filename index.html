@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <script src="site-core.js"></script>
+<script>try{if(!localStorage.getItem('fa-content-v1')){var _d=document.documentElement;_d.classList.add('sk-on');var _s=document.createElement('style');_s.textContent='html.sk-on :is(#orgGrid,#projGrid,#eduList,#achList,#skillsList)>:not(.sk){display:none!important}';document.head.appendChild(_s);setTimeout(function(){_d.classList.remove('sk-on')},8000)}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fahad Abdur Rahman | Youth Leader &amp; Founder, Joypurhat</title>
 <meta name="description" content="Fahad Abdur Rahman is a youth leader from Joypurhat, Bangladesh. Founder &amp; chairman of TalentVerse Bangladesh, NexEra Youth Network and Visionary Youth Alliance.">
@@ -14,8 +15,11 @@
 
 <link rel="canonical" href="https://fahad-abdur-rahman.github.io/ghost-leader/">
 <meta property="og:url" content="https://fahad-abdur-rahman.github.io/ghost-leader/">
-<meta property="og:image" content="https://fahad-abdur-rahman.github.io/ghost-leader/photo.jpg">
-<meta name="twitter:image" content="https://fahad-abdur-rahman.github.io/ghost-leader/photo.jpg">
+<meta property="og:image" content="https://fahad-abdur-rahman.github.io/ghost-leader/og/home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Fahad Abdur Rahman — Ideas into Impact">
+<meta name="twitter:image" content="https://fahad-abdur-rahman.github.io/ghost-leader/og/home.jpg">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fahad Abdur Rahman">
@@ -23,7 +27,6 @@
 <meta property="og:locale:alternate" content="bn_BD">
 <meta property="og:title" content="Fahad Abdur Rahman — Ideas into Impact">
 <meta property="og:description" content="Youth leader, organization builder and founder &amp; chairman from Joypurhat, Bangladesh. Better Youth, Better Tomorrow.">
-<meta property="og:image:alt" content="Portrait of Fahad Abdur Rahman, youth leader and founder">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Fahad Abdur Rahman — Ideas into Impact">
 <meta name="twitter:description" content="Youth leader, organization builder and founder &amp; chairman from Joypurhat, Bangladesh.">
@@ -1064,9 +1067,28 @@ window.faContent=(async function(){
   }
   (function(){var nb=document.getElementById('qodNext');if(nb)nb.addEventListener('click',function(){qodShift=(qodShift+1)%(window.__qodN||1);renderQuote(LASTQ)})})();
   var LASTQ=null;
+  /* loading skeletons (first visit only, until the saved content arrives) */
+  var SKROOT=document.documentElement;
+  function skOn(){
+    if(!SKROOT.classList.contains('sk-on'))return;
+    [['orgGrid',3,''],['projGrid',3,''],['eduList',2,''],['achList',2,''],['skillsList',8,'sk-pill']].forEach(function(c){
+      var box=document.getElementById(c[0]);if(!box)return;
+      for(var i=0;i<c[1];i++){
+        var n=document.createElement(c[0]==='skillsList'?'li':'div');n.className='sk '+c[2];n.setAttribute('aria-hidden','true');
+        if(!c[2])n.innerHTML='<i></i><i></i><i></i>';
+        box.appendChild(n);
+      }
+    });
+    setTimeout(skOff,8000);
+  }
+  function skOff(){
+    SKROOT.classList.remove('sk-on');
+    [].forEach.call(document.querySelectorAll('.sk'),function(n){n.remove()});
+  }
+  skOn();
   var LAST=null;
   function renderAll(raw){
-    LAST=raw;var d=SH.localize(raw);
+    skOff();LAST=raw;var d=SH.localize(raw);
     LASTQ=d.quotes;renderQuote(d.quotes);SH.applySeo(raw);
     renderProfile(d.profile);
     renderOrgs(d.orgs);
@@ -1120,5 +1142,7 @@ window.faContent=(async function(){
 <script src="site-footer.js"></script>
 <script src="extras.js"></script>
 <script src="premium-fx.js"></script>
+<script src="site-ux.js"></script>
+<script src="hero-fx.js"></script>
 </body>
 </html>

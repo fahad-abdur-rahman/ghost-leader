@@ -496,7 +496,7 @@
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce || root.classList.contains('lite')) return;
     var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
-    var photo = document.querySelector('.photo'), blobs = [].slice.call(document.querySelectorAll('.aurora .blob'));
+    var photo = null /* 3D tilt now lives in hero-fx.js */, blobs = [].slice.call(document.querySelectorAll('.aurora .blob'));
     /* scroll parallax (all devices) */
     var raf = 0;
     function par() {

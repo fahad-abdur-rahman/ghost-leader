@@ -259,6 +259,134 @@ input[type=file]{padding:8px;font-size:.85rem}
   }
   function shownName(it,key){return String(it[key]||'').trim()||String(it[key+'Bn']||'').trim()}
 
+
+  /* ===== Blog share pages: one real page + one share image per post (for WhatsApp / Facebook / Google) ===== */
+  var SITE='https://fahad-abdur-rahman.github.io/ghost-leader/';
+  function esc(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+  function ensureSlugs(){
+    var used={};
+    (data.posts||[]).forEach(function(x,i){if(x&&x.slug&&/^[a-z0-9-]+$/.test(x.slug))used[x.slug]=1});
+    (data.posts||[]).forEach(function(x,i){
+      if(!x||!(String(x.title||'').trim()||String(x.titleBn||'').trim()))return;
+      if(x.slug&&/^[a-z0-9-]+$/.test(x.slug))return;
+      var sg=slugify(x.title)||('post-'+Date.now().toString(36)+i),n=2,base=sg;
+      while(used[sg]){sg=base+'-'+(n++)}
+      used[sg]=1;x.slug=sg;
+    });
+  }
+  function pickL(p,k,lang){var en=String(p[k]||'').trim(),bn=String(p[k+'Bn']||'').trim();return lang==='bn'?(bn||en):(en||bn)}
+  function bodyHtml(t){
+    return String(t||'').replace(/\r/g,'').split(/\n{2,}/).map(function(b){
+      b=b.trim();if(!b)return '';
+      if(/^##\s+/.test(b))return '<h2>'+esc(b.replace(/^##\s+/,''))+'</h2>';
+      return '<p>'+esc(b).replace(/\n/g,'<br>')+'</p>';
+    }).join('\n');
+  }
+  function postPage(p){
+    var tEn=pickL(p,'title','en'),sEn=pickL(p,'summary','en')||pickL(p,'body','en').replace(/\s+/g,' ').slice(0,160),
+        url=SITE+'blog/'+p.slug+'.html',img=SITE+'blog/'+p.slug+'.jpg',hasEn=!!String(p.body||p.title||'').trim(),hasBn=!!String(p.bodyBn||p.titleBn||'').trim();
+    var date=/^\d{4}-\d{2}-\d{2}$/.test(p.date||'')?p.date:'';
+    var ld={'@context':'https://schema.org','@type':'BlogPosting',headline:tEn,description:sEn,image:img,mainEntityOfPage:url,inLanguage:hasEn?'en':'bn',
+      author:{'@type':'Person','@id':SITE+'#person',name:'Fahad Abdur Rahman',url:SITE},publisher:{'@type':'Person','@id':SITE+'#person',name:'Fahad Abdur Rahman'}};
+    if(date){ld.datePublished=date;ld.dateModified=date}
+    function block(lang){
+      var cls=lang==='bn'?'l-bn':'l-en';
+      return '<div class="'+cls+'"'+(lang==='bn'&&hasEn?' hidden':'')+'>'+
+        '<div class="meta">'+(pickL(p,'tag',lang)?'<span class="tag">'+esc(pickL(p,'tag',lang))+'</span>':'')+(date?'<time datetime="'+date+'">'+date+'</time>':'')+'</div>'+
+        '<h1>'+esc(pickL(p,'title',lang))+'</h1><div class="body">'+bodyHtml(pickL(p,'body',lang)||pickL(p,'summary',lang))+'</div></div>';
+    }
+    var arts=(hasEn?block('en'):'')+(hasBn?block('bn'):'');
+    return '<!DOCTYPE html>\n<html lang="'+(hasEn?'en':'bn')+'">\n<head>\n<meta charset="UTF-8">\n<script src="../site-core.js"><\/script>\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'+
+      '<title>'+esc(tEn)+' | Fahad Abdur Rahman</title>\n<meta name="description" content="'+esc(sEn)+'">\n<meta name="author" content="Fahad Abdur Rahman">\n<link rel="canonical" href="'+url+'">\n'+
+      '<meta property="og:type" content="article">\n<meta property="og:site_name" content="Fahad Abdur Rahman">\n<meta property="og:title" content="'+esc(tEn)+'">\n<meta property="og:description" content="'+esc(sEn)+'">\n<meta property="og:url" content="'+url+'">\n<meta property="og:image" content="'+img+'">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n'+
+      (date?'<meta property="article:published_time" content="'+date+'">\n':'')+'<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="'+esc(tEn)+'">\n<meta name="twitter:description" content="'+esc(sEn)+'">\n<meta name="twitter:image" content="'+img+'">\n'+
+      '<script type="application/ld+json">'+JSON.stringify(ld).replace(/</g,'\\u003c')+'<\/script>\n'+
+      '<style>:root{--bg:#FAF9F6;--surface:#fff;--text:#1C1E1F;--muted:#5A615D;--border:#E6E3DC;--green:#287A50;--green-2:#3FAE7C;--green-text:#226B45}@media(prefers-color-scheme:dark){:root{--bg:#0A0F0C;--surface:#111a15;--text:#EAF1EC;--muted:#9DAAA3;--border:#223028;--green-text:#7FDDB0}}'+
+      '*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:17px/1.8 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Bengali",sans-serif}a{color:inherit}'+
+      'header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;max-width:860px;margin:0 auto;padding:18px 20px}.logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;letter-spacing:.17em;white-space:nowrap}.logo b{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--green),var(--green-2));color:#fff;font-size:.7rem;letter-spacing:.02em}.logo i{font-style:normal;color:var(--green)}'+
+      'nav{display:flex;gap:6px;flex-wrap:wrap}nav a,nav button{font:600 .86rem inherit;color:var(--muted);text-decoration:none;padding:7px 12px;border-radius:10px;border:0;background:none;cursor:pointer}nav a:hover,nav button:hover{color:var(--green-text);background:color-mix(in srgb,var(--green) 10%,transparent)}'+
+      'main{max-width:760px;margin:0 auto;padding:18px 20px 60px}.meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:.82rem;color:var(--muted);font-weight:600}.tag{padding:3px 11px;border-radius:99px;background:color-mix(in srgb,var(--green) 12%,transparent);color:var(--green-text);font-weight:700}'+
+      'h1{font-size:clamp(1.9rem,6vw,2.7rem);line-height:1.2;margin:12px 0 18px}.body h2{font-size:1.45rem;margin:1.6em 0 .5em;line-height:1.3}.body p{margin:0 0 1.15em}.back{display:inline-block;margin-top:26px;font-weight:700;color:var(--green-text)}'+
+      'footer{border-top:1px solid var(--border);text-align:center;padding:22px 16px 34px;color:var(--muted);font-size:.85rem}[hidden]{display:none!important}</style>\n</head>\n<body>\n'+
+      '<header><a class="logo" href="../index.html" aria-label="Fahad Abdur Rahman - home"><b>FA</b><span>FAHAD<i>.</i></span></a><nav><a href="../index.html">Home</a><a href="../about.html">About</a><a href="../blog.html">Blog</a><a href="../contact.html">Contact</a>'+((hasEn&&hasBn)?'<button type="button" id="lg">\u09ac\u09be\u0982\u09b2\u09be</button>':'')+'</nav></header>\n'+
+      '<main><article>\n'+arts+'\n</article><a class="back" href="../blog.html?p='+p.slug+'">Open this post on the site \u2192</a></main>\n'+
+      '<footer>\u00a9 <span id="yr">'+new Date().getFullYear()+'</span> Fahad Abdur Rahman</footer>\n'+
+      ((hasEn&&hasBn)?'<script>(function(){var b=document.getElementById("lg"),e=document.querySelector(".l-en"),n=document.querySelector(".l-bn"),L="en";try{L=localStorage.getItem("fa-lang")==="bn"?"bn":"en"}catch(x){}function p(){e.hidden=L==="bn";n.hidden=L!=="bn";document.documentElement.lang=L;b.textContent=L==="bn"?"EN":"\u09ac\u09be\u0982\u09b2\u09be"}b.addEventListener("click",function(){L=L==="bn"?"en":"bn";try{localStorage.setItem("fa-lang",L)}catch(x){}p()});p()})()<\/script>\n':'')+
+      '</body>\n</html>\n';
+  }
+  function wrapText(ctx,text,maxW,maxLines){
+    var words=String(text).split(/\s+/),lines=[],cur='';
+    words.forEach(function(w){var t=cur?cur+' '+w:w;if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=w}else cur=t});
+    if(cur)lines.push(cur);
+    if(lines.length>maxLines){lines=lines.slice(0,maxLines);lines[maxLines-1]=lines[maxLines-1].replace(/\s*\S*$/,'')+'\u2026'}
+    return lines;
+  }
+  function postImage(p){
+    return new Promise(function(res){
+      var c=document.createElement('canvas');c.width=1200;c.height=630;var x=c.getContext('2d');
+      var g=x.createLinearGradient(0,0,1200,630);g.addColorStop(0,'#06100b');g.addColorStop(.55,'#0b1d14');g.addColorStop(1,'#071410');x.fillStyle=g;x.fillRect(0,0,1200,630);
+      function glow(cx,cy,r,col,a){var rg=x.createRadialGradient(cx,cy,0,cx,cy,r);rg.addColorStop(0,col);rg.addColorStop(1,'rgba(0,0,0,0)');x.globalAlpha=a;x.fillStyle=rg;x.fillRect(0,0,1200,630);x.globalAlpha=1}
+      glow(60,40,520,'#287A50',.55);glow(1140,640,520,'#3FAE7C',.4);
+      x.strokeStyle='rgba(255,255,255,.045)';x.lineWidth=1;for(var i=0;i<=1200;i+=48){x.beginPath();x.moveTo(i,0);x.lineTo(i,630);x.stroke()}for(var j=0;j<=630;j+=48){x.beginPath();x.moveTo(0,j);x.lineTo(1200,j);x.stroke()}
+      var f='"Plus Jakarta Sans","Noto Sans Bengali","Segoe UI",system-ui,-apple-system,Arial,sans-serif';
+      var mg=x.createLinearGradient(72,64,146,138);mg.addColorStop(0,'#287A50');mg.addColorStop(1,'#3FAE7C');x.fillStyle=mg;
+      x.beginPath();x.roundRect?x.roundRect(72,64,74,74,22):x.rect(72,64,74,74);x.fill();
+      x.fillStyle='#fff';x.font='800 30px '+f;x.textAlign='center';x.textBaseline='middle';x.fillText('FA',109,102);
+      x.textAlign='left';x.font='800 22px '+f;x.fillStyle='#eef5f0';if('letterSpacing' in x)x.letterSpacing='6px';x.fillText('FAHAD',166,102);
+      x.fillStyle='#7FDDB0';x.fillText('.',166+x.measureText('FAHAD').width,102);if('letterSpacing' in x)x.letterSpacing='0px';
+      var title=pickL(p,'title','en'),tag=(pickL(p,'tag','en')||'Blog').toUpperCase();
+      x.textBaseline='alphabetic';x.fillStyle='#7FDDB0';x.font='800 21px '+f;if('letterSpacing' in x)x.letterSpacing='5px';x.fillText(tag.slice(0,40),72,236);if('letterSpacing' in x)x.letterSpacing='0px';
+      x.font='800 64px '+f;x.fillStyle='#f1f7f3';
+      var lines=wrapText(x,title,1050,3),y=318;lines.forEach(function(l){x.fillText(l,72,y);y+=78});
+      x.font='500 26px '+f;x.fillStyle='#8fa198';
+      var d=/^\d{4}-\d{2}-\d{2}$/.test(p.date||'')?p.date:'';x.fillText('Fahad Abdur Rahman'+(d?'  \u00b7  '+d:''),72,572);
+      x.font='700 22px '+f;x.fillStyle='#7FDDB0';x.textAlign='right';x.fillText('Better Youth \u00b7 Better Tomorrow',1128,572);
+      c.toBlob(function(b){b.arrayBuffer().then(function(ab){res(new Uint8Array(ab))})},'image/jpeg',.88);
+    });
+  }
+  var CRC=null;
+  function crc32(u8){
+    if(!CRC){CRC=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;CRC[n]=c>>>0}}
+    var c=0xFFFFFFFF;for(var i=0;i<u8.length;i++)c=CRC[(c^u8[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;
+  }
+  function makeZip(files){
+    var enc=new TextEncoder(),parts=[],central=[],off=0;
+    files.forEach(function(f){
+      var nm=enc.encode(f.name),crc=crc32(f.data),sz=f.data.length;
+      var lh=new Uint8Array(30+nm.length),v=new DataView(lh.buffer);
+      v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x0800,true);v.setUint16(8,0,true);v.setUint16(10,0,true);v.setUint16(12,0x21,true);
+      v.setUint32(14,crc,true);v.setUint32(18,sz,true);v.setUint32(22,sz,true);v.setUint16(26,nm.length,true);v.setUint16(28,0,true);lh.set(nm,30);
+      var ch=new Uint8Array(46+nm.length),w=new DataView(ch.buffer);
+      w.setUint32(0,0x02014b50,true);w.setUint16(4,20,true);w.setUint16(6,20,true);w.setUint16(8,0x0800,true);w.setUint16(10,0,true);w.setUint16(12,0,true);w.setUint16(14,0x21,true);
+      w.setUint32(16,crc,true);w.setUint32(20,sz,true);w.setUint32(24,sz,true);w.setUint16(28,nm.length,true);w.setUint32(42,off,true);ch.set(nm,46);
+      parts.push(lh,f.data);central.push(ch);off+=lh.length+sz;
+    });
+    var cdSize=central.reduce(function(a,b){return a+b.length},0),end=new Uint8Array(22),e=new DataView(end.buffer);
+    e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cdSize,true);e.setUint32(16,off,true);
+    return new Blob(parts.concat(central,[end]),{type:'application/zip'});
+  }
+  async function downloadShare(btn,note){
+    ensureSlugs();
+    var posts=(data.posts||[]).filter(function(p){return p&&p.slug&&(String(p.title||'').trim()||String(p.titleBn||'').trim())});
+    if(!posts.length){note.textContent='Add a post first.';return}
+    btn.disabled=true;note.textContent='Making pages and images…';
+    try{
+      if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+      var enc=new TextEncoder(),files=[],urls='';
+      for(var i=0;i<posts.length;i++){
+        var p=posts[i];
+        files.push({name:'blog/'+p.slug+'.html',data:enc.encode(postPage(p))});
+        files.push({name:'blog/'+p.slug+'.jpg',data:await postImage(p)});
+        urls+='  <url>\n    <loc>'+SITE+'blog/'+p.slug+'.html</loc>\n'+(/^\d{4}-\d{2}-\d{2}$/.test(p.date||'')?'    <lastmod>'+p.date+'</lastmod>\n':'')+'    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+      }
+      files.push({name:'blog/sitemap.xml',data:enc.encode('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+urls+'</urlset>\n')});
+      var blob=makeZip(files),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='blog-share-pages.zip';document.body.appendChild(a);a.click();
+      setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},2000);
+      note.textContent='Done: '+posts.length+' post(s). Unzip it and upload the "blog" folder to your site (next to index.html).';
+    }catch(e){note.textContent='Could not make the files: '+(e&&e.message||e)}
+    btn.disabled=false;
+  }
+
   function slugify(t){return String(t||'').toLowerCase().trim().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)}
   var STATIC_SLUGS=['talentverse-bangladesh','nexera-youth-network','visionary-youth-alliance'];
 
@@ -280,6 +408,7 @@ input[type=file]{padding:8px;font-size:.85rem}
             if(mime==='image/jpeg'){x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height)}
             x.drawImage(im,0,0,c.width,c.height);
             out=c.toDataURL(mime,q);
+            if(mime==='image/webp'&&out.indexOf('data:image/webp')!==0){out=c.toDataURL('image/png')}
             if(out.length<=(mime==='image/jpeg'?260000:120000))break;
             m=Math.round(m*.75);
           }
@@ -357,6 +486,7 @@ input[type=file]{padding:8px;font-size:.85rem}
             var sc=cover*z*k,w=im.width*sc,hh=im.height*sc;
             x.drawImage(im,cx*k-w/2,cy*k-hh/2,w,hh);
             out=c.toDataURL(round&&o.mime==='image/jpeg'?'image/png':o.mime,o.q);
+            if(o.mime==='image/webp'&&out.indexOf('data:image/webp')!==0){x.globalCompositeOperation='destination-over';x.fillStyle='#fff';x.fillRect(0,0,outW,outH);out=c.toDataURL('image/jpeg',o.q)}
             if(out.length<=(o.mime==='image/jpeg'?260000:140000))break;
             outW=Math.round(outW*.75);
           }
@@ -485,7 +615,7 @@ input[type=file]{padding:8px;font-size:.85rem}
     ]);
     var photo=h('div',{class:'item'},[
       h('strong',{text:'Your photo (home page)'}),
-      imageField('Upload photo',p.photo,function(v){p.photo=v},{crop:true,aspect:.8,shapes:false,outW:720,mime:'image/jpeg',q:.85,wide:true,hint:'After choosing a file you can crop it. Portrait works best.'})
+      imageField('Upload photo',p.photo,function(v){p.photo=v},{crop:true,aspect:.8,shapes:false,outW:720,mime:'image/webp',q:.82,wide:true,hint:'After choosing a file you can crop it. Portrait works best.'})
     ]);
     var contact=h('div',{class:'item'},[
       h('strong',{text:'Contact'}),
@@ -627,7 +757,23 @@ input[type=file]{padding:8px;font-size:.85rem}
         {key:'tag',label:'Topic (optional)',ph:'Leadership'},
         {key:'summary',label:'Short summary (shown on the blog list)',area:true},
         {key:'body',label:'Full article',area:true}
-      ],{title:'',slug:'',date:new Date().toISOString().slice(0,10),tag:'',summary:'',body:'',titleBn:'',tagBn:'',summaryBn:'',bodyBn:''},function(i){return i.title},'+ Add post');
+      ],{title:'',slug:'',date:new Date().toISOString().slice(0,10),tag:'',summary:'',body:'',titleBn:'',tagBn:'',summaryBn:'',bodyBn:''},function(i){return i.title},'+ Add post',function(it){
+        var row=h('div',{class:'row'});
+        var cp=h('button',{class:'btn small',type:'button',text:'Copy share link',onclick:function(){
+          ensureSlugs();var u=SITE+'blog/'+(it.slug||'')+'.html';
+          if(navigator.clipboard)navigator.clipboard.writeText(u);cp.textContent='Copied';setTimeout(function(){cp.textContent='Copy share link'},1500);
+        }});
+        row.appendChild(cp);
+        row.appendChild(h('span',{class:'hint',text:'Share this link on WhatsApp / Facebook (after you upload the share pages).'}));
+        return row;
+      });
+      (function(){
+        var note=h('p',{class:'hint',text:'To share a post with a title and picture preview: press the button, unzip the file, and upload the "blog" folder to your site. Do this after you Save new posts.'});
+        var b=h('button',{class:'btn',type:'button',text:'\u2B07 Download share pages (.zip)'});
+        b.addEventListener('click',function(){downloadShare(b,note)});
+        var box=h('div',{class:'langbar'},[h('strong',{text:'Share pages'}),b,note]);
+        w.insertBefore(box,w.firstChild);
+      })();
       w.insertBefore(h('p',{class:'hint',text:'Use the language switch at the top to write the English or the Bangla version. Leave an empty line between paragraphs. Start a line with ## to make a heading. Newest date shows first. Press Save at the bottom to publish.'}),w.firstChild);
       return w;
     }},

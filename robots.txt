@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /ghost-leader/admin.html
 Sitemap: https://fahad-abdur-rahman.github.io/ghost-leader/sitemap.xml
+Sitemap: https://fahad-abdur-rahman.github.io/ghost-leader/blog/sitemap.xml
