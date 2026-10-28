@@ -29,6 +29,9 @@
     '@keyframes cwFloat{from{transform:translate3d(0,0,0)}to{transform:translate3d(16px,-30px,50px)}}',
     ':root[data-theme="dark"] .scene3d{opacity:1.0}',
     '@media(max-width:700px){.scene3d .cw.c3{display:none}.scene3d{opacity:.75}}',
+    /* keep every 3D piece inside the screen (otherwise phones zoom the whole page out) */
+    '.hero,.ohero{overflow-x:clip}',
+    '@media(max-width:700px){.photo .orbit{inset:-5% -7%}}',
     /* ---- orbit rings around the photo ---- */
     '.photo .orbit{position:absolute;inset:-12% -20%;transform-style:preserve-3d;pointer-events:none;translate:0 0 -34px}',
     '.photo .orbit i{position:absolute;inset:0;border-radius:50%;border:1.5px dashed color-mix(in srgb,' + G2 + ' 60%,transparent);animation:orbSpin var(--t,16s) linear infinite}',
