@@ -13,7 +13,7 @@
 
   var css = [
     '#faProg{position:fixed;left:0;top:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--green,#287A50),var(--green-2,#3FAE7C),#7FDDB0);box-shadow:0 0 12px rgba(63,174,124,.55);z-index:2147482000;pointer-events:none;will-change:transform}',
-    '.fx{opacity:0;transform:translateY(28px) scale(.965);filter:blur(6px);transition:opacity .85s ' + E + ',transform .95s ' + E + ',filter .8s ' + E + ';transition-delay:var(--fd,0s);will-change:opacity,transform}',
+    '.fx{opacity:0;transform:perspective(900px) translateY(30px) rotateX(14deg) scale(.965);transform-origin:50% 100%;filter:blur(6px);transition:opacity .85s ' + E + ',transform .95s ' + E + ',filter .8s ' + E + ';transition-delay:var(--fd,0s);will-change:opacity,transform}',
     '.fx.fx-in{opacity:1;transform:none;filter:none}',
     '.sh h2.fx-h::after{transform:scaleX(0);transform-origin:left center;transition:transform 1.05s .25s ' + E + '}',
     '.sh h2.fx-h.fx-in::after{transform:scaleX(1)}',
@@ -38,6 +38,7 @@
     '@keyframes lgShine{0%,60%{left:-60%}85%,100%{left:130%}}',
     '@keyframes ltDot{50%{opacity:.35;transform:scale(1.35)}}',
     '@media(prefers-reduced-motion:reduce){.logo b::after,.logo .lt,.logo .lt i{animation:none}.logo .lt{background-position:100% 0}}',
+    '@media(max-width:1440px){.links a{padding:8px 9px}.logo .lt{letter-spacing:.13em;margin-right:-.13em}}',
     '@media(max-width:1200px){.links{gap:0}.links a{padding:8px 7px;font-size:.78rem}.logo .lt{letter-spacing:.1em;margin-right:-.1em}.logo:hover .lt{letter-spacing:.14em}}',
     '@media(max-width:1060px){.links a{padding:8px 5px;font-size:.74rem}.logo .lt{letter-spacing:.05em;margin-right:-.05em}.logo{gap:7px}}',
     'a.gl-link{white-space:nowrap;color:#2f9d6c!important;font-weight:700;text-shadow:0 0 0 rgba(63,174,124,0)}',

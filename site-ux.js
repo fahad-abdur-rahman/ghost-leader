@@ -29,7 +29,7 @@
     '.timeline.tl-js::before{transform:scaleY(0);transform-origin:top;transition:transform 1.9s cubic-bezier(.4,0,.2,1)}',
     '.timeline.tl-js.tl-in::before{transform:scaleY(1)}',
     '.timeline.tl-js .item::after{transform:scale(0);transition:transform .55s cubic-bezier(.3,1.6,.4,1),box-shadow .6s;transition-delay:calc(var(--k,0) * .3s + .4s)}',
-    '.timeline.tl-js.tl-in .item::after{transform:scale(1);box-shadow:0 0 0 6px color-mix(in srgb,var(--green,#287A50) 16%,transparent)}',
+    '.timeline.tl-js.tl-in .item::after{transform:scale(1)}',
     '@media(prefers-reduced-motion:reduce){img.fa-bu{filter:none;transform:none;opacity:1;transition:none}.timeline.tl-js::before,.timeline.tl-js .item::after{transform:none;transition:none}}'
   ].join('\n');
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
