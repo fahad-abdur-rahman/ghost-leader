@@ -54,6 +54,15 @@ function celebrate() {
   again.focus({ preventScroll: true });
 }
 
+/* arriving from the Web Services page with ?plan=Business: write the first line of the message */
+(function () {
+  var plan = new URLSearchParams(location.search).get('plan');
+  var box = $('cMsg');
+  if (!plan || !box || box.value) return;
+  var bn = document.documentElement.getAttribute('lang') === 'bn';
+  box.value = bn ? '\u0986\u09ae\u09bf \u0986\u09aa\u09a8\u09be\u09b0 "' + plan.slice(0, 40) + '" \u0993\u09af\u09bc\u09c7\u09ac\u09b8\u09be\u0987\u099f \u09aa\u09cd\u09b2\u09cd\u09af\u09be\u09a8 \u09a8\u09bf\u09a4\u09c7 \u0986\u0997\u09cd\u09b0\u09b9\u09c0\u0964 ' : 'Hello Fahad, I am interested in the "' + plan.slice(0, 40) + '" website plan. ';
+})();
+
 window.faContent = (async function () {
   try {
     var cfg = await import('./firebase-config.js'); var c = cfg.firebaseConfig;

@@ -38,6 +38,7 @@
     '@keyframes lgShine{0%,60%{left:-60%}85%,100%{left:130%}}',
     '@keyframes ltDot{50%{opacity:.35;transform:scale(1.35)}}',
     '@media(prefers-reduced-motion:reduce){.logo b::after,.logo .lt,.logo .lt i{animation:none}.logo .lt{background-position:100% 0}}',
+    '@media(max-width:1250px){.menu{display:grid!important}.tools{margin-left:auto}.links{display:none!important}}',
     '@media(max-width:1440px){.links a{padding:8px 9px}.logo .lt{letter-spacing:.13em;margin-right:-.13em}}',
     '@media(max-width:1200px){.links{gap:0}.links a{padding:8px 7px;font-size:.78rem}.logo .lt{letter-spacing:.1em;margin-right:-.1em}.logo:hover .lt{letter-spacing:.14em}}',
     '@media(max-width:1060px){.links a{padding:8px 5px;font-size:.74rem}.logo .lt{letter-spacing:.05em;margin-right:-.05em}.logo{gap:7px}}',

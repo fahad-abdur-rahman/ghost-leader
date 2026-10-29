@@ -142,6 +142,7 @@ input[type=file]{padding:8px;font-size:.85rem}
   </div>
 </div>
 
+<script src="web-defaults.js"></script>
 <script type="module">
 (async function(){
   var $=function(id){return document.getElementById(id)};
@@ -199,6 +200,7 @@ input[type=file]{padding:8px;font-size:.85rem}
     social:{linkedin:'',facebook:'',github:'',x:'',youtube:'',whatsapp:''},
     site:{
       waMsg:'Hello Fahad, I found your website and would like to talk.',
+      wsPill:'',wsTitle:'',wsLead:'',wsPlansTitle:'',wsPlansLead:'',wsServicesTitle:'',wsStepsTitle:'',wsHostTitle:'',wsHostText:'',wsFaqTitle:'',wsCtaTitle:'',wsCtaText:'',wsPriceNone:'',wsBtnPlans:'',wsBtnWhats:'',wsBtnContact:'',
       heroPill:'Founder & Chairman · Youth Leader',
       heroSub:'Ideas into Impact.',
       heroLead:'I am a youth leader, organization builder, and passionate about creating opportunities for the next generation.',
@@ -209,6 +211,7 @@ input[type=file]{padding:8px;font-size:.85rem}
     },
     posts:[],
     quotes:[],
+    webPlans:[],webServices:[],webSteps:[],webFaq:[],
     skills:[{name:'Leadership'},{name:'Communication'},{name:'Content Creation'},{name:'Web Design'},{name:'Event Management'},{name:'Problem Solving'}]
   };
 
@@ -785,6 +788,44 @@ input[type=file]{padding:8px;font-size:.85rem}
       w.insertBefore(h('p',{class:'hint',text:'Use the language switch at the top to write the English or the Bangla version. Leave an empty line between paragraphs. Start a line with ## to make a heading. Newest date shows first. Press Save at the bottom to publish.'}),w.firstChild);
       return w;
     }},
+    {id:'webservices',label:'Web Services',build:function(){
+      var w=h('div');
+      var top=h('div',{class:'langbar'});
+      var load=h('button',{class:'btn',type:'button',text:'Load the ready-made content'});
+      load.addEventListener('click',function(){
+        if(!window.FA_WEB){alert('web-defaults.js was not found next to admin.html.');return}
+        var has=['webPlans','webServices','webSteps','webFaq'].some(function(k){return (data[k]||[]).length});
+        if(has&&!confirm('Replace your current Web Services content with the ready-made content?'))return;
+        var c=JSON.parse(JSON.stringify(window.FA_WEB));
+        data.webPlans=c.plans;data.webServices=c.services;data.webSteps=c.steps;data.webFaq=c.faq;
+        Object.keys(c.site).forEach(function(k){data.site[k]=c.site[k]});
+        showApp(curTab);
+      });
+      top.appendChild(h('strong',{text:'Start here'}));top.appendChild(load);
+      top.appendChild(h('p',{class:'hint',text:'The Web Services page already shows ready-made plans, services, steps and questions. Press the button to copy them here so you can edit them (prices, words, Bangla). Anything you leave empty keeps the ready-made text. Prices left empty show "Message for price". Remember to Save.'}));
+      w.appendChild(top);
+      var t=data.site;
+      w.appendChild(h('div',{class:'item'},[h('strong',{text:'Page texts'}),
+        tf('Small label',t,'wsPill'),tf('Main title',t,'wsTitle'),tf('Intro text',t,'wsLead',{area:true}),
+        tf('Plans heading',t,'wsPlansTitle'),tf('Plans intro',t,'wsPlansLead',{area:true}),tf('Services heading',t,'wsServicesTitle'),tf('Steps heading',t,'wsStepsTitle'),
+        tf('Domain & hosting heading',t,'wsHostTitle'),tf('Domain & hosting text',t,'wsHostText',{area:true}),tf('Questions heading',t,'wsFaqTitle'),
+        tf('Bottom heading',t,'wsCtaTitle'),tf('Bottom text',t,'wsCtaText',{area:true}),tf('Text when a plan has no price',t,'wsPriceNone'),
+        tf('Button: see plans',t,'wsBtnPlans'),tf('Button: WhatsApp',t,'wsBtnWhats'),tf('Button: message',t,'wsBtnContact')]));
+      var L=function(k,fields,blank,nameOf,add,title){var e=listEditor(k,fields,blank,nameOf,add);e.insertBefore(h('h3',{text:title}),e.firstChild);return e};
+      w.appendChild(L('webPlans',[
+        {key:'name',label:'Plan name',name:true},
+        {key:'badge',label:'Badge (e.g. Most popular) \u2014 leave empty for none'},
+        {key:'price',label:'Price (e.g. \u09f3 5,000). Empty = "Message for price"'},
+        {key:'period',label:'Price note (e.g. one time)'},
+        {key:'desc',label:'Short description',area:true},
+        {key:'features',label:'What is included \u2014 one item per line',area:true},
+        {key:'btn',label:'Button text'}
+      ],{name:'',badge:'',price:'',period:'',desc:'',features:'',btn:''},function(i){return i.name},'+ Add plan','Plans'));
+      w.appendChild(L('webServices',[{key:'icon',label:'Icon (an emoji)',nt:true},{key:'title',label:'Title',name:true},{key:'desc',label:'Description',area:true}],{icon:'\u2728',title:'',desc:''},function(i){return i.title},'+ Add service','Services'));
+      w.appendChild(L('webSteps',[{key:'title',label:'Step title',name:true},{key:'desc',label:'Description',area:true}],{title:'',desc:''},function(i){return i.title},'+ Add step','How it works'));
+      w.appendChild(L('webFaq',[{key:'q',label:'Question',name:true},{key:'a',label:'Answer',area:true}],{q:'',a:''},function(i){return i.q},'+ Add question','Questions'));
+      return w;
+    }},
     {id:'quotes',label:'Quotes',build:function(){
       var w=listEditor('quotes',[
         {key:'text',label:'Quote',name:true,area:true,wide:true},
@@ -849,6 +890,7 @@ input[type=file]{padding:8px;font-size:.85rem}
     }
     if(Array.isArray(saved.posts))d.posts=saved.posts;
     if(Array.isArray(saved.quotes))d.quotes=saved.quotes;
+    ['webPlans','webServices','webSteps','webFaq'].forEach(function(k){if(Array.isArray(saved[k]))d[k]=saved[k]});
     if(saved.site){
       Object.keys(d.site).forEach(function(k){if(typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
       Object.keys(saved.site).forEach(function(k){if(/.Bn$/.test(k)&&typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
@@ -918,6 +960,7 @@ input[type=file]{padding:8px;font-size:.85rem}
         while(used[sg]){sg=base+'-'+(n++)}
         used[sg]=1;o.slug=sg;
       });
+      ['webPlans:name','webServices:title','webSteps:title','webFaq:q'].forEach(function(p){var k=p.split(':')[0],f=p.split(':')[1];out[k]=(out[k]||[]).filter(function(x){return x&&(String(x[f]||'').trim()||String(x[f+'Bn']||'').trim())})});
       out.quotes=(out.quotes||[]).filter(function(x){return x&&(String(x.text||'').trim()||String(x.textBn||'').trim())});
       var usedP={};
       out.posts=(out.posts||[]).filter(function(x){return x&&(String(x.title||'').trim()||String(x.titleBn||'').trim())});

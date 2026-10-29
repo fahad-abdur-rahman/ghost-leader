@@ -115,6 +115,7 @@
     'Skip to main content': 'মূল অংশে যান',
     'Home': 'হোম', 'About': 'পরিচিতি', 'Education': 'শিক্ষা', 'Skills': 'দক্ষতা',
     'Quote of the Day': 'আজকের উক্তি', '↻ Another quote': '↻ আরেকটি উক্তি', 'Ghost Leader': 'Ghost Leader',
+    'Services': 'সার্ভিস', 'Plans': 'প্ল্যান', 'Process': 'প্রক্রিয়া', 'Domain & hosting': 'ডোমেইন ও হোস্টিং', 'FAQ': 'প্রশ্নোত্তর',
     'Lite mode: On': 'লাইট মোড: চালু', 'Lite mode: Off': 'লাইট মোড: বন্ধ',
     'Blog': 'ব্লগ', 'Articles & Updates': 'লেখা ও আপডেট', 'Thoughts, stories and updates from my journey as a youth leader and founder.': 'যুব নেতা ও প্রতিষ্ঠাতা হিসেবে আমার পথচলার ভাবনা, গল্প ও আপডেট।', 'Read more →': 'আরও পড়ুন →', '← All posts': '← সব লেখা', 'No posts yet. Please check back soon.': 'এখনো কোনো লেখা নেই। শীঘ্রই আবার দেখুন।', 'Loading posts…': 'লেখা লোড হচ্ছে…', 'Post not found': 'লেখাটি পাওয়া যায়নি', 'Back to all posts': 'সব লেখায় ফিরে যান',
     'Organizations': 'সংগঠনসমূহ', 'Organisations': 'সংগঠনসমূহ',
