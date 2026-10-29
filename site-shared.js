@@ -73,6 +73,7 @@ export function fillConnect(d) {
   }
   if (email && /^[^\s@]+@[^\s@]+$/.test(email)) add('Email', 'mailto:' + email, false);
   var soc = d.social || {};
+  var wa = normWa(soc.whatsapp); if (wa) add('WhatsApp', 'https://wa.me/' + wa, true);
   Object.keys(labels).forEach(function (k) {
     if (soc[k] && /^https?:\/\//i.test(soc[k])) add(labels[k], soc[k], true);
   });
@@ -111,6 +112,9 @@ export function saveNotice(d) {
     var n = (d && d.site) || {}, t = function (k) { return String(n[k] || '').trim(); };
     localStorage.setItem('fa-notice', JSON.stringify({ t: t('noticeText'), tb: t('noticeTextBn'), l: t('noticeLink'), b: t('noticeLabel'), bb: t('noticeLabelBn') }));
     if (window.faNotice) window.faNotice();
+    var soc = (d && d.social) || {};
+    localStorage.setItem('fa-wa', JSON.stringify({ n: normWa(soc.whatsapp), m: t('waMsg'), mb: t('waMsgBn') }));
+    window.dispatchEvent(new Event('fa-wa'));
   } catch (e) {}
 }
 
@@ -135,4 +139,11 @@ export function applySeo(d, org) {
       if (changed) sc.textContent = JSON.stringify(j);
     });
   } catch (e) {}
+}
+
+// WhatsApp: accepts 8801XXXXXXXXX, +880 1XXX-XXXXXX or 01XXXXXXXXX (Bangladesh) and returns digits only, or ''.
+export function normWa(v) {
+  var d = String(v || '').replace(/[^\d]/g, '');
+  if (/^01\d{9}$/.test(d)) d = '88' + d;
+  return /^\d{8,15}$/.test(d) ? d : '';
 }

@@ -196,8 +196,9 @@ input[type=file]{padding:8px;font-size:.85rem}
     achievements:[
       {year:'YEAR',title:'Achievement title',desc:'One line about what it was and why it mattered.'}
     ],
-    social:{linkedin:'',facebook:'',github:'',x:'',youtube:''},
+    social:{linkedin:'',facebook:'',github:'',x:'',youtube:'',whatsapp:''},
     site:{
+      waMsg:'Hello Fahad, I found your website and would like to talk.',
       heroPill:'Founder & Chairman · Youth Leader',
       heroSub:'Ideas into Impact.',
       heroLead:'I am a youth leader, organization builder, and passionate about creating opportunities for the next generation.',
@@ -635,6 +636,8 @@ input[type=file]{padding:8px;font-size:.85rem}
       h('strong',{text:'Social links'}),
       h('p',{class:'hint',text:'Full address starting with https://. Leave empty to hide that icon.'})
     ]);
+    soc.appendChild(field('WhatsApp number (shows the floating WhatsApp button)',data.social.whatsapp,function(v){data.social.whatsapp=v},{placeholder:'8801XXXXXXXXX  or  01XXXXXXXXX'}));
+    soc.appendChild(h('p',{class:'hint',text:'Digits with country code (Bangladesh = 880). The number becomes public on your website. Leave empty to hide the button. The ready-made message is set in Site texts.'}));
     [['linkedin','LinkedIn'],['facebook','Facebook'],['github','GitHub'],['x','X / Twitter'],['youtube','YouTube']].forEach(function(n){
       soc.appendChild(field(n[1],data.social[n[0]],function(v){data.social[n[0]]=v},{type:'url',placeholder:'https://'}));
     });
@@ -650,6 +653,11 @@ input[type=file]{padding:8px;font-size:.85rem}
       tf('Notice text',t,'noticeText'),
       field('Link (optional)',t.noticeLink,function(v){t.noticeLink=v},{type:'url',placeholder:'https://'}),
       tf('Link button label (optional)',t,'noticeLabel')
+    ]));
+    wrap.appendChild(h('div',{class:'item'},[
+      h('strong',{text:'WhatsApp button'}),
+      h('p',{class:'hint',text:'The message that is already typed when a visitor taps the floating WhatsApp button. Set the number in Profile & Links.'}),
+      tf('Ready-made message',t,'waMsg',{area:true})
     ]));
     wrap.appendChild(h('div',{class:'item'},[
       h('strong',{text:'Top of the home page'}),
