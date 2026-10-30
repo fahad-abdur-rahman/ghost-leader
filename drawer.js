@@ -20,5 +20,5 @@
   if (closeBtn) closeBtn.addEventListener('click', function () { close(true); });
   dr.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a')) close(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dr.classList.contains('open')) close(true); });
-  window.addEventListener('resize', function () { if (innerWidth > 960 && dr.classList.contains('open')) close(false); });
+  window.addEventListener('resize', function () { if (innerWidth > 1250 && dr.classList.contains('open')) close(false); });
 })();
