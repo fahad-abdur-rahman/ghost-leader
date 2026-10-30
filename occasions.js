@@ -81,13 +81,18 @@
     if (cssDone) return; cssDone = true;
     var s = document.createElement('style'); s.id = 'faOccCss';
     s.textContent = [
-      '.focc{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 84px);z-index:75;width:min(92vw,500px);transform:translate(-50%,-14px);opacity:0;display:flex;gap:14px;align-items:center;padding:14px 44px 14px 14px;border-radius:20px;background:var(--surface,#fff);color:var(--text,#1C1E1F);border:1px solid color-mix(in srgb,var(--oc,#287A50) 45%,var(--border,#E6E3DC));box-shadow:0 18px 50px rgba(0,0,0,.22);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1)}',
-      '.focc.in{opacity:1;transform:translate(-50%,0)}',
-      '.focc .oe{flex:none;width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:1.7rem;background:color-mix(in srgb,var(--oc,#287A50) 16%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--oc,#287A50) 35%,transparent)}',
-      '.focc b{display:block;font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:1.05rem;line-height:1.25;margin-bottom:2px}',
-      '.focc span.ot{display:block;font-size:.88rem;line-height:1.45;color:var(--muted,#5A615D)}',
-      '.focc i.oa{display:block;margin-top:4px;font-style:normal;font-family:"Amiri","Noto Naskh Arabic","Scheherazade New",serif;font-size:1.25rem;line-height:1.5;color:var(--oc,#287A50)}',
-      '.focc button{position:absolute;right:8px;top:8px;width:32px;height:32px;border:0;border-radius:9px;background:transparent;color:var(--muted,#5A615D);font-size:1.25rem;line-height:1;cursor:pointer}',
+      '.focc{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 84px);z-index:75;width:min(92vw,520px);transform:translate(-50%,-18px) scale(.97);opacity:0;display:flex;gap:14px;align-items:center;padding:16px 46px 18px 16px;border-radius:22px;overflow:hidden;color:var(--text,#1C1E1F);border:1px solid transparent;background:linear-gradient(var(--surface,#fff),var(--surface,#fff)) padding-box,linear-gradient(135deg,var(--oc,#287A50),color-mix(in srgb,var(--oc,#287A50) 20%,transparent) 45%,var(--oc,#287A50)) border-box;box-shadow:0 22px 60px rgba(0,0,0,.26),0 0 0 6px color-mix(in srgb,var(--oc,#287A50) 8%,transparent);transition:opacity .5s,transform .7s cubic-bezier(.2,1.2,.3,1)}',
+      '.focc.in{opacity:1;transform:translate(-50%,0) scale(1)}',
+      '.focc::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px circle at 0% 0%,color-mix(in srgb,var(--oc,#287A50) 18%,transparent),transparent 62%)}',
+      '.focc::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;transform-origin:left;background:linear-gradient(90deg,var(--oc,#287A50),transparent);animation:faOccBar 15s linear forwards}',
+      '@keyframes faOccBar{to{transform:scaleX(0)}}',
+      '.focc>*{position:relative}',
+      '.focc .oe{flex:none;width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-size:1.95rem;background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--oc,#287A50) 28%,#fff),color-mix(in srgb,var(--oc,#287A50) 12%,transparent));box-shadow:0 0 0 1px color-mix(in srgb,var(--oc,#287A50) 40%,transparent),0 8px 22px color-mix(in srgb,var(--oc,#287A50) 30%,transparent);animation:faOccPop 2.6s ease-in-out infinite}',
+      '@keyframes faOccPop{50%{transform:scale(1.07) rotate(-3deg)}}',
+      '.focc b{display:block;font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:1.12rem;font-weight:800;letter-spacing:-.01em;line-height:1.25;margin-bottom:3px}',
+      '.focc span.ot{display:block;font-size:.88rem;line-height:1.5;color:var(--muted,#5A615D)}',
+      '.focc i.oa{display:block;margin-top:6px;font-style:normal;font-family:"Amiri","Noto Naskh Arabic","Scheherazade New",serif;font-size:1.35rem;line-height:1.5;color:var(--oc,#287A50)}',
+      '.focc button{position:absolute;z-index:2;right:10px;top:10px;width:32px;height:32px;border:1px solid var(--border,#E6E3DC);border-radius:50%;background:var(--surface,#fff);color:var(--muted,#5A615D);font-size:1.15rem;line-height:1;cursor:pointer;transition:background .2s}',
       '.focc button:hover{background:color-mix(in srgb,var(--text,#000) 8%,transparent)}',
       '#faFx{position:fixed;inset:0;width:100%;height:100%;z-index:900;pointer-events:none}',
       '.fx-bal,.fx-star,.fx-lan{position:fixed;pointer-events:none;will-change:transform,opacity}',
@@ -99,7 +104,7 @@
       '@keyframes faSwing{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}',
       '.fx-lan svg{display:block;overflow:visible;filter:drop-shadow(0 0 14px rgba(224,184,74,.55))}',
       '@media(max-width:640px){.focc{top:calc(env(safe-area-inset-top,0px) + 78px)}}',
-      '@media(prefers-reduced-motion:reduce){.focc{transition:none}}'
+      '@media(prefers-reduced-motion:reduce){.focc{transition:none}.focc::after,.focc .oe{animation:none}}'
     ].join('\n');
     document.head.appendChild(s);
   }
@@ -214,6 +219,13 @@
     paintBanner(cur);
     banner.querySelector('button').addEventListener('click', function () { closeBanner(); });
     add(banner);
+    /* sit just under the menu bar, wherever it is (a notice bar may push it down) */
+    function place() {
+      if (!banner) { removeEventListener('scroll', place); removeEventListener('resize', place); return; }
+      var hd = document.querySelector('header'), bt = hd ? hd.getBoundingClientRect().bottom : 70;
+      banner.style.top = Math.max(8, Math.round(bt) + 10) + 'px';
+    }
+    place(); addEventListener('scroll', place, { passive: true }); addEventListener('resize', place);
     requestAnimationFrame(function () { requestAnimationFrame(function () { if (banner) banner.classList.add('in'); }); });
     later(function () { closeBanner(); }, 15000);
   }
@@ -223,12 +235,10 @@
   }
 
   /* ---------- start ---------- */
-  function seen(cur) { try { return localStorage.getItem('fa-occ-seen') === cur.id; } catch (e) { return false; } }
-  function mark(cur) { try { localStorage.setItem('fa-occ-seen', cur.id); } catch (e) {} }
   function start(cur) {
     css(); run = { id: cur.id, timers: [], raf: 0, nodes: [], canvas: null };
-    var fx = cur.o.effect, showMsg = fx !== 'none' && (forcedIdx >= 0 || !seen(cur));
-    if (showMsg) { showBanner(cur); mark(cur); }
+    var fx = cur.o.effect;
+    if (fx !== 'none') showBanner(cur); /* every page shows it; the cross closes it on this page only */
     if (reduce) return;
     if (fx === 'birthday') {
       confetti(small ? 70 : 130, true); balloons();

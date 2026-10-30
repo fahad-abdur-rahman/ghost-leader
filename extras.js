@@ -75,16 +75,22 @@
     '.fa-mag{transition:transform .25s cubic-bezier(.2,.8,.2,1)}',
     '@media(prefers-reduced-motion:reduce){body{animation:none}.reveal{filter:none}#hero-title span{animation:none;-webkit-text-fill-color:currentColor;background:none;color:var(--green-text)}.fa-spot{display:none}}',
     /* notice bar */
-    '.notice{position:relative;z-index:60;display:flex;align-items:center;gap:12px;padding:9px 46px 9px 0;overflow:hidden;background:var(--green);color:#fff;font-size:.86rem;font-weight:500;line-height:1.45;text-align:center}',
-    '.notice .nt{flex:1;overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}',
+    '.notice{position:relative;z-index:60;display:flex;align-items:center;gap:10px;min-height:42px;padding:6px 52px 6px 8px;overflow:hidden;color:#EAF7F0;font-size:.86rem;font-weight:500;line-height:1.4;background:linear-gradient(100deg,#0B1F16 0%,#14412B 45%,#1F6B46 100%);border-bottom:1px solid rgba(127,221,176,.28);box-shadow:0 6px 24px rgba(10,40,26,.28)}',
+    '.notice::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:url("' + GEO_L + '");background-size:64px 64px;opacity:.07}',
+    '.notice::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,#7FDDB0,transparent);opacity:.7;pointer-events:none}',
+    '.notice .ni{position:relative;z-index:1;flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:.9rem;background:radial-gradient(circle at 35% 30%,#7FDDB0,#287A50);box-shadow:0 0 0 0 rgba(127,221,176,.55);animation:faNi 2.4s ease-out infinite}',
+    '@keyframes faNi{0%{box-shadow:0 0 0 0 rgba(127,221,176,.5)}70%,100%{box-shadow:0 0 0 10px rgba(127,221,176,0)}}',
+    '.notice .nt{position:relative;z-index:1;flex:1;overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}',
     '.notice .nm{display:inline-flex;align-items:center;will-change:transform;animation:faMarq var(--dur,18s) linear infinite}',
     '.notice .nm>span{display:inline-flex;align-items:center;gap:12px;padding-right:56px}',
+    '.notice .sep{color:#E0B84A;font-size:.7rem}',
     '.notice:hover .nm,.notice:active .nm{animation-play-state:paused}',
+    '.notice a{display:inline-flex;align-items:center;padding:3px 12px;border-radius:99px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;font-weight:700;font-size:.78rem;text-decoration:none;white-space:nowrap;transition:background .2s,transform .2s}',
+    '.notice a:hover{background:rgba(255,255,255,.26);transform:translateY(-1px)}',
+    '.notice button{position:absolute;z-index:2;right:8px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px solid rgba(255,255,255,.2);border-radius:50%;background:rgba(255,255,255,.08);color:#fff;font-size:1.1rem;line-height:1;cursor:pointer;transition:background .2s}',
+    '.notice button:hover{background:rgba(255,255,255,.22)}',
     '@keyframes faMarq{to{transform:translateX(-50%)}}',
     '@media(prefers-reduced-motion:reduce){.notice .nm{animation:none}.notice .nm>span+span{display:none}.notice .nt{overflow:auto;white-space:normal;text-align:center}}',
-    '.notice a{color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}',
-    '.notice button{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:#fff;font-size:1.2rem;line-height:1;cursor:pointer}',
-    '.notice button:hover{background:rgba(255,255,255,.18)}',
     /* back to top */
     '.totop{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));width:48px;height:48px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--green-text);box-shadow:var(--shadow-lg,0 10px 30px rgba(0,0,0,.15));display:grid;place-items:center;cursor:pointer;z-index:55;opacity:0;visibility:hidden;transform:translateY(14px) scale(.9);transition:opacity .3s,transform .3s cubic-bezier(.2,.8,.2,1),visibility .3s}',
     '.totop.show{opacity:1;visibility:visible;transform:none}',
@@ -537,8 +543,8 @@
     var tx = (LANG === 'bn' && n.tb) ? n.tb : n.t, lb = (LANG === 'bn' && n.bb) ? n.bb : n.b;
     if (!tx) return;
     var key = n.t + '|' + n.l;
-    try { if (sessionStorage.getItem('fa-notice-x') === key) return; } catch (e) {}
     var bar = document.createElement('div'); bar.className = 'notice'; bar.id = 'faNotice'; bar.setAttribute('role', 'status');
+    var ni = document.createElement('span'); ni.className = 'ni'; ni.setAttribute('aria-hidden', 'true'); ni.textContent = '\uD83D\uDCE3'; bar.appendChild(ni);
     var nt = document.createElement('div'); nt.className = 'nt';
     var nm = document.createElement('div'); nm.className = 'nm';
     function unit(clone) {
@@ -554,7 +560,7 @@
     /* repeat the message enough times that two identical halves always fill the bar, then slide by exactly one half */
     var a1 = unit(false); nm.appendChild(a1); nt.appendChild(nm); bar.appendChild(nt);
     var x = document.createElement('button'); x.type = 'button'; x.setAttribute('aria-label', 'Close'); x.textContent = '×';
-    x.addEventListener('click', function () { try { sessionStorage.setItem('fa-notice-x', key); } catch (e) {} bar.remove(); });
+    x.addEventListener('click', function () { bar.remove(); }); /* closes on this page only; it is back on the next page */
     bar.appendChild(x);
     document.body.insertBefore(bar, document.body.firstChild);
     var w = a1.offsetWidth || 300, need = Math.max(1, Math.ceil((nt.offsetWidth || 360) / w));
