@@ -834,7 +834,24 @@ input[type=file]{padding:8px;font-size:.85rem}
         alert(n?(n+' new item'+(n===1?'':'s')+' added at the end of the lists. Check them, then press Save.'):'Nothing new to add.');
         showApp(curTab);
       });
-      top.appendChild(h('strong',{text:'Start here'}));top.appendChild(load);top.appendChild(addNew);
+      var FREE_PLAN={name:'Free website',nameBn:'ফ্রি ওয়েবসাইট',badge:'Selected applicants',badgeBn:'নির্বাচিত আবেদনকারী',price:'Free',priceBn:'ফ্রি',period:'for selected projects',periodBn:'নির্বাচিত প্রজেক্টের জন্য',
+        desc:'For youth, student, community and non-profit projects. Not for everyone: I review every application.',descBn:'তরুণ, শিক্ষার্থী, কমিউনিটি ও অলাভজনক প্রজেক্টের জন্য। সবার জন্য নয়: আমি প্রতিটি আবেদন দেখে বেছে নিই।',
+        features:'Up to 3 pages, mobile-friendly\nOnly for selected applicants (limited spots)\nYou send your text, photos and logo on time\nDomain and hosting fees are paid by you\nA small "Website by Fahad" credit in the footer\nI reply to every application',
+        featuresBn:'সর্বোচ্চ ৩টি পেজ, মোবাইল-ফ্রেন্ডলি\nশুধু নির্বাচিত আবেদনকারীর জন্য (সীমিত সুযোগ)\nআপনার লেখা, ছবি ও লোগো সময়মতো পাঠাতে হবে\nডোমেইন ও হোস্টিংয়ের খরচ আপনি দেবেন\nফুটারে ছোট একটি "Website by Fahad" ক্রেডিট থাকবে\nপ্রতিটি আবেদনের উত্তর আমি দিই',
+        btn:'Apply for a free website',btnBn:'ফ্রি ওয়েবসাইটের জন্য আবেদন'};
+      var FREE_SVC={icon:'🎁',title:'FREE website check-up',titleBn:'ফ্রি ওয়েবসাইট চেক-আপ',desc:'Send me your website (or your idea) and I will tell you for free what to improve: speed, mobile view, design and Google visibility.',descBn:'আপনার ওয়েবসাইট (বা আইডিয়া) পাঠান। কী উন্নতি করা যায় আমি বিনামূল্যে জানাব: গতি, মোবাইল ভিউ, ডিজাইন আর Google-এ দেখা যাওয়া।'};
+      function addFree(key,item,nameKey,label){
+        data[key]=data[key]||[];
+        var nm=String(item[nameKey]).toLowerCase();
+        if(data[key].some(function(x){return String(x[nameKey]||'').trim().toLowerCase()===nm})){alert(label+' is already in the list below. Scroll down to edit it.');return}
+        data[key].push(JSON.parse(JSON.stringify(item)));markDirty();showApp(curTab);
+        setTimeout(function(){var it=document.querySelectorAll('[role=tabpanel]:not([hidden]) .item');alert(label+' added at the end of its list. Edit it, then press Save.')},50);
+      }
+      var fr=h('div',{style:'display:flex;gap:8px;flex-wrap:wrap;margin-top:10px'},[
+        h('button',{class:'btn',type:'button',text:'+ Add the FREE website plan',onclick:function(){addFree('webPlans',FREE_PLAN,'name','The Free website plan')}}),
+        h('button',{class:'btn',type:'button',text:'+ Add the FREE check-up service',onclick:function(){addFree('webServices',FREE_SVC,'title','The Free check-up service')}})]);
+      var cnt=window.FA_WEB?('Ready-made file loaded: '+window.FA_WEB.plans.length+' plans, '+window.FA_WEB.services.length+' services, '+window.FA_WEB.faq.length+' questions. (If this says 3 plans, web-defaults.js on the site is still the old one.)'):'web-defaults.js did not load.';
+      top.appendChild(h('strong',{text:'Start here'}));top.appendChild(load);top.appendChild(addNew);top.appendChild(fr);top.appendChild(h('p',{class:'hint',text:cnt}));
       top.appendChild(h('p',{class:'hint',text:'The Web Services page already shows ready-made plans, services, steps and questions. Press the button to copy them here so you can edit them (prices, words, Bangla). Anything you leave empty keeps the ready-made text. Prices left empty show "Message for price". Remember to Save.'}));
       w.appendChild(top);
       var t=data.site;
