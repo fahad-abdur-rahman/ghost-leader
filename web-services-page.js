@@ -165,7 +165,7 @@ function thanks(form) {
       form.reset(); fillPlans(localize(build(RAW)), build(RAW)); ost('', '');
       thanks(form);
       try { window.faTrack && window.faTrack('web_order_submit', { plan: String($('oPlan').value).slice(0, 40) }); } catch (e) {}
-    } catch (e) { mailFallback(T.fail); }
+    } catch (e) { try { console.warn('Order not sent:', e); } catch (x) {} mailFallback(T.fail + ' [' + String((e && (e.code || e.message)) || 'error').slice(0, 60) + ']'); }
     btn.disabled = false;
   });
 })();
