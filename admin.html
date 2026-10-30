@@ -200,7 +200,7 @@ input[type=file]{padding:8px;font-size:.85rem}
     social:{linkedin:'',facebook:'',github:'',x:'',youtube:'',whatsapp:''},
     site:{
       waMsg:'Hello Fahad, I found your website and would like to talk.',
-      wsPill:'',wsTitle:'',wsLead:'',wsPlansTitle:'',wsPlansLead:'',wsServicesTitle:'',wsStepsTitle:'',wsHostTitle:'',wsHostText:'',wsFaqTitle:'',wsCtaTitle:'',wsCtaText:'',wsPriceNone:'',wsBtnPlans:'',wsBtnWhats:'',wsBtnContact:'',
+      wsPill:'',wsTitle:'',wsLead:'',wsPlansTitle:'',wsPlansLead:'',wsServicesTitle:'',wsStepsTitle:'',wsHostTitle:'',wsHostText:'',wsFaqTitle:'',wsCtaTitle:'',wsCtaText:'',wsPriceNone:'',wsBtnPlans:'',wsBtnWhats:'',wsBtnContact:'',wsOrderOn:'',wsOrderTitle:'',wsOrderText:'',wsHidePlans:'',wsHideServices:'',wsHideSteps:'',wsHideHost:'',wsHideFaq:'',
       heroPill:'Founder & Chairman · Youth Leader',
       heroSub:'Ideas into Impact.',
       heroLead:'I am a youth leader, organization builder, and passionate about creating opportunities for the next generation.',
@@ -688,18 +688,19 @@ input[type=file]{padding:8px;font-size:.85rem}
   function messagesPanel(){
     var wrap=h('div',{class:'panel'});
     var list=h('div',{class:'panel'});
-    var status=h('p',{class:'hint',text:''});
+    var status=h('p',{class:'hint',text:''}),mf='all';
     function load(){
       status.textContent='Loading…';list.textContent='';
-      var q=fsM.query(fsM.collection(db,'messages'),fsM.orderBy('createdAt','desc'),fsM.limit(100));
+      var q=fsM.query(fsM.collection(db,'messages'),fsM.orderBy('createdAt','desc'),fsM.limit(200));
       fsM.getDocs(q).then(function(snap){
         list.textContent='';
-        if(snap.empty){status.textContent='No messages yet. Messages sent from the Contact page appear here.';return}
+        if(snap.empty){status.textContent='No messages yet. Messages from the Contact page and website orders from the Web Services page appear here.';return}
         status.textContent=snap.size+' message'+(snap.size===1?'':'s');
         snap.forEach(function(d){
           var m=d.data(),when=m.createdAt?new Date(m.createdAt).toLocaleString():'';
+          if(mf==='orders'&&m.page!=='web-order')return;if(mf==='contact'&&m.page==='web-order')return;
           var card=h('div',{class:'item'},[
-            h('div',{class:'ihead'},[h('strong',{text:m.name||'(no name)'}),h('span',{class:'msgmeta',text:when})]),
+            h('div',{class:'ihead'},[h('strong',{text:(m.page==='web-order'?'\uD83D\uDCBC WEBSITE ORDER \u2014 ':'')+(m.name||'(no name)')}),h('span',{class:'msgmeta',text:when})]),
             h('div',{class:'msgmeta',text:m.email||''}),
             h('div',{class:'msgc',text:m.message||''})
           ]);
@@ -709,13 +710,22 @@ input[type=file]{padding:8px;font-size:.85rem}
             if(!confirm('Delete this message?'))return;
             fsM.deleteDoc(fsM.doc(db,'messages',d.id)).then(function(){card.remove()}).catch(function(e){alert('Could not delete: '+(e.code||e.message))});
           }});
-          acts.appendChild(reply);acts.appendChild(del);card.appendChild(acts);list.appendChild(card);
+          acts.appendChild(reply);
+          var pm=/Phone\/WhatsApp:\s*([^\n]+)/.exec(m.message||'');
+          if(m.page==='web-order'&&pm){
+            var dg=pm[1].replace(/[^\d]/g,'');if(/^01\d{9}$/.test(dg))dg='88'+dg;
+            if(dg.length>=8)acts.appendChild(h('a',{class:'btn small',href:'https://wa.me/'+dg,target:'_blank',rel:'noopener',text:'Reply on WhatsApp',style:'text-decoration:none;color:inherit'}));
+          }
+          acts.appendChild(del);card.appendChild(acts);list.appendChild(card);
         });
       }).catch(function(e){
         status.textContent=(e.code==='permission-denied')?'Not allowed yet — update the Firestore rules (see below), then press Refresh.':'Could not load messages: '+(e.code||e.message);
       });
     }
-    var top=h('div',{style:'display:flex;gap:10px;align-items:center'},[h('button',{class:'btn small',type:'button',text:'Refresh',onclick:load}),status]);
+    var fsel=h('select',{'aria-label':'Filter'});
+    [['all','All'],['orders','Website orders'],['contact','Contact messages']].forEach(function(o){fsel.appendChild(h('option',{value:o[0],text:o[1]}))});
+    fsel.addEventListener('change',function(){mf=fsel.value;load()});
+    var top=h('div',{style:'display:flex;gap:10px;align-items:center;flex-wrap:wrap'},[h('button',{class:'btn small',type:'button',text:'Refresh',onclick:load}),fsel,status]);
     var det=h('details',{class:'rules'},[h('summary',{text:'Firestore rules needed for the contact form'}),h('p',{class:'hint',style:'margin-top:8px',text:'Firebase Console → Firestore Database → Rules → replace everything with this, then Publish.'}),h('pre',{text:RULES})]);
     wrap.appendChild(top);wrap.appendChild(list);wrap.appendChild(det);
     load();
@@ -790,6 +800,16 @@ input[type=file]{padding:8px;font-size:.85rem}
     }},
     {id:'webservices',label:'Web Services',build:function(){
       var w=h('div');
+      /* first time: copy the ready-made content in automatically, so everything can be edited right away */
+      (function(){
+        if(!window.FA_WEB)return;
+        var has=['webPlans','webServices','webSteps','webFaq'].some(function(k){return (data[k]||[]).length});
+        if(has)return;
+        var c=JSON.parse(JSON.stringify(window.FA_WEB));
+        data.webPlans=c.plans;data.webServices=c.services;data.webSteps=c.steps;data.webFaq=c.faq;
+        Object.keys(c.site).forEach(function(k){if(!data.site[k])data.site[k]=c.site[k]});
+        markDirty();
+      })();
       var top=h('div',{class:'langbar'});
       var load=h('button',{class:'btn',type:'button',text:'Load the ready-made content'});
       load.addEventListener('click',function(){
@@ -801,7 +821,20 @@ input[type=file]{padding:8px;font-size:.85rem}
         Object.keys(c.site).forEach(function(k){data.site[k]=c.site[k]});
         showApp(curTab);
       });
-      top.appendChild(h('strong',{text:'Start here'}));top.appendChild(load);
+      var addNew=h('button',{class:'btn',type:'button',text:'Add new ready-made items (keeps my edits)',style:'margin-left:8px'});
+      addNew.addEventListener('click',function(){
+        if(!window.FA_WEB){alert('web-defaults.js was not found next to admin.html.');return}
+        var c=JSON.parse(JSON.stringify(window.FA_WEB)),n=0;
+        [['webPlans',c.plans,'name'],['webServices',c.services,'title'],['webSteps',c.steps,'title'],['webFaq',c.faq,'q']].forEach(function(x){
+          data[x[0]]=data[x[0]]||[];
+          var have={};data[x[0]].forEach(function(it){have[String(it[x[2]]||'').trim().toLowerCase()]=1;have[String(it[x[2]+'Bn']||'').trim().toLowerCase()]=1});
+          x[1].forEach(function(it){var k=String(it[x[2]]||'').trim().toLowerCase();if(k&&!have[k]){data[x[0]].push(it);n++}});
+        });
+        if(n)markDirty();
+        alert(n?(n+' new item'+(n===1?'':'s')+' added at the end of the lists. Check them, then press Save.'):'Nothing new to add.');
+        showApp(curTab);
+      });
+      top.appendChild(h('strong',{text:'Start here'}));top.appendChild(load);top.appendChild(addNew);
       top.appendChild(h('p',{class:'hint',text:'The Web Services page already shows ready-made plans, services, steps and questions. Press the button to copy them here so you can edit them (prices, words, Bangla). Anything you leave empty keeps the ready-made text. Prices left empty show "Message for price". Remember to Save.'}));
       w.appendChild(top);
       var t=data.site;
@@ -811,6 +844,21 @@ input[type=file]{padding:8px;font-size:.85rem}
         tf('Domain & hosting heading',t,'wsHostTitle'),tf('Domain & hosting text',t,'wsHostText',{area:true}),tf('Questions heading',t,'wsFaqTitle'),
         tf('Bottom heading',t,'wsCtaTitle'),tf('Bottom text',t,'wsCtaText',{area:true}),tf('Text when a plan has no price',t,'wsPriceNone'),
         tf('Button: see plans',t,'wsBtnPlans'),tf('Button: WhatsApp',t,'wsBtnWhats'),tf('Button: message',t,'wsBtnContact')]));
+      function sel(label,key,opts){
+        var id='f'+(++uid),s2=h('select',{id:id});
+        opts.forEach(function(o){s2.appendChild(h('option',{value:o[0],text:o[1]}))});
+        s2.value=t[key]===undefined||t[key]===null?'':String(t[key]);
+        if(!s2.value)s2.value=opts[0][0];
+        s2.addEventListener('change',function(){t[key]=s2.value;markDirty()});
+        return h('div',{},[h('label',{for:id,text:label}),s2]);
+      }
+      var yn=[['','Show'],['1','Hide']];
+      w.appendChild(h('div',{class:'item'},[h('strong',{text:'Order form'}),
+        sel('Order form on the page','wsOrderOn',[['','Show'],['0','Hide (plan buttons go to the Contact page)']]),
+        tf('Order form heading',t,'wsOrderTitle'),tf('Order form text',t,'wsOrderText',{area:true}),
+        h('p',{class:'hint',text:'Orders arrive in the Messages tab, marked WEBSITE ORDER, with a WhatsApp reply button.'})]));
+      w.appendChild(h('div',{class:'item'},[h('strong',{text:'Show or hide sections'}),
+        sel('Plans','wsHidePlans',yn),sel('Services','wsHideServices',yn),sel('How it works','wsHideSteps',yn),sel('Domain & hosting','wsHideHost',yn),sel('Questions (FAQ)','wsHideFaq',yn)]));
       var L=function(k,fields,blank,nameOf,add,title){var e=listEditor(k,fields,blank,nameOf,add);e.insertBefore(h('h3',{text:title}),e.firstChild);return e};
       w.appendChild(L('webPlans',[
         {key:'name',label:'Plan name',name:true},

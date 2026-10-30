@@ -454,6 +454,26 @@ html{background:var(--bg)}
 @media(max-width:860px){.wsh-grid,.host{grid-template-columns:1fr}.tlds{justify-content:flex-start}.mock{max-width:420px;transform:perspective(1000px) rotateY(-6deg)}}
 @media(prefers-reduced-motion:reduce){.mock{animation:none}}
 
+.ord{padding:30px;position:relative;max-width:900px}
+.og{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 18px}
+.og .f{display:flex;flex-direction:column;gap:6px}.og .f.full{grid-column:1/-1}
+.ord label{font-size:.84rem;font-weight:700;color:var(--muted)}
+.ord input,.ord select,.ord textarea{width:100%;font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;transition:border-color .2s,box-shadow .2s}
+.ord textarea{min-height:130px;resize:vertical}
+.ord input:focus,.ord select:focus,.ord textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px color-mix(in srgb,var(--green) 16%,transparent)}
+.ord .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.orow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:20px}
+.ost{margin:0;font-size:.92rem;font-weight:600}.ost.err{color:#c0392b}.ost.ok{color:var(--green-text)}
+.ord-ok{position:absolute;inset:0;z-index:5;display:grid;place-items:center;text-align:center;padding:24px;border-radius:inherit;background:var(--surface);animation:ordIn .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes ordIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+.ord-ok svg{width:96px;height:96px;display:block;margin:0 auto 12px;overflow:visible}
+.ord-ok .c1{fill:none;stroke:var(--green);stroke-width:4;stroke-linecap:round;stroke-dasharray:302;stroke-dashoffset:302;transform:rotate(-90deg);transform-origin:50% 50%;animation:ordDraw .8s .1s cubic-bezier(.4,0,.2,1) forwards}
+.ord-ok .ck{fill:none;stroke:var(--green);stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:ordDraw .45s .7s ease-out forwards}
+@keyframes ordDraw{to{stroke-dashoffset:0}}
+.ord-ok h3{margin:0 0 6px;font-size:1.4rem}.ord-ok p{margin:0 0 16px;color:var(--muted);max-width:420px}
+@media(max-width:700px){.og{grid-template-columns:1fr}.ord{padding:22px 18px}}
+@media(prefers-reduced-motion:reduce){.ord-ok *{animation:none!important}.ord-ok .c1,.ord-ok .ck{stroke-dashoffset:0}}
+
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "Website design, development and hosting setup", "serviceType": "Web design and development", "description": "Custom websites for people, clubs and organizations in Bangladesh: design, build, domain and hosting setup, and a simple admin panel. By Fahad Abdur Rahman.", "url": "https://fahad-abdur-rahman.github.io/ghost-leader/web-services.html", "areaServed": {"@type": "Country", "name": "Bangladesh"}, "provider": {"@type": "Person", "@id": "https://fahad-abdur-rahman.github.io/ghost-leader/#person", "name": "Fahad Abdur Rahman", "url": "https://fahad-abdur-rahman.github.io/ghost-leader/"}}</script>
 </head>
@@ -542,6 +562,41 @@ html{background:var(--bg)}
 <article class="plan card pop"><span class="bd">Most popular</span><h3>Business</h3><p class="pd">For clubs, organizations and small businesses</p><div class="pr none">Message for price</div><ul><li>Up to 8 pages</li><li>Admin panel to edit your own content</li><li>Bangla and English versions</li><li>Blog or news section</li><li>Google Analytics and SEO setup</li><li>Domain and hosting setup help</li><li>Help after launch</li></ul><a class="btn primary" href="contact.html?plan=Business">Get Business</a></article>
 <article class="plan card"><h3>Custom</h3><p class="pd">For bigger and special projects</p><div class="pr none">Message for price</div><ul><li>As many pages as you need</li><li>Custom design and features</li><li>Forms, database and user content</li><li>More than one language</li><li>Speed and performance tuning</li><li>Monthly care option</li></ul><a class="btn" href="contact.html?plan=Custom">Request a quote</a></article>
   </div>
+</div></section>
+
+
+<section id="order" aria-labelledby="od-h"><div class="wrap">
+  <div class="sh"><div><div class="eyebrow" data-en="Order" data-bn="অর্ডার">Order</div><h2 id="od-h" data-en="Tell me about your website" data-bn="আপনার ওয়েবসাইটের কথা বলুন">Tell me about your website</h2></div></div>
+  <p class="sec-lead" id="oText" data-en="Fill in the form and I will message you with a few questions and a clear price. Sending this form does not commit you to anything." data-bn="ফর্মটি পূরণ করুন, আমি কয়েকটা প্রশ্ন আর পরিষ্কার দাম নিয়ে আপনাকে মেসেজ করব। এই ফর্ম পাঠালে আপনি কোনো বাধ্যবাধকতায় পড়েন না।">Fill in the form and I will message you with a few questions and a clear price. Sending this form does not commit you to anything.</p>
+  <form class="card ord" id="wsOrder" novalidate>
+    <div class="og">
+      <div class="f"><label for="oName" data-en="Your name *" data-bn="আপনার নাম *">Your name *</label><input id="oName" type="text" maxlength="80" autocomplete="name" required></div>
+      <div class="f"><label for="oPhone" data-en="WhatsApp / phone *" data-bn="WhatsApp / ফোন নম্বর *">WhatsApp / phone *</label><input id="oPhone" type="tel" maxlength="30" autocomplete="tel" placeholder="01XXXXXXXXX" required></div>
+      <div class="f"><label for="oEmail" data-en="Email *" data-bn="ইমেইল *">Email *</label><input id="oEmail" type="email" maxlength="120" autocomplete="email" required></div>
+      <div class="f"><label for="oPlan" data-en="Plan" data-bn="প্ল্যান">Plan</label><select id="oPlan"><option value="Not sure yet" data-en="Not sure yet" data-bn="এখনো ঠিক করিনি">Not sure yet</option></select></div>
+      <div class="f"><label for="oType" data-en="What kind of website?" data-bn="কী ধরনের ওয়েবসাইট?">What kind of website?</label><select id="oType">
+        <option value="Personal / portfolio" data-en="Personal / portfolio" data-bn="ব্যক্তিগত / পোর্টফোলিও">Personal / portfolio</option>
+        <option value="Organization / club" data-en="Organization / club" data-bn="সংগঠন / ক্লাব">Organization / club</option>
+        <option value="Blog / news" data-en="Blog / news" data-bn="ব্লগ / নিউজ">Blog / news</option>
+        <option value="Landing / event page" data-en="Landing / event page" data-bn="ল্যান্ডিং / ইভেন্ট পেজ">Landing / event page</option>
+        <option value="Redesign of my old website" data-en="Redesign of my old website" data-bn="পুরোনো ওয়েবসাইট নতুন করে সাজানো">Redesign of my old website</option>
+        <option value="FREE website check-up" data-en="FREE website check-up" data-bn="ফ্রি ওয়েবসাইট চেক-আপ">FREE website check-up</option>
+        <option value="Something else" data-en="Something else" data-bn="অন্য কিছু">Something else</option></select></div>
+      <div class="f"><label for="oBudget" data-en="Your budget (optional)" data-bn="আপনার বাজেট (ঐচ্ছিক)">Your budget (optional)</label><input id="oBudget" type="text" maxlength="60"></div>
+      <div class="f"><label for="oWhen" data-en="When do you need it?" data-bn="কখন লাগবে?">When do you need it?</label><select id="oWhen">
+        <option value="Not decided" data-en="Not decided" data-bn="ঠিক করিনি">Not decided</option>
+        <option value="As soon as possible" data-en="As soon as possible" data-bn="যত তাড়াতাড়ি সম্ভব">As soon as possible</option>
+        <option value="Within a month" data-en="Within a month" data-bn="এক মাসের মধ্যে">Within a month</option>
+        <option value="No hurry" data-en="No hurry" data-bn="তাড়া নেই">No hurry</option></select></div>
+      <div class="f"><label for="oDomain" data-en="Domain name" data-bn="ডোমেইন নাম">Domain name</label><select id="oDomain">
+        <option value="Not sure" data-en="Not sure" data-bn="জানি না">Not sure</option>
+        <option value="I already have a domain" data-en="I already have a domain" data-bn="আমার ডোমেইন আছে">I already have a domain</option>
+        <option value="I need help with a domain" data-en="I need help with a domain" data-bn="ডোমেইনে সাহায্য লাগবে">I need help with a domain</option></select></div>
+      <div class="f full"><label for="oMsg" data-en="Tell me about your idea *" data-bn="আপনার আইডিয়া সম্পর্কে লিখুন *">Tell me about your idea *</label><textarea id="oMsg" maxlength="1200" required data-ph-en="What is the website for? Who will use it? Any websites you like?" data-ph-bn="ওয়েবসাইটটা কীসের জন্য? কারা ব্যবহার করবে? পছন্দের কোনো ওয়েবসাইট আছে?"></textarea></div>
+    </div>
+    <div class="hp" aria-hidden="true"><label>Leave this empty<input id="oWeb" type="text" tabindex="-1" autocomplete="off"></label></div>
+    <div class="orow"><button class="btn primary" id="oSend" type="submit"><span data-en="Send my order" data-bn="অর্ডার পাঠান">Send my order</span> <span aria-hidden="true">→</span></button><p class="ost" id="oStatus" role="status" aria-live="polite"></p></div>
+  </form>
 </div></section>
 
 <section aria-labelledby="sv-h"><div class="wrap">

@@ -32,7 +32,11 @@ window.FA_WEB={
   "wsBtnWhats": "Order on WhatsApp",
   "wsBtnWhatsBn": "হোয়াটসঅ্যাপে অর্ডার করুন",
   "wsBtnContact": "Send a message",
-  "wsBtnContactBn": "মেসেজ পাঠান"
+  "wsBtnContactBn": "মেসেজ পাঠান",
+  "wsOrderTitle": "Tell me about your website",
+  "wsOrderTitleBn": "আপনার ওয়েবসাইটের কথা বলুন",
+  "wsOrderText": "Fill in the form and I will message you with a few questions and a clear price. Sending this form does not commit you to anything.",
+  "wsOrderTextBn": "ফর্মটি পূরণ করুন, আমি কয়েকটি প্রশ্ন আর পরিষ্কার দাম জানিয়ে আপনাকে মেসেজ করব। ফর্ম পাঠালে আপনি কিছুতেই বাধ্য থাকেন না।"
  },
  "plans": [
   {
@@ -126,6 +130,20 @@ window.FA_WEB={
    "titleBn": "ডোমেইন, হোস্টিং ও ইমেইল",
    "desc": "Get your own address and a reliable place online.",
    "descBn": "নিজের ঠিকানা আর অনলাইনে নির্ভরযোগ্য জায়গা পাওয়া।"
+  },
+  {
+   "icon": "🔎",
+   "title": "SEO setup (be found on Google)",
+   "titleBn": "SEO সেটআপ (Google-এ খুঁজে পাওয়া)",
+   "desc": "Page titles, descriptions, sitemap, share pictures and Google Search Console, so people can find you.",
+   "descBn": "পেজের শিরোনাম, বিবরণ, সাইটম্যাপ, শেয়ার ছবি আর Google Search Console, যাতে মানুষ আপনাকে খুঁজে পায়।"
+  },
+  {
+   "icon": "🎁",
+   "title": "FREE website check-up",
+   "titleBn": "ফ্রি ওয়েবসাইট চেক-আপ",
+   "desc": "Send me your website (or your idea) and I will tell you for free what to improve: speed, mobile view, design and Google visibility.",
+   "descBn": "আপনার ওয়েবসাইট (বা আইডিয়া) পাঠান। কী উন্নতি করা যায় আমি বিনামূল্যে জানাব: গতি, মোবাইল ভিউ, ডিজাইন আর Google-এ দেখা যাওয়া।"
   }
  ],
  "steps": [
@@ -184,6 +202,18 @@ window.FA_WEB={
    "qBn": "কীভাবে অর্ডার করব?",
    "a": "Choose a plan and press the button, or message me on WhatsApp. We will talk about your idea, and then I send a clear price.",
    "aBn": "একটি প্ল্যান বেছে বাটনে চাপুন, বা WhatsApp-এ মেসেজ করুন। আপনার আইডিয়া নিয়ে কথা বলব, তারপর পরিষ্কার দাম পাঠাব।"
-  }
+  },
+  {
+   "q": "Will my website show on Google?",
+   "qBn": "আমার ওয়েবসাইট কি Google-এ দেখাবে?",
+   "a": "Yes. I set up the basics: clear titles and descriptions, a sitemap, nice share pictures and Google Search Console. Google decides the final ranking and it takes time, so nobody can honestly promise the first place.",
+   "aBn": "হ্যাঁ। আমি মূল কাজগুলো করে দিই: পরিষ্কার শিরোনাম ও বিবরণ, সাইটম্যাপ, সুন্দর শেয়ার ছবি আর Google Search Console। শেষ র‍্যাঙ্ক Google ঠিক করে আর এতে সময় লাগে, তাই প্রথম স্থানের প্রতিশ্রুতি কেউ সততার সাথে দিতে পারে না।"
+ },
+ {
+   "q": "Is the first talk and the website check-up free?",
+   "qBn": "প্রথম কথা আর ওয়েবসাইট চেক-আপ কি ফ্রি?",
+   "a": "Yes. Talking about your idea and the website check-up are free, and you do not have to order anything afterwards.",
+   "aBn": "হ্যাঁ। আপনার আইডিয়া নিয়ে কথা বলা আর ওয়েবসাইট চেক-আপ বিনামূল্যে, আর এরপর কিছু অর্ডার করতে আপনি বাধ্য নন।"
+ }
  ]
 };
