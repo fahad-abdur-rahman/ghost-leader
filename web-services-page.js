@@ -156,7 +156,7 @@ function thanks(form) {
     if (Date.now() - last < 60000) { ost(T.wait, 'err'); return; }
     if (!DB || !FS) { mailFallback(T.na); return; }
     var head = '[WEBSITE ORDER]\nPlan: ' + $('oPlan').value + '\nWebsite type: ' + $('oType').value + '\nBudget: ' + ($('oBudget').value.trim() || 'not given') +
-      '\nNeeded: ' + $('oWhen').value + '\nDomain: ' + $('oDomain').value + '\nPhone/WhatsApp: ' + phone + '\nDetails:\n';
+      '\nNeeded: ' + $('oWhen').value + '\nDomain: ' + $('oDomain').value + ($('oSite').value.trim() ? '\nCurrent website: ' + $('oSite').value.trim().slice(0, 200) : '') + '\nPhone/WhatsApp: ' + phone + '\nDetails:\n';
     var text = (head + msg).slice(0, 2000);
     var btn = $('oSend'); btn.disabled = true; ost(T.sending, '');
     try {

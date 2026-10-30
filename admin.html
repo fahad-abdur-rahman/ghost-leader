@@ -92,12 +92,14 @@ input[type=file]{padding:8px;font-size:.85rem}
 .frow .btn{margin-top:8px}
 .pgaddr{font-size:.8rem;color:var(--muted);margin-top:8px;word-break:break-all}
 
+.amk{display:inline-grid;place-items:center;width:36px;height:36px;margin-right:12px;border-radius:11px;background:linear-gradient(135deg,#287A50,#3FAE7C);color:#fff;font-size:.78rem;font-weight:800;letter-spacing:.02em;vertical-align:middle;box-shadow:0 6px 16px rgba(40,122,80,.4),inset 0 1px 0 rgba(255,255,255,.3)}
 </style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23287A50'/%3E%3Cstop offset='1' stop-color='%233FAE7C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-size='28' font-weight='800' text-anchor='middle' fill='%23fff' font-family='Arial,sans-serif'%3EFA%3C/text%3E%3C/svg%3E">
 </head>
 <body>
 <header>
   <div class="wrap top">
-    <h1>FAHAD. <span>Admin</span></h1>
+    <h1><b class="amk">FA</b>FAHAD. <span>Admin</span></h1>
     <a class="btn small" href="index.html" style="text-decoration:none;color:inherit">View site</a>
     <button class="btn small" id="mode" type="button" aria-label="Toggle dark mode">🌓</button>
     <button class="btn small" id="signout" type="button" hidden>Sign out</button>
@@ -143,6 +145,7 @@ input[type=file]{padding:8px;font-size:.85rem}
 </div>
 
 <script src="web-defaults.js"></script>
+<script src="occasions.js"></script>
 <script type="module">
 (async function(){
   var $=function(id){return document.getElementById(id)};
@@ -210,6 +213,7 @@ input[type=file]{padding:8px;font-size:.85rem}
       contactText:'Have a project, collaboration or just want to say hello? Feel free to reach out!'
     },
     posts:[],
+    occasions:[],
     quotes:[],
     webPlans:[],webServices:[],webSteps:[],webFaq:[],
     skills:[{name:'Leadership'},{name:'Communication'},{name:'Content Creation'},{name:'Web Design'},{name:'Event Management'},{name:'Problem Solving'}]
@@ -732,6 +736,53 @@ input[type=file]{padding:8px;font-size:.85rem}
     return wrap;
   }
 
+  /* ===== Occasions: birthday, Eid, Friday, New Year ... ===== */
+  function occSel(label,obj,key,opts){
+    var id='f'+(++uid),s2=h('select',{id:id});
+    opts.forEach(function(o){s2.appendChild(h('option',{value:o[0],text:o[1]}))});
+    var v=obj[key]===undefined||obj[key]===null?'':String(obj[key]);
+    s2.value=v;if(s2.value!==v)s2.value=opts[0][0];
+    s2.addEventListener('change',function(){obj[key]=s2.value;markDirty()});
+    return h('div',{},[h('label',{for:id,text:label}),s2]);
+  }
+  function occasionsPanel(){
+    data.occasions=data.occasions||[];
+    if(!data.occasions.length&&window.FA_OCC_DEF){data.occasions=JSON.parse(JSON.stringify(window.FA_OCC_DEF));markDirty()}
+    var w=h('div',{class:'panel'});
+    var blank={name:'',on:'',rule:'yearly',month:'',day:'',days:'1',weekday:'5',from:'',to:'',effect:'celebrate',emoji:'🎉',title:'',text:'',arabic:''};
+    var extra=function(it){
+      var box=h('div',{class:'item',style:'margin-top:12px'});
+      box.appendChild(h('strong',{text:'When and how'}));
+      var g=h('div',{class:'grid2'});
+      g.appendChild(occSel('Status',it,'on',[['','On'],['0','Off (do not show)']]));
+      g.appendChild(occSel('Which day?',it,'rule',[['yearly','Every year on a date (fill Month + Day below)'],['weekly','Every week on a day (choose the weekday)'],['range','One time, from a date to a date (fill From + To below)']]));
+      g.appendChild(occSel('Weekday (for "every week")',it,'weekday',[['0','Sunday'],['1','Monday'],['2','Tuesday'],['3','Wednesday'],['4','Thursday'],['5','Friday'],['6','Saturday']]));
+      g.appendChild(occSel('Animation',it,'effect',[['birthday','Birthday: confetti + balloons'],['newyear','New Year: fireworks'],['islamic','Islamic: lanterns + stars (Eid)'],['jummah','Islamic, soft: a few stars (Friday)'],['celebrate','Celebration: confetti'],['banner','Message card only, no animation']]));
+      box.appendChild(g);
+      box.appendChild(h('button',{class:'btn small',type:'button',text:'Preview on the site',onclick:function(){
+        var i=data.occasions.indexOf(it);
+        try{localStorage.setItem('fa-occ',JSON.stringify(data.occasions))}catch(e){}
+        window.open('index.html?occ='+i,'_blank');
+      }}));
+      box.appendChild(h('p',{class:'hint',text:'Preview shows your current edits right away (even before Save). Remember to press Save so visitors see it on the day.'}));
+      return box;
+    };
+    var L=listEditor('occasions',[
+      {key:'name',label:'Name (only for you)',name:true,nt:true,wide:true},
+      {key:'emoji',label:'Emoji on the card',nt:true,ph:'🎂'},
+      {key:'title',label:'Greeting title ({year} becomes the year)',wide:true},
+      {key:'text',label:'Greeting text',area:true},
+      {key:'arabic',label:'Arabic line (optional, e.g. for Eid)',nt:true,wide:true},
+      {key:'month',label:'Month, 1 to 12 (every year)',nt:true,type:'number'},
+      {key:'day',label:'Day, 1 to 31 (every year)',nt:true,type:'number'},
+      {key:'days',label:'How many days it lasts',nt:true,type:'number'},
+      {key:'from',label:'From date (one time)',nt:true,type:'date'},
+      {key:'to',label:'To date (one time)',nt:true,type:'date'}
+    ],blank,function(i){return i.name},'+ Add occasion',extra);
+    L.insertBefore(h('p',{class:'hint',text:'On the chosen day the site shows a greeting card and an animation. Dates use Bangladesh time. If two occasions fall on the same day, the one higher in the list wins (use ↑ ↓). The ready-made list is already here: set the month and day of your birthday (and turn it On), and check the Eid dates every year after the moon sighting. Eid dates shown are only a guess.'}),L.firstChild);
+    w.appendChild(L);return w;
+  }
+
   var TABS=[
     {id:'projects',label:'Projects',build:function(){
       var w=listEditor('projects',[
@@ -891,6 +942,7 @@ input[type=file]{padding:8px;font-size:.85rem}
       w.appendChild(L('webFaq',[{key:'q',label:'Question',name:true},{key:'a',label:'Answer',area:true}],{q:'',a:''},function(i){return i.q},'+ Add question','Questions'));
       return w;
     }},
+    {id:'occasions',label:'Occasions',build:occasionsPanel},
     {id:'quotes',label:'Quotes',build:function(){
       var w=listEditor('quotes',[
         {key:'text',label:'Quote',name:true,area:true,wide:true},
@@ -954,6 +1006,7 @@ input[type=file]{padding:8px;font-size:.85rem}
       });
     }
     if(Array.isArray(saved.posts))d.posts=saved.posts;
+    if(Array.isArray(saved.occasions))d.occasions=saved.occasions;
     if(Array.isArray(saved.quotes))d.quotes=saved.quotes;
     ['webPlans','webServices','webSteps','webFaq'].forEach(function(k){if(Array.isArray(saved[k]))d[k]=saved[k]});
     if(saved.site){

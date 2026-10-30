@@ -112,6 +112,8 @@ export function saveNotice(d) {
     var n = (d && d.site) || {}, t = function (k) { return String(n[k] || '').trim(); };
     localStorage.setItem('fa-notice', JSON.stringify({ t: t('noticeText'), tb: t('noticeTextBn'), l: t('noticeLink'), b: t('noticeLabel'), bb: t('noticeLabelBn') }));
     if (window.faNotice) window.faNotice();
+    if (d && Array.isArray(d.occasions) && d.occasions.length) localStorage.setItem('fa-occ', JSON.stringify(d.occasions)); else localStorage.removeItem('fa-occ');
+    if (window.faOcc) window.faOcc();
     var soc = (d && d.social) || {};
     localStorage.setItem('fa-wa', JSON.stringify({ n: normWa(soc.whatsapp), m: t('waMsg'), mb: t('waMsgBn') }));
     window.dispatchEvent(new Event('fa-wa'));
