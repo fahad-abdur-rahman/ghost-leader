@@ -86,6 +86,22 @@ window.FA_WEB={
    "featuresBn": "যত পেজ দরকার\nনিজের মতো ডিজাইন ও ফিচার\nফর্ম, ডাটাবেস ও ব্যবহারকারীর কনটেন্ট\nএকাধিক ভাষা\nগতি ও পারফরম্যান্স ঠিক করা\nমাসিক রক্ষণাবেক্ষণের সুযোগ",
    "btn": "Request a quote",
    "btnBn": "দাম জানতে চাই"
+  },
+  {
+   "name": "Free website",
+   "nameBn": "ফ্রি ওয়েবসাইট",
+   "badge": "Selected applicants",
+   "badgeBn": "নির্বাচিত আবেদনকারী",
+   "price": "Free",
+   "priceBn": "ফ্রি",
+   "period": "for selected projects",
+   "periodBn": "নির্বাচিত প্রজেক্টের জন্য",
+   "desc": "For youth, student, community and non-profit projects. Not for everyone: I review every application.",
+   "descBn": "তরুণ, শিক্ষার্থী, কমিউনিটি ও অলাভজনক প্রজেক্টের জন্য। সবার জন্য নয়: আমি প্রতিটি আবেদন দেখে বেছে নিই।",
+   "features": "Up to 3 pages, mobile-friendly\nOnly for selected applicants (limited spots)\nYou send your text, photos and logo on time\nDomain and hosting fees are paid by you\nA small \"Website by Fahad\" credit in the footer\nI reply to every application",
+   "featuresBn": "সর্বোচ্চ ৩টি পেজ, মোবাইল-ফ্রেন্ডলি\nশুধু নির্বাচিত আবেদনকারীর জন্য (সীমিত সুযোগ)\nআপনার লেখা, ছবি ও লোগো সময়মতো পাঠাতে হবে\nডোমেইন ও হোস্টিংয়ের খরচ আপনি দেবেন\nফুটারে ছোট একটি \"Website by Fahad\" ক্রেডিট থাকবে\nপ্রতিটি আবেদনের উত্তর আমি দিই",
+   "btn": "Apply for a free website",
+   "btnBn": "ফ্রি ওয়েবসাইটের জন্য আবেদন"
   }
  ],
  "services": [
@@ -214,6 +230,12 @@ window.FA_WEB={
    "qBn": "প্রথম কথা আর ওয়েবসাইট চেক-আপ কি ফ্রি?",
    "a": "Yes. Talking about your idea and the website check-up are free, and you do not have to order anything afterwards.",
    "aBn": "হ্যাঁ। আপনার আইডিয়া নিয়ে কথা বলা আর ওয়েবসাইট চেক-আপ বিনামূল্যে, আর এরপর কিছু অর্ডার করতে আপনি বাধ্য নন।"
+ },
+ {
+   "q": "Who can get a free website?",
+   "qBn": "ফ্রি ওয়েবসাইট কারা পেতে পারেন?",
+   "a": "The free website is not for everyone. It is for selected youth, student, community and non-profit projects. Apply with the order form and tell me about your project. I review each application and reply to every one. If you are selected, you send your content on time, pay the domain and hosting fees yourself, and I add a small credit link in the footer.",
+   "aBn": "ফ্রি ওয়েবসাইট সবার জন্য নয়। এটা নির্বাচিত তরুণ, শিক্ষার্থী, কমিউনিটি ও অলাভজনক প্রজেক্টের জন্য। অর্ডার ফর্মে আপনার প্রজেক্টের কথা লিখে আবেদন করুন। আমি প্রতিটি আবেদন দেখি আর সবাইকে উত্তর দিই। নির্বাচিত হলে আপনি সময়মতো কনটেন্ট পাঠাবেন, ডোমেইন ও হোস্টিংয়ের খরচ নিজে দেবেন, আর ফুটারে আমি ছোট একটি ক্রেডিট লিংক রাখব।"
  }
  ]
 };
