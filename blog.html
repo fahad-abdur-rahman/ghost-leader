@@ -395,6 +395,9 @@ html{background:var(--bg)}
 .soclist{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 .soclist a{text-decoration:none;padding:8px 14px;border-radius:999px;border:1px solid var(--border);color:var(--text);font-size:.86rem;font-weight:600;transition:all .25s var(--ease)}
 .soclist a:hover{border-color:var(--green);color:var(--green-text);transform:translateY(-2px)}
+.bl-cov{display:block;width:calc(100% + 44px);margin:-22px -22px 4px;aspect-ratio:16/9;object-fit:cover;background:color-mix(in srgb,var(--text) 6%,var(--surface))}
+.bl-fig{margin:1.6em 0}.bl-fig img{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--border)}
+.bl-art>.bl-fig:first-of-type{margin-top:0}
 </style>
 <style>
 .bl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
@@ -529,6 +532,7 @@ html{background:var(--bg)}
 <script src="site-footer.js"></script>
 <script src="extras.js"></script>
 <script src="premium-fx.js"></script>
+<script src="menu-style.js"></script>
 <script src="site-ux.js"></script>
 <script src="fx3d.js"></script>
 <script src="whatsapp-fab.js"></script>

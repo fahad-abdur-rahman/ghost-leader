@@ -1,5 +1,5 @@
 // Blog page: lists the posts saved from the admin panel (Blog tab), or shows one post (blog.html?p=slug).
-import { fillNav, fillConnect, saveNotice } from './site-shared.js';
+import { fillNav, fillConnect, saveNotice, safeImg } from './site-shared.js';
 var $ = function (id) { return document.getElementById(id); };
 function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
 var ALL = [];                    /* posts loaded from the admin panel */
@@ -34,6 +34,8 @@ function renderList(posts) {
   var g = el('div', 'bl-grid');
   posts.forEach(function (p) {
     var a = el('a', 'card bl-card'); a.href = 'blog.html?p=' + encodeURIComponent(p.slug);
+    var cv = safeImg(p.cover);
+    if (cv) { var ci = el('img', 'bl-cov'); ci.src = cv; ci.alt = ''; ci.loading = 'lazy'; ci.decoding = 'async'; a.appendChild(ci); }
     a.appendChild(meta(p));
     a.appendChild(el('h3', null, pick(p, 'title')));
     var sum = pick(p, 'summary') || pick(p, 'body').replace(/\s+/g, ' ').slice(0, 160);
@@ -59,14 +61,20 @@ function renderPost(p) {
   var art = el('article', 'bl-art');
   art.appendChild(meta(p));
   art.appendChild(el('h1', null, ttl));
+  function fig(src) { var f = el('figure', 'bl-fig'), im = el('img'); im.src = src; im.alt = ttl; im.loading = 'lazy'; im.decoding = 'async'; f.appendChild(im); return f; }
+  var cover = safeImg(p.cover); if (cover) art.appendChild(fig(cover));
+  var pics = [p.img1, p.img2, p.img3].map(safeImg), used = {};
   var body = el('div', 'bl-body');
   pick(p, 'body').replace(/\r/g, '').split(/\n{2,}/).forEach(function (blk) {
     blk = blk.trim(); if (!blk) return;
+    var mk = /^\[\[\s*image\s*([1-3])\s*\]\]$/i.exec(blk);
+    if (mk) { var src = pics[+mk[1] - 1]; if (src && !used[mk[1]]) { used[mk[1]] = 1; body.appendChild(fig(src)); } return; }
     if (/^##\s+/.test(blk)) { body.appendChild(el('h2', null, blk.replace(/^##\s+/, ''))); return; }
     var para = el('p');
     blk.split('\n').forEach(function (ln, i) { if (i) para.appendChild(document.createElement('br')); para.appendChild(document.createTextNode(ln)); });
     body.appendChild(para);
   });
+  pics.forEach(function (src, i) { if (src && !used[i + 1]) body.appendChild(fig(src)); });
   art.appendChild(body);
   var back = el('a', 'bl-back', '← All posts'); back.href = 'blog.html'; art.appendChild(back);
   wrap.appendChild(art);

@@ -1,6 +1,6 @@
 // Web Services page: shows plans, services, steps and FAQ.
 // Built-in content comes from web-defaults.js; whatever you save in Admin > Web Services replaces it.
-import { fillNav, fillConnect, localize, onLangChange, saveNotice, applySeo } from './site-shared.js';
+import { fillNav, fillConnect, localize, onLangChange, saveNotice, applySeo, safeImg } from './site-shared.js';
 var $ = function (id) { return document.getElementById(id); };
 function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
 var DEF = window.FA_WEB || { site: {}, plans: [], services: [], steps: [], faq: [] };
@@ -27,7 +27,7 @@ function put(id, v) { var n = $(id); if (n && v != null && String(v).trim()) n.t
 function render() {
   var D = localize(build(RAW)), S = D.site;
   [['wsPill', 'wsPill'], ['wsLead', 'wsLead'], ['wsPlansTitle', 'wsPlansTitle'], ['wsPlansLead', 'wsPlansLead'], ['wsServicesTitle', 'wsServicesTitle'], ['wsStepsTitle', 'wsStepsTitle'],
-   ['wsHostTitle', 'wsHostTitle'], ['wsHostText', 'wsHostText'], ['wsFaqTitle', 'wsFaqTitle'], ['wsCtaTitle', 'wsCtaTitle'], ['wsCtaText', 'wsCtaText'], ['wsBtnPlans', 'wsBtnPlans']]
+   ['wsHostTitle', 'wsHostTitle'], ['wsHostText', 'wsHostText'], ['wsFaqTitle', 'wsFaqTitle'], ['wsWorkTitle', 'wsWorkTitle'], ['wsWorkLead', 'wsWorkLead'], ['wsWorkAll', 'wsWorkAll'], ['wsCtaTitle', 'wsCtaTitle'], ['wsCtaText', 'wsCtaText'], ['wsBtnPlans', 'wsBtnPlans']]
     .forEach(function (m) { put(m[0], S[m[1]]); });
   var h1 = $('ws-h1'); if (h1 && S.wsTitle) h1.textContent = S.wsTitle;
   document.title = (S.wsTitle ? 'Web Services | ' : 'Web Services | ') + 'Fahad Abdur Rahman';
@@ -85,6 +85,8 @@ function render() {
     var sec = document.querySelector(x[1]); if (sec) sec.hidden = String(S[x[0]] || '') === '1';
   });
 
+  renderWorks(S);
+
   /* buttons: WhatsApp when a number is saved, otherwise the contact page */
   var link = wa(S.wsCtaText ? (document.documentElement.lang === 'bn' ? '\u0986\u09ae\u09bf \u0986\u09aa\u09a8\u09be\u09b0 \u0993\u09af\u09bc\u09c7\u09ac\u09b8\u09be\u0987\u099f \u09b8\u09be\u09b0\u09cd\u09ad\u09bf\u09b8 \u09b8\u09ae\u09cd\u09aa\u09b0\u09cd\u0995\u09c7 \u099c\u09be\u09a8\u09a4\u09c7 \u099a\u09be\u0987\u0964' : 'Hello Fahad, I would like to know more about your website service.') : '');
   [['wsHeroCta', true], ['wsCtaWa', false]].forEach(function (x) {
@@ -94,6 +96,34 @@ function render() {
   });
 }
 
+
+/* ---------- "Websites I have built": cards from Admin > Projects; a click opens the project ---------- */
+function renderWorks(S) {
+  var sec = document.getElementById('work'), box = $('wsWorks'); if (!sec || !box) return;
+  var list = (RAW && Array.isArray(RAW.projects)) ? RAW.projects : [];
+  list = localize({ projects: list }).projects.filter(function (p) { return p && String(p.title || '').trim(); });
+  var web = list.filter(function (p) { return /web|\u0993\u09af\u09bc\u09c7\u09ac/i.test(String(p.category || '')); });
+  if (web.length) list = web;
+  list = list.slice(0, 6);
+  box.textContent = '';
+  list.forEach(function (p) {
+    var url = /^https:\/\/\S+$/i.test(String(p.url || '').trim()) ? String(p.url).trim() : '';
+    var a = el('a', 'work card'); a.href = url || 'index.html#projects';
+    if (url) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+    var shot = el('div', 'wk-shot'), img = safeImg(p.shot);
+    if (img) { var im = el('img'); im.src = img; im.alt = ''; im.loading = 'lazy'; im.decoding = 'async'; shot.appendChild(im); }
+    else shot.appendChild(el('span', 'wk-badge', String(p.tag || p.title).slice(0, 4).toUpperCase()));
+    var host = ''; try { host = new URL(url).hostname.replace(/^www\./, ''); } catch (e) {}
+    var bar = el('div', 'wk-bar'); bar.appendChild(el('i')); bar.appendChild(el('i')); bar.appendChild(el('i')); if (host) bar.appendChild(el('span', null, host));
+    shot.appendChild(bar); a.appendChild(shot);
+    var body = el('div', 'wk-body');
+    if (p.category) body.appendChild(el('span', 'wk-cat', p.category));
+    body.appendChild(el('h3', null, p.title)); if (p.sub) body.appendChild(el('p', null, p.sub));
+    body.appendChild(el('span', 'wk-go', (url ? S.wsWorkVisit : (bn() ? '\u09aa\u09cd\u09b0\u099c\u09c7\u0995\u09cd\u099f \u09a6\u09c7\u0996\u09c1\u09a8' : 'View project')) + ' \u2192'));
+    a.appendChild(body); box.appendChild(a);
+  });
+  sec.hidden = !list.length || String(S.wsHideWork || '') === '1';
+}
 
 /* ---------- order form ---------- */
 function fillPlans(D, B) {

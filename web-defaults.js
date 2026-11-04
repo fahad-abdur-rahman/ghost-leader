@@ -36,7 +36,15 @@ window.FA_WEB={
   "wsOrderTitle": "Tell me about your website",
   "wsOrderTitleBn": "আপনার ওয়েবসাইটের কথা বলুন",
   "wsOrderText": "Fill in the form and I will message you with a few questions and a clear price. Sending this form does not commit you to anything.",
-  "wsOrderTextBn": "ফর্মটি পূরণ করুন, আমি কয়েকটি প্রশ্ন আর পরিষ্কার দাম জানিয়ে আপনাকে মেসেজ করব। ফর্ম পাঠালে আপনি কিছুতেই বাধ্য থাকেন না।"
+  "wsOrderTextBn": "ফর্মটি পূরণ করুন, আমি কয়েকটি প্রশ্ন আর পরিষ্কার দাম জানিয়ে আপনাকে মেসেজ করব। ফর্ম পাঠালে আপনি কিছুতেই বাধ্য থাকেন না।",
+  "wsWorkTitle": "Websites I have built",
+  "wsWorkTitleBn": "আমার তৈরি ওয়েবসাইট",
+  "wsWorkLead": "A few projects I have built. Tap a card to open the website.",
+  "wsWorkLeadBn": "আমার বানানো কয়েকটা প্রজেক্ট। কার্ডে চাপলে ওয়েবসাইটটি খুলবে।",
+  "wsWorkAll": "See all my projects",
+  "wsWorkAllBn": "আমার সব প্রজেক্ট দেখুন",
+  "wsWorkVisit": "Visit website",
+  "wsWorkVisitBn": "ওয়েবসাইট দেখুন"
  },
  "plans": [
   {
@@ -224,18 +232,18 @@ window.FA_WEB={
    "qBn": "আমার ওয়েবসাইট কি Google-এ দেখাবে?",
    "a": "Yes. I set up the basics: clear titles and descriptions, a sitemap, nice share pictures and Google Search Console. Google decides the final ranking and it takes time, so nobody can honestly promise the first place.",
    "aBn": "হ্যাঁ। আমি মূল কাজগুলো করে দিই: পরিষ্কার শিরোনাম ও বিবরণ, সাইটম্যাপ, সুন্দর শেয়ার ছবি আর Google Search Console। শেষ র‍্যাঙ্ক Google ঠিক করে আর এতে সময় লাগে, তাই প্রথম স্থানের প্রতিশ্রুতি কেউ সততার সাথে দিতে পারে না।"
- },
- {
+  },
+  {
    "q": "Is the first talk and the website check-up free?",
    "qBn": "প্রথম কথা আর ওয়েবসাইট চেক-আপ কি ফ্রি?",
    "a": "Yes. Talking about your idea and the website check-up are free, and you do not have to order anything afterwards.",
    "aBn": "হ্যাঁ। আপনার আইডিয়া নিয়ে কথা বলা আর ওয়েবসাইট চেক-আপ বিনামূল্যে, আর এরপর কিছু অর্ডার করতে আপনি বাধ্য নন।"
- },
- {
+  },
+  {
    "q": "Who can get a free website?",
    "qBn": "ফ্রি ওয়েবসাইট কারা পেতে পারেন?",
    "a": "The free website is not for everyone. It is for selected youth, student, community and non-profit projects. Apply with the order form and tell me about your project. I review each application and reply to every one. If you are selected, you send your content on time, pay the domain and hosting fees yourself, and I add a small credit link in the footer.",
    "aBn": "ফ্রি ওয়েবসাইট সবার জন্য নয়। এটা নির্বাচিত তরুণ, শিক্ষার্থী, কমিউনিটি ও অলাভজনক প্রজেক্টের জন্য। অর্ডার ফর্মে আপনার প্রজেক্টের কথা লিখে আবেদন করুন। আমি প্রতিটি আবেদন দেখি আর সবাইকে উত্তর দিই। নির্বাচিত হলে আপনি সময়মতো কনটেন্ট পাঠাবেন, ডোমেইন ও হোস্টিংয়ের খরচ নিজে দেবেন, আর ফুটারে আমি ছোট একটি ক্রেডিট লিংক রাখব।"
- }
+  }
  ]
 };

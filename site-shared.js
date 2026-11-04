@@ -115,7 +115,7 @@ export function saveNotice(d) {
     if (d && Array.isArray(d.occasions) && d.occasions.length) localStorage.setItem('fa-occ', JSON.stringify(d.occasions)); else localStorage.removeItem('fa-occ');
     if (window.faOcc) window.faOcc();
     var soc = (d && d.social) || {};
-    localStorage.setItem('fa-wa', JSON.stringify({ n: normWa(soc.whatsapp), m: t('waMsg'), mb: t('waMsgBn') }));
+    localStorage.setItem('fa-wa', JSON.stringify({ n: normWa(soc.whatsapp), m: t('waMsg'), mb: t('waMsgBn'), g: t('waGreet'), gb: t('waGreetBn') }));
     window.dispatchEvent(new Event('fa-wa'));
   } catch (e) {}
 }
