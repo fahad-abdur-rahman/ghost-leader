@@ -121,6 +121,7 @@
     'Skip to main content': 'মূল অংশে যান',
     'Home': 'হোম', 'About': 'পরিচিতি', 'Education': 'শিক্ষা', 'Skills': 'দক্ষতা',
     'Quote of the Day': 'আজকের উক্তি', '↻ Another quote': '↻ আরেকটি উক্তি', 'Ghost Leader': 'Ghost Leader',
+    'Digital card': 'ডিজিটাল কার্ড', 'Challenge': 'চ্যালেঞ্জ',
     'Portfolio': 'পোর্টফোলিও',
     'Services': 'সার্ভিস', 'Plans': 'প্ল্যান', 'Process': 'প্রক্রিয়া', 'Domain & hosting': 'ডোমেইন ও হোস্টিং', 'FAQ': 'প্রশ্নোত্তর',
     'Lite mode: On': 'লাইট মোড: চালু', 'Lite mode: Off': 'লাইট মোড: বন্ধ',

@@ -145,6 +145,7 @@ input[type=file]{padding:8px;font-size:.85rem}
 </div>
 
 <script src="web-defaults.js"></script>
+<script src="challenge-defaults.js"></script>
 <script src="occasions.js"></script>
 <script type="module">
 (async function(){
@@ -215,7 +216,7 @@ input[type=file]{padding:8px;font-size:.85rem}
     posts:[],
     occasions:[],
     quotes:[],
-    webPlans:[],webServices:[],webSteps:[],webFaq:[],
+    webPlans:[],webServices:[],webSteps:[],webFaq:[],challenge:[],
     skills:[{name:'Leadership'},{name:'Communication'},{name:'Content Creation'},{name:'Web Design'},{name:'Event Management'},{name:'Problem Solving'}]
   };
 
@@ -988,6 +989,23 @@ input[type=file]{padding:8px;font-size:.85rem}
     {id:'profile',label:'Profile & Links',build:profilePanel}
   ];
 
+  /* ===== 7-Day Leadership Challenge: edit the daily actions ===== */
+  TABS.push({id:'challenge',label:'Challenge',build:function(){
+    var w=h('div');
+    var top=h('div',{class:'langbar'});
+    var load=h('button',{class:'btn',type:'button',text:'Load the ready-made 7 days'});
+    load.addEventListener('click',function(){
+      if(!window.FA_CHALLENGE){alert('challenge-defaults.js was not found next to admin.html.');return}
+      if((data.challenge||[]).length&&!confirm('Replace your current challenge days with the ready-made ones?'))return;
+      data.challenge=JSON.parse(JSON.stringify(window.FA_CHALLENGE));markDirty();showApp(curTab);
+    });
+    top.appendChild(h('strong',{text:'Start here'}));top.appendChild(load);
+    top.appendChild(h('p',{class:'hint',text:'The Challenge page (challenge.html) already has 7 ready-made days. Press the button to copy them here and change the words, or add your own days. Empty list = the ready-made days. Use the language switch at the top for the Bangla version. Remember to Save.'}));
+    w.appendChild(top);
+    w.appendChild(listEditor('challenge',[{key:'title',label:'Day title',name:true},{key:'text',label:'What to do today',area:true}],{title:'',text:''},function(i){return i.title},'+ Add day'));
+    return w;
+  }});
+
   /* ===== Backup & restore: a copy of everything, kept on your own device ===== */
   TABS.push({id:'backup',label:'Backup',build:function(){
     var w=h('div');
@@ -1110,7 +1128,7 @@ input[type=file]{padding:8px;font-size:.85rem}
     if(Array.isArray(saved.posts))d.posts=saved.posts;
     if(Array.isArray(saved.occasions))d.occasions=saved.occasions;
     if(Array.isArray(saved.quotes))d.quotes=saved.quotes;
-    ['webPlans','webServices','webSteps','webFaq'].forEach(function(k){if(Array.isArray(saved[k]))d[k]=saved[k]});
+    ['webPlans','webServices','webSteps','webFaq','challenge'].forEach(function(k){if(Array.isArray(saved[k]))d[k]=saved[k]});
     if(saved.site){
       Object.keys(d.site).forEach(function(k){if(typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
       Object.keys(saved.site).forEach(function(k){if(/.Bn$/.test(k)&&typeof saved.site[k]==='string')d.site[k]=saved.site[k]});
@@ -1180,7 +1198,7 @@ input[type=file]{padding:8px;font-size:.85rem}
         while(used[sg]){sg=base+'-'+(n++)}
         used[sg]=1;o.slug=sg;
       });
-      ['webPlans:name','webServices:title','webSteps:title','webFaq:q'].forEach(function(p){var k=p.split(':')[0],f=p.split(':')[1];out[k]=(out[k]||[]).filter(function(x){return x&&(String(x[f]||'').trim()||String(x[f+'Bn']||'').trim())})});
+      ['webPlans:name','webServices:title','webSteps:title','webFaq:q','challenge:title'].forEach(function(p){var k=p.split(':')[0],f=p.split(':')[1];out[k]=(out[k]||[]).filter(function(x){return x&&(String(x[f]||'').trim()||String(x[f+'Bn']||'').trim())})});
       out.quotes=(out.quotes||[]).filter(function(x){return x&&(String(x.text||'').trim()||String(x.textBn||'').trim())});
       var usedP={};
       out.posts=(out.posts||[]).filter(function(x){return x&&(String(x.title||'').trim()||String(x.titleBn||'').trim())});

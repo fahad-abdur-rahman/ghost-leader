@@ -181,6 +181,26 @@ body.nm .gbtn:not(.red){border-color:rgba(255,84,104,.5);background:rgba(255,84,
 body.nm .hero>div{animation:shake 7s linear infinite}
 @keyframes shake{0%,90%,100%{transform:none}91%{transform:translate(-3px,1px)}92%{transform:translate(3px,-2px)}93%{transform:translate(-2px,2px)}94%{transform:translate(2px,0)}95%{transform:translate(-1px,-1px)}96%{transform:none}}
 
+
+.qzc{margin-top:18px;padding:26px 22px;border:1px solid rgba(127,221,176,.22);border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.01));backdrop-filter:blur(4px)}
+.qzc .lead{margin:0 0 18px}
+.qzp{display:flex;align-items:center;gap:12px;margin-bottom:14px;color:var(--mute);font-size:.82rem;font-weight:700;letter-spacing:.08em}
+.qzp i{flex:1;height:5px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden}.qzp i b{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--g2),var(--g));transition:width .45s var(--ease)}
+.qzq{margin:0 0 16px;font-size:1.25rem;line-height:1.35;font-weight:800}
+.qzo{display:grid;gap:10px}
+.qzo button{text-align:left;font:600 1rem inherit;color:var(--ink);padding:14px 16px;border-radius:14px;border:1px solid rgba(127,221,176,.22);background:rgba(255,255,255,.03);cursor:pointer;transition:transform .25s var(--ease),border-color .25s,background .25s}
+.qzo button:hover,.qzo button:focus-visible{transform:translateX(4px);border-color:var(--g);background:rgba(127,221,176,.1);outline:none}
+.qzo button.on{border-color:var(--g);background:rgba(127,221,176,.16)}
+.qzn{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+.qzn button{font:700 .9rem inherit;color:var(--ink);padding:9px 18px;border-radius:99px;background:none;border:1px solid rgba(255,255,255,.18);cursor:pointer}
+.qzn button:hover,.qzn button:focus-visible{border-color:var(--g);color:var(--g);outline:none}
+.qzr{text-align:center}.qzr .you{color:var(--mute);font-size:.9rem;letter-spacing:.14em;text-transform:uppercase}
+.qzr h3{margin:6px 0 10px;font-size:clamp(1.7rem,6vw,2.4rem);line-height:1.15;color:var(--g)}
+.qzr p{margin:0 auto 12px;max-width:520px;color:#c3d0c9}
+.qzr dl{margin:16px auto 0;max-width:520px;text-align:left;display:grid;gap:12px}
+.qzr dt{font-size:.74rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--g)}.qzr dd{margin:3px 0 0;color:#c3d0c9}
+.qzr .row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}
+@media(prefers-reduced-motion:reduce){.qzp i b{transition:none}}
 @media(max-width:560px){.top{padding-left:12px;padding-right:12px}.top a,.top button{padding:6px 11px;font-size:.8rem}section.s{padding:56px 18px}}
 @media(prefers-reduced-motion:reduce){
   .runes,.fog,.grain,.ghost,.gate .skull,.down,.glitch::before,.glitch::after,.cursor,.ghost .blink{animation:none!important}
@@ -285,10 +305,18 @@ body.nm .hero>div{animation:shake 7s linear infinite}
     <blockquote class="quote" data-en="“A ghost never dies. Ideas that change lives never do either.”" data-bn="“ভুত কখনো মরে না। জীবন বদলে দেওয়া ধারণাও কখনো মরে না।”">“A ghost never dies. Ideas that change lives never do either.”</blockquote>
   </section>
 
+
+  <section class="s rv" id="quiz" aria-labelledby="qzT">
+    <div class="eyebrow" id="qzE">THE TEST</div>
+    <h2 id="qzT">What kind of Ghost Leader are you?</h2>
+    <div class="qzc" id="qz"></div>
+  </section>
+
   <section class="end rv">
     <button class="sig" data-id="c" style="left:14%;bottom:18%" type="button" aria-label="A hidden sign">🗝️</button>
     <h2 data-en="Still here?" data-bn="এখনো আছেন?">Still here?</h2>
     <p class="lead" data-en="Then you are braver than most. Go back to the living world, or meet the human behind the ghost." data-bn="তাহলে আপনি অনেকের চেয়ে সাহসী। জীবিতদের জগতে ফিরে যান, অথবা ভুতের পেছনের মানুষটার সাথে পরিচিত হন।">Then you are braver than most. Go back to the living world, or meet the human behind the ghost.</p>
+    <p><a class="gbtn" href="challenge.html" data-en="7-day leadership challenge" data-bn="৭ দিনের নেতৃত্ব চ্যালেঞ্জ">7-day leadership challenge</a> <a class="gbtn" href="card.html" data-en="My digital card" data-bn="আমার ডিজিটাল কার্ড">My digital card</a></p>
     <p><a class="gbtn" href="about.html" data-en="Meet the human" data-bn="মানুষটাকে চিনুন">Meet the human</a> <a class="gbtn red" href="index.html" data-en="Back to the living" data-bn="জীবিতদের জগতে">Back to the living</a></p>
   </section>
 </main>
@@ -508,5 +536,78 @@ body.nm .hero>div{animation:shake 7s linear infinite}
 </script>
 <script src="fx3d.js"></script>
 <script src="occasions.js" defer></script>
+
+<script>
+(function(){
+  var D={"q": [["A big event is coming. What do you do first?", "বড় একটা অনুষ্ঠান আসছে। আগে কী করেন?", ["Set up everything quietly behind the scenes", "Check that everyone has what they need", "Draw the plan and spot what could go wrong", "Tell everyone and get them excited"], ["পেছনে বসে চুপচাপ সবকিছু গুছিয়ে ফেলি", "সবার দরকারি জিনিস আছে কিনা দেখি", "পরিকল্পনা আঁকি, কোথায় ভুল হতে পারে খুঁজি", "সবাইকে জানাই, উৎসাহ জাগাই"]], ["Your team is stuck. You…", "আপনার দল আটকে গেছে। আপনি…", ["fix the problem yourself, quietly", "sit with them and ask what they need", "step back and look for the real cause", "lift the mood and restart the energy"], ["নিজেই চুপচাপ সমস্যাটা মিটিয়ে ফেলেন", "ওদের পাশে বসে জানতে চান কী দরকার", "একটু পিছিয়ে এসে আসল কারণটা খোঁজেন", "মন ভালো করে নতুন উদ্যম জাগান"]], ["Someone else gets the credit for your work.", "আপনার কাজের কৃতিত্ব অন্য কেউ পেয়ে গেল।", ["I do not mind. The work is done.", "I am happy to see them shine.", "I note it and use it for my next move.", "I smile, then start something new."], ["কিছু মনে করি না, কাজটা তো হয়েছে।", "ওদের উজ্জ্বল দেখে খুশি হই।", "মনে রাখি আর পরের চালে কাজে লাগাই।", "হেসে নতুন কিছু শুরু করি।"]], ["Pick a superpower.", "একটা অতিমানবীয় ক্ষমতা বেছে নিন।", ["Make anything real", "Make everyone feel safe", "See ten steps ahead", "Make people believe"], ["যা ভাবি তা বাস্তব করা", "সবাইকে নিরাপদ বোধ করানো", "দশ ধাপ আগে দেখা", "মানুষকে বিশ্বাস করানো"]], ["Your perfect day looks like…", "আপনার সেরা দিনটা কেমন?", ["A long quiet day of building", "Time with people I care about", "A fresh notebook and a hard puzzle", "A new idea and a room full of people"], ["চুপচাপ কিছু গড়ে তোলার লম্বা দিন", "প্রিয় মানুষদের সাথে সময়", "নতুন খাতা আর একটা কঠিন ধাঁধা", "নতুন আইডিয়া আর মানুষে ভরা ঘর"]], ["When you start something new, you first…", "নতুন কিছু শুরু করলে আগে আপনি…", ["build a small first version", "find who it will help", "study how it could fail", "announce it and gather a team"], ["ছোট একটা প্রথম সংস্করণ বানান", "খোঁজেন কার উপকার হবে", "পড়ে দেখেন কীভাবে ব্যর্থ হতে পারে", "ঘোষণা দিয়ে দল জোগাড় করেন"]], ["People thank you most for…", "মানুষ আপনাকে সবচেয়ে বেশি ধন্যবাদ দেয়…", ["getting things done", "being there when they needed you", "showing them the way out", "giving them the courage to start"], ["কাজ শেষ করে দেওয়ার জন্য", "দরকারের সময় পাশে থাকার জন্য", "পথ দেখিয়ে দেওয়ার জন্য", "শুরু করার সাহস দেওয়ার জন্য"]]], "t": [{"n": ["The Silent Builder", "নীরব নির্মাতা"], "d": ["You make things work while nobody is watching. Your leadership is the kind people only notice when it is missing.", "কেউ না দেখলেও আপনি জিনিস দাঁড় করিয়ে ফেলেন। আপনার নেতৃত্ব এমন, যেটা না থাকলেই তবে মানুষ টের পায়।"], "p": ["Turning plans into real, working things", "পরিকল্পনাকে সত্যিকারের কাজে বদলে দেওয়া"], "w": ["Finish one small thing you have been postponing, and show it to one person.", "যে ছোট কাজটা পিছিয়ে দিচ্ছেন সেটা শেষ করুন, আর একজনকে দেখান।"]}, {"n": ["The Lamp Holder", "আলো-ধরা মানুষ"], "d": ["You hold the light so others can find their way. People feel safe and heard around you.", "অন্যরা যাতে পথ দেখতে পায়, আপনি আলো ধরে থাকেন। আপনার কাছে মানুষ নিরাপদ বোধ করে, নিজের কথা বলতে পারে।"], "p": ["Making people feel safe and understood", "মানুষকে নিরাপদ আর বোঝা হচ্ছে এমন অনুভব করানো"], "w": ["Ask one person \"What do you need from me?\" and listen without trying to fix it.", "একজনকে জিজ্ঞেস করুন \"আমার কাছ থেকে তোমার কী দরকার?\" আর সমাধান না দিয়ে শুধু শুনুন।"]}, {"n": ["The Shadow Strategist", "ছায়া কৌশলী"], "d": ["You see the pattern before anyone else. You find the real cause and the smartest next step.", "আপনি সবার আগে নকশাটা দেখতে পান। আসল কারণ আর পরের সবচেয়ে বুদ্ধিমান ধাপটা খুঁজে বের করেন।"], "p": ["Finding the real cause and the smartest next step", "আসল কারণ আর পরের সবচেয়ে বুদ্ধিমান ধাপ খুঁজে বের করা"], "w": ["Write down the one problem that, if solved, makes three others easier. Share it with your team.", "এমন একটা সমস্যা লিখুন, যেটা মিটলে আরও তিনটা সহজ হয়। দলের সাথে ভাগ করুন।"]}, {"n": ["The Spark Starter", "স্ফুলিঙ্গ জ্বালানো"], "d": ["You light the first fire, and others gather around it. You make people believe a start is possible.", "প্রথম আগুনটা আপনি জ্বালান, তারপর অন্যরা এসে জোটে। আপনি মানুষকে বিশ্বাস করান যে শুরু করা সম্ভব।"], "p": ["Starting things and making people believe", "কিছু শুরু করা আর মানুষকে বিশ্বাস করানো"], "w": ["Start the idea you keep thinking about, and invite two people to join you.", "যে আইডিয়াটা বারবার ভাবছেন সেটা শুরু করুন, আর দুজনকে যোগ দিতে ডাকুন।"]}], "ui": {"en": {"start": "Take the test", "title": "What kind of Ghost Leader are you?", "lead": "Seven quick questions. No wrong answers. No sign-up.", "of": "of", "next": "Next", "back": "Back", "you": "You are", "power": "Your superpower", "week": "Try this week", "share": "Share", "dl": "Download my card", "again": "Take it again", "eyebrow": "THE TEST", "copied": "Link copied", "shareText": "I took the Ghost Leader test and I am", "shareEnd": "What kind of Ghost Leader are you?", "card": "I AM A GHOST LEADER", "cardSub": "The Ghost Leader test"}, "bn": {"start": "টেস্ট দিন", "title": "আপনি কেমন ঘোস্ট লিডার?", "lead": "সাতটা ছোট প্রশ্ন। ভুল উত্তর নেই। সাইন-আপও লাগে না।", "of": "/", "next": "পরের প্রশ্ন", "back": "পেছনে", "you": "আপনি", "power": "আপনার বিশেষ ক্ষমতা", "week": "এই সপ্তাহে চেষ্টা করুন", "share": "শেয়ার করুন", "dl": "আমার কার্ড নামান", "again": "আবার দিন", "eyebrow": "পরীক্ষা", "copied": "লিংক কপি হয়েছে", "shareText": "আমি ঘোস্ট লিডার টেস্ট দিয়েছি আর আমি", "shareEnd": "আপনি কেমন ঘোস্ট লিডার?", "card": "আমি একজন ঘোস্ট লিডার", "cardSub": "ঘোস্ট লিডার টেস্ট"}}};
+  var root=document.documentElement, box=document.getElementById('qz');
+  function L(){return root.getAttribute('lang')==='bn'?1:0}
+  function ui(){return D.ui[L()?'bn':'en']}
+  var step=0,ans=[],result=-1;
+  function el(t,c,x){var n=document.createElement(t);if(c)n.className=c;if(x!=null)n.textContent=x;return n}
+  function track(n,p){try{window.faTrack&&window.faTrack(n,p)}catch(e){}}
+  function head(){document.getElementById('qzE').textContent=ui().eyebrow;document.getElementById('qzT').textContent=ui().title}
+  function paint(){
+    head();box.textContent='';var u=ui();
+    if(result>=0){return showResult()}
+    if(step<0){box.appendChild(el('p','lead',u.lead));var b=el('button','gbtn',u.start);b.type='button';b.addEventListener('click',function(){step=0;ans=[];paint();track('ghost_quiz_start')});box.appendChild(b);return}
+    var q=D.q[step],lang=L();
+    var pr=el('div','qzp');pr.appendChild(el('span',null,(step+1)+' '+u.of+' '+D.q.length));var bar=el('i'),fill=el('b');bar.appendChild(fill);pr.appendChild(bar);box.appendChild(pr);
+    setTimeout(function(){fill.style.width=((step)/D.q.length*100)+'%'},20);
+    box.appendChild(el('p','qzq',q[lang]));
+    var o=el('div','qzo');o.setAttribute('role','group');
+    q[2+lang].forEach(function(t,i){var b=el('button',ans[step]===i?'on':'',t);b.type='button';b.addEventListener('click',function(){ans[step]=i;if(step<D.q.length-1){step++;paint()}else{finish()}});o.appendChild(b)});
+    box.appendChild(o);
+    var nv=el('div','qzn');var bk=el('button',null,u.back);bk.type='button';bk.style.visibility=step?'visible':'hidden';bk.addEventListener('click',function(){if(step>0){step--;paint()}});nv.appendChild(bk);box.appendChild(nv);
+  }
+  function finish(){
+    var s=[0,0,0,0];ans.forEach(function(a){if(a>=0)s[a]++});
+    var best=0;for(var i=1;i<4;i++)if(s[i]>s[best])best=i;
+    result=best;try{localStorage.setItem('gl-quiz',String(best))}catch(e){}
+    track('ghost_quiz_complete',{type:D.t[best].n[0]});paint();
+  }
+  function pageUrl(){return location.href.split('#')[0].split('?')[0]}
+  function showResult(){
+    var u=ui(),lang=L(),t=D.t[result];
+    var r=el('div','qzr');r.appendChild(el('div','you',u.you));r.appendChild(el('h3',null,t.n[lang]));r.appendChild(el('p',null,t.d[lang]));
+    var dl=el('dl');
+    [[u.power,t.p[lang]],[u.week,t.w[lang]]].forEach(function(x){var w=el('div');w.appendChild(el('dt',null,x[0]));w.appendChild(el('dd',null,x[1]));dl.appendChild(w)});
+    r.appendChild(dl);
+    var row=el('div','row');
+    var sh=el('button','gbtn',u.share);sh.type='button';sh.addEventListener('click',share);
+    var dw=el('button','gbtn red',u.dl);dw.type='button';dw.addEventListener('click',download);
+    var ag=el('button','calm',u.again);ag.type='button';ag.addEventListener('click',function(){step=-1;result=-1;ans=[];paint()});
+    row.appendChild(sh);row.appendChild(dw);r.appendChild(row);r.appendChild(ag);box.appendChild(r);
+  }
+  function text(){var t=D.t[result],lang=L(),u=ui();return u.shareText+' '+t.n[lang]+'. '+u.shareEnd+' '+pageUrl()+'#quiz'}
+  function share(){
+    var data={title:ui().title,text:text()};
+    if(navigator.share){navigator.share(data).catch(function(){});track('ghost_quiz_share');return}
+    window.open('https://wa.me/?text='+encodeURIComponent(text()),'_blank','noopener');track('ghost_quiz_share');
+  }
+  function card(){
+    var t=D.t[result],lang=L(),u=ui(),W=1080,c=document.createElement('canvas');c.width=W;c.height=W;var x=c.getContext('2d');
+    var f='"Plus Jakarta Sans","Noto Sans Bengali","Segoe UI",system-ui,-apple-system,Arial,sans-serif';
+    var g=x.createLinearGradient(0,0,W,W);g.addColorStop(0,'#040605');g.addColorStop(.6,'#0b1d14');g.addColorStop(1,'#050a07');x.fillStyle=g;x.fillRect(0,0,W,W);
+    function glow(cx,cy,r,col,a){var rg=x.createRadialGradient(cx,cy,0,cx,cy,r);rg.addColorStop(0,col);rg.addColorStop(1,'rgba(0,0,0,0)');x.globalAlpha=a;x.fillStyle=rg;x.fillRect(0,0,W,W);x.globalAlpha=1}
+    glow(220,160,560,'#287A50',.5);glow(880,930,520,'#3FAE7C',.35);
+    var gh=x.createLinearGradient(0,330,0,700);gh.addColorStop(0,'rgba(241,255,248,.95)');gh.addColorStop(.7,'rgba(159,233,197,.55)');gh.addColorStop(1,'rgba(127,221,176,0)');
+    x.fillStyle=gh;x.beginPath();x.moveTo(540,250);x.bezierCurveTo(430,250,380,380,380,500);x.lineTo(380,760);x.quadraticCurveTo(410,720,440,765);x.quadraticCurveTo(470,715,500,765);x.quadraticCurveTo(530,715,560,765);x.quadraticCurveTo(590,715,620,765);x.quadraticCurveTo(650,720,680,760);x.lineTo(700,500);x.bezierCurveTo(700,380,650,250,540,250);x.fill();
+    x.fillStyle='#020403';x.beginPath();x.ellipse(540,470,86,100,0,0,7);x.fill();x.fillStyle='#baffdf';x.shadowColor='#7FDDB0';x.shadowBlur=24;x.beginPath();x.ellipse(508,462,13,19,0,0,7);x.fill();x.beginPath();x.ellipse(572,462,13,19,0,0,7);x.fill();x.shadowBlur=0;
+    var mg=x.createLinearGradient(60,60,140,140);mg.addColorStop(0,'#287A50');mg.addColorStop(1,'#3FAE7C');x.fillStyle=mg;x.beginPath();if(x.roundRect)x.roundRect(60,60,84,84,24);else x.rect(60,60,84,84);x.fill();
+    x.fillStyle='#fff';x.font='800 34px '+f;x.textAlign='center';x.textBaseline='middle';x.fillText('FA',102,103);
+    x.textBaseline='alphabetic';x.textAlign='center';x.fillStyle='#7FDDB0';x.font='800 28px '+f;if('letterSpacing' in x)x.letterSpacing='7px';x.fillText(u.card,W/2,200);if('letterSpacing' in x)x.letterSpacing='0px';
+    x.fillStyle='#f1f7f3';x.font='800 84px '+f;x.fillText(t.n[lang],W/2,880);
+    x.fillStyle='#9db0a5';x.font='500 30px '+f;
+    var words=t.d[lang].split(' '),lines=[],cur='';words.forEach(function(w){var tt=cur?cur+' '+w:w;if(x.measureText(tt).width>880&&cur){lines.push(cur);cur=w}else cur=tt});if(cur)lines.push(cur);lines=lines.slice(0,2);
+    lines.forEach(function(l,i){x.fillText(l,W/2,940+i*40)});
+    x.fillStyle='rgba(157,176,165,.8)';x.font='500 24px '+f;x.textAlign='left';x.fillText(u.cardSub,60,1032);x.textAlign='right';x.fillText('Fahad Abdur Rahman',W-60,1032);
+    return c;
+  }
+  function download(){var c=card(),a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='my-ghost-leader-card.png';document.body.appendChild(a);a.click();a.remove();track('ghost_quiz_card')}
+  new MutationObserver(function(){paint()}).observe(root,{attributes:true,attributeFilter:['lang']});
+  step=-1;paint();
+})();
+</script>
 </body>
 </html>
