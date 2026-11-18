@@ -419,6 +419,22 @@ html{background:var(--bg)}
 .qod-next{margin-top:14px;background:none;border:1px solid var(--border);border-radius:99px;padding:7px 16px;font:600 .85rem inherit;color:var(--green-text);cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
 .qod-next:hover{border-color:var(--green);background:color-mix(in srgb,var(--green) 10%,transparent);transform:translateY(-2px)}
 .qod-next[hidden]{display:none}
+.dcard{display:grid;grid-template-columns:1.25fr .75fr;gap:30px;align-items:center;padding:34px 36px}
+.dcard h2{margin:8px 0 10px;font-size:clamp(1.6rem,4.4vw,2.3rem);line-height:1.15}
+.dcard p{margin:0 0 20px;color:var(--muted);max-width:520px}
+.dc-btns{display:flex;gap:12px;flex-wrap:wrap}
+.dc-qr{display:grid;justify-items:center;gap:10px;text-decoration:none;color:var(--muted);font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.dc-qr canvas{width:min(190px,48vw);height:auto;border-radius:18px;background:#fff;padding:10px;box-shadow:var(--shadow-lg);transition:transform .45s var(--ease)}
+.dc-qr:hover canvas,.dc-qr:focus-visible canvas{transform:rotate(-3deg) scale(1.05)}
+@media(max-width:760px){.dcard{grid-template-columns:1fr;padding:26px 22px}.dc-qr{justify-items:start}}
+.dcards{display:grid;gap:20px}
+.ch-ring{position:relative;width:min(190px,48vw);aspect-ratio:1;justify-self:center;display:grid;place-items:center;text-decoration:none;color:var(--text)}
+.ch-ring svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.ch-ring circle{fill:none;stroke-width:9;stroke-linecap:round}
+.ch-ring .bg{stroke:color-mix(in srgb,var(--text) 12%,transparent)}
+.ch-ring .fg{stroke:var(--green-2);stroke-dasharray:326.7;stroke-dashoffset:326.7;transition:stroke-dashoffset 1s var(--ease)}
+.ch-ring b{position:relative;font-size:2rem;font-weight:800;letter-spacing:-.02em}
+.dch .dc-qr,.dch .ch-ring{justify-self:center}
 </style>
 </head>
 <body>
@@ -679,6 +695,39 @@ html{background:var(--bg)}
       <figcaption id="qodBy"></figcaption>
       <button type="button" class="qod-next" id="qodNext">↻ Another quote</button>
     </figure>
+  </div>
+</section>
+
+<!-- DIGITAL CARD -->
+<section id="digital-card" aria-labelledby="dc-h" style="padding:8px 0 36px">
+  <div class="wrap reveal dcards">
+    <div class="card dcard">
+      <div class="dc-txt">
+        <div class="eyebrow">Digital card</div>
+        <h2 id="dc-h">Meet me in one tap</h2>
+        <p>Save my contact, message me on WhatsApp, or scan the QR code with your phone.</p>
+        <div class="dc-btns">
+          <a class="btn primary" href="card.html" id="dcOpen">Open my digital card <span aria-hidden="true">→</span></a>
+          <button class="btn" type="button" id="dcCopy">Copy card link</button>
+        </div>
+      </div>
+      <a class="dc-qr" href="card.html" aria-label="Open my digital card">
+        <canvas id="dcQr" width="10" height="10" aria-hidden="true"></canvas>
+        <span>Scan me</span>
+      </a>
+    </div>
+    <div class="card dcard dch">
+      <div class="dc-txt">
+        <div class="eyebrow">7-day challenge</div>
+        <h2 id="ch-h">7-Day Leadership Challenge</h2>
+        <p>One small leadership action a day. No sign-up. Finish all seven and get your own badge.</p>
+        <div class="dc-btns"><a class="btn primary" href="challenge.html" id="chOpen"><span id="chOpenT">Start the challenge</span> <span aria-hidden="true">→</span></a></div>
+      </div>
+      <a class="ch-ring" href="challenge.html" aria-label="Open the 7-day challenge">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" id="chFg" cx="60" cy="60" r="52"/></svg>
+        <b><span id="chCnt">0</span>/7</b>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -1143,6 +1192,36 @@ window.faContent=(async function(){
 </script>
 <script src="site-footer.js"></script>
 <script src="extras.js"></script>
+<script src="qr.js"></script>
+<script>
+(function(){
+  var root=document.documentElement;
+  function cardUrl(){return location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/,'')+'card.html'}
+  try{FA_QR.draw(document.getElementById('dcQr'),cardUrl(),{scale:8,margin:2,dark:'#06100b',light:'#ffffff'})}catch(e){}
+  var c=document.getElementById('dcCopy');if(!c)return;
+  c.addEventListener('click',function(){
+    var bn=root.getAttribute('lang')==='bn',orig=c.textContent;
+    function done(m){c.textContent=m;setTimeout(function(){c.textContent=orig},1800)}
+    if(navigator.share&&/Mobi|Android/i.test(navigator.userAgent)){navigator.share({title:'Fahad Abdur Rahman',url:cardUrl()}).catch(function(){});return}
+    if(navigator.clipboard)navigator.clipboard.writeText(cardUrl()).then(function(){done(bn?'\u09b2\u09bf\u0982\u0995 \u0995\u09aa\u09bf \u09b9\u09af\u09bc\u09c7\u099b\u09c7 \u2713':'Link copied \u2713')},function(){done(bn?'\u0995\u09aa\u09bf \u0995\u09b0\u09be \u09af\u09be\u09af\u09bc\u09a8\u09bf':'Could not copy')});
+  });
+})();
+</script>
+<script>
+(function(){
+  var root=document.documentElement,fg=document.getElementById('chFg'),cnt=document.getElementById('chCnt'),t=document.getElementById('chOpenT');
+  if(!fg||!t)return;
+  function paint(){
+    var n=0;try{var s=JSON.parse(localStorage.getItem('fa-challenge')||'null');if(s&&Array.isArray(s.d))n=s.d.slice(0,7).filter(Boolean).length}catch(e){}
+    var bn=root.getAttribute('lang')==='bn';
+    cnt.textContent=String(n);fg.style.strokeDashoffset=String(326.7*(1-n/7));
+    t.textContent=n===0?(bn?'\u099a\u09cd\u09af\u09be\u09b2\u09c7\u099e\u09cd\u099c \u09b6\u09c1\u09b0\u09c1 \u0995\u09b0\u09c1\u09a8':'Start the challenge'):n<7?(bn?'\u099a\u09be\u09b2\u09bf\u09af\u09bc\u09c7 \u09af\u09be\u09a8 ('+n+'/7)':'Continue ('+n+'/7)'):(bn?'\u0986\u09ae\u09be\u09b0 \u09ac\u09cd\u09af\u09be\u099c \u09a6\u09c7\u0996\u09c1\u09a8':'See my badge');
+  }
+  setTimeout(paint,300);paint();
+  new MutationObserver(function(){setTimeout(paint,50)}).observe(root,{attributes:true,attributeFilter:['lang']});
+  window.addEventListener('pageshow',paint);
+})();
+</script>
 <script src="premium-fx.js"></script>
 <script src="menu-style.js"></script>
 <script src="site-ux.js"></script>

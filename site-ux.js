@@ -71,7 +71,7 @@
 
   /* ---------- 2. blur-up images ---------- */
   function prepImg(img) {
-    if (img.__fa) return; img.__fa = 1;
+    if (img.__faUx) return; img.__faUx = 1;
     if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
     if (img.complete && img.naturalWidth > 0) return;
     if (img.closest('.logo,.dr-brand,.fx-rip')) return;

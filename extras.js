@@ -121,6 +121,8 @@
     'Skip to main content': 'মূল অংশে যান',
     'Home': 'হোম', 'About': 'পরিচিতি', 'Education': 'শিক্ষা', 'Skills': 'দক্ষতা',
     'Quote of the Day': 'আজকের উক্তি', '↻ Another quote': '↻ আরেকটি উক্তি', 'Ghost Leader': 'Ghost Leader',
+    'Meet me in one tap': 'এক চাপে আমাকে চিনুন', 'Save my contact, message me on WhatsApp, or scan the QR code with your phone.': 'আমার কন্টাক্ট সেভ করুন, WhatsApp-এ মেসেজ করুন, অথবা ফোনে QR কোড স্ক্যান করুন।', 'Open my digital card': 'আমার ডিজিটাল কার্ড খুলুন', 'Copy card link': 'কার্ডের লিংক কপি করুন', 'Scan me': 'আমাকে স্ক্যান করুন',
+    '7-day challenge': '৭ দিনের চ্যালেঞ্জ', '7-Day Leadership Challenge': '৭ দিনের নেতৃত্ব চ্যালেঞ্জ', 'One small leadership action a day. No sign-up. Finish all seven and get your own badge.': 'দিনে একটা ছোট নেতৃত্বের কাজ। সাইন-আপ লাগে না। সাতটাই শেষ করলে পাবেন নিজের ব্যাজ।',
     'Digital card': 'ডিজিটাল কার্ড', 'Challenge': 'চ্যালেঞ্জ',
     'Portfolio': 'পোর্টফোলিও',
     'Services': 'সার্ভিস', 'Plans': 'প্ল্যান', 'Process': 'প্রক্রিয়া', 'Domain & hosting': 'ডোমেইন ও হোস্টিং', 'FAQ': 'প্রশ্নোত্তর',
