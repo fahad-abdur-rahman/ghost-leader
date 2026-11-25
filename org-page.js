@@ -71,6 +71,40 @@ function render(o, all) {
     if (fs) fs.hidden = !feats.length;
   }
 
+
+  // badge, leadership box and departments (all editable in Admin)
+  var bd = $('orgBadge'); if (bd && typeof o.badge === 'string' && o.badge.trim()) bd.textContent = o.badge.trim();
+  var lh = $('lead-h'), lcard = document.querySelector('.lead-card');
+  if (lh && typeof o.leaderTitle === 'string' && o.leaderTitle.trim()) lh.textContent = o.leaderTitle.trim();
+  if (lcard) {
+    var ln = lcard.querySelector('h3'); if (ln && typeof o.leaderName === 'string' && o.leaderName.trim()) ln.textContent = o.leaderName.trim();
+    var lbio = lcard.querySelector('p'); if (lbio && typeof o.leaderBio === 'string' && o.leaderBio.trim()) { lbio.textContent = o.leaderBio.trim(); lbio.dataset.own = '1'; }
+    var lsec = lcard.closest('section'); if (lsec) lsec.hidden = String(o.hideLeader || '') === '1';
+  }
+  if (Array.isArray(o.departments)) {
+    var deps = o.departments.filter(function (x) { return x && (x.title || '').trim(); });
+    var ds = $('deptSection');
+    if (!ds && deps.length) {
+      var anchor = lcard && lcard.closest('section');
+      ds = document.createElement('section'); ds.id = 'deptSection'; ds.setAttribute('aria-labelledby', 'dept-h'); ds.style.paddingTop = '8px';
+      ds.innerHTML = '<div class="wrap"><div class="sh reveal show"><div><div class="eyebrow">Departments</div><h2 id="dept-h"></h2><p class="muted" id="deptSub" style="margin-top:6px"></p></div></div><div class="feat" id="deptWrap"></div></div>';
+      if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(ds, anchor); else document.querySelector('main').appendChild(ds);
+    }
+    if (ds) {
+      ds.hidden = !deps.length;
+      var fw2 = ds.querySelector('.feat'); if (fw2) { fw2.id = 'deptWrap'; fw2.textContent = ''; }
+      var h2 = ds.querySelector('h2'); if (h2) h2.textContent = (o.deptHeading || '').trim() || 'Our Departments';
+      var sp = ds.querySelector('.sh p'); if (sp) { sp.textContent = (o.deptSub || '').trim(); sp.hidden = !(o.deptSub || '').trim(); }
+      deps.forEach(function (x, i) {
+        var c = el('div', 'card reveal show'); c.style.setProperty('--d', (i * 0.07) + 's');
+        var hh = el('h3'); if ((x.icon || '').trim()) { var ic = el('span', null, x.icon.trim()); ic.setAttribute('aria-hidden', 'true'); hh.appendChild(ic); hh.appendChild(document.createTextNode(' ')); }
+        hh.appendChild(el('span', null, x.title)); c.appendChild(hh); c.appendChild(el('p', null, x.text || ''));
+        if (fw2) fw2.appendChild(c);
+      });
+      if (fw2) fw2.style.setProperty('--n', 3);
+    }
+  }
+
   // logo
   var lg = $('orgLogo'); if (lg) logoInto(lg, o);
 
@@ -126,7 +160,7 @@ window.faContent = (async function () {
     render(me, orgs);
     renderOthers(orgs);
     if (d.profile && typeof d.profile.location === 'string' && d.profile.location.trim()) {
-      var lc = document.querySelector('.lead-card p'); if (lc) lc.textContent = 'Youth leader and organization builder from ' + d.profile.location.trim() + '.';
+      var lc = document.querySelector('.lead-card p'); if (lc && !lc.dataset.own) lc.textContent = 'Youth leader and organization builder from ' + d.profile.location.trim() + '.';
     }
   }
   draw();

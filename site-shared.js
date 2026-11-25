@@ -1,5 +1,5 @@
 // Small helpers shared by index.html and the organization pages.
-export var STATIC_PAGES = ['talentverse-bangladesh', 'nexera-youth-network', 'visionary-youth-alliance'];
+export var STATIC_PAGES = ['talentverse-bangladesh', 'athar-islamic-youth-forum', 'visionary-youth-alliance'];
 
 export function slugify(s) {
   return String(s || '').toLowerCase().trim().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
@@ -22,6 +22,7 @@ export function mono(o) { return String((o && (o.mono || o.name)) || '').slice(0
 export function logoInto(el, o, altSuffix) {
   el.textContent = '';
   var src = safeImg(o && o.logo);
+  if (!src && o && (o.slug === 'athar-islamic-youth-forum' || /^ATHAR /i.test(o.name || ''))) src = 'athar-logo.webp';
   if (src) {
     var im = document.createElement('img');
     im.src = src; im.alt = (o.name || 'Organization') + (altSuffix || ' logo');

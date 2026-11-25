@@ -82,7 +82,7 @@
         cO.lastChild.appendChild(a(x.getAttribute('href'), (t || '').trim()));
       });
     } else if (!cO.lastChild.children.length) {
-      [['All organizations', 'index.html#organizations'], ['TalentVerse Bangladesh', 'talentverse-bangladesh.html'], ['NexEra Youth Network', 'nexera-youth-network.html'], ['Visionary Youth Alliance', 'visionary-youth-alliance.html']]
+      [['All organizations', 'index.html#organizations'], ['TalentVerse Bangladesh', 'talentverse-bangladesh.html'], ['ATHAR Islamic Youth Forum', 'athar-islamic-youth-forum.html'], ['Visionary Youth Alliance', 'visionary-youth-alliance.html']]
         .forEach(function (x) { cO.lastChild.appendChild(a(x[1], x[0])); });
     }
     var con = document.querySelectorAll('#drConnect a');

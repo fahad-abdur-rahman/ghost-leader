@@ -118,7 +118,7 @@
       if (/projects/.test(h)) return 'folder';
       if (/achievements/.test(h)) return 'award';
       if (/contact/.test(h)) return 'mail';
-      if (/organi[sz]ation|talentverse|nexera|visionary/.test(h)) return 'org';
+      if (/organi[sz]ation|talentverse|athar|visionary/.test(h)) return 'org';
       if (/home|^#?$|index/.test(h)) return 'home';
       return 'link';
     }
