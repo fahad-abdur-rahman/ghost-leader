@@ -436,6 +436,35 @@ html{background:var(--bg)}
 .ch-ring b{position:relative;font-size:2rem;font-weight:800;letter-spacing:-.02em}
 .dch .dc-qr,.dch .ch-ring{justify-self:center}
 </style>
+<style id="compact">
+/* tighter spacing: the home page was too long */
+section{padding:44px 0}
+.hero{padding:22px 0 14px}
+.hero-grid{gap:20px}
+.hero h1{font-size:clamp(2.2rem,8.6vw,3.7rem);margin:14px 0 8px}
+.hero .sub{font-size:1.08rem;margin-bottom:8px}
+.hero p.lead{font-size:.98rem}
+.photo{max-width:270px}
+.stats{margin-top:26px;gap:10px}
+.stat{padding:13px 14px;gap:11px}
+.stat svg{width:36px;height:36px;padding:8px;border-radius:12px}
+.stat b{font-size:1.4rem}
+.stat span{font-size:.7rem}
+.sh{margin-bottom:18px}
+#organizations{padding-top:28px!important}
+.more-row{margin-top:20px;text-align:center}
+.ayah{padding-top:8px!important;padding-bottom:6px!important}
+.aq{padding:26px 20px 22px!important}
+#qod{padding:4px 0 14px!important}
+#digital-card{padding:4px 0 22px!important}
+.dcard{padding:20px!important;gap:14px!important}
+.dcard h2{font-size:1.2rem!important}
+.dcard p{font-size:.9rem!important}
+@media(max-width:700px){.dc-qr,.ch-ring{display:none!important}}
+#contact{padding-bottom:14px!important}
+.contact{padding:30px 20px!important;gap:20px!important}
+@media(min-width:860px){.hero{padding:36px 0 20px}section{padding:52px 0}}
+</style>
 </head>
 <body>
 <div id="intro" role="status" aria-label="Loading Fahad Abdur Rahman's website">
@@ -478,7 +507,7 @@ html{background:var(--bg)}
             <a href="visionary-youth-alliance.html"><span class="lg" aria-hidden="true">VY</span><span>Visionary Youth Alliance</span></a>
           </div></div>
         </div>
-        <a href="#projects">Projects</a>
+        <a href="projects.html">Projects</a>
         <a href="#achievements">Achievements</a>
         <a href="contact.html">Contact</a>
       </div>
@@ -512,7 +541,7 @@ html{background:var(--bg)}
     <a class="dl gl-link" href="ghost-leader.html"><span aria-hidden="true">👻</span> Ghost Leader</a>
     <a class="dl" href="#education">Education</a>
     <a class="dl" href="#skills">Skills</a>
-    <a class="dl" href="#projects">Projects</a>
+    <a class="dl" href="projects.html">Projects</a>
     <a class="dl" href="#achievements">Achievements</a>
     <a class="dl" href="contact.html">Contact</a>
   </div>
@@ -640,23 +669,14 @@ html{background:var(--bg)}
 <!-- PROJECTS -->
 <section id="projects" style="padding-top:16px" aria-labelledby="proj-title">
   <div class="wrap reveal">
-    <div class="sh"><span class="num" aria-hidden="true">05</span><div><div class="eyebrow">Projects</div><h2 id="proj-title">Latest Projects</h2></div></div>
-    <div class="filters" role="group" aria-label="Filter projects by category">
-      <button class="filter" type="button" data-filter="all" aria-pressed="true">All</button>
-      <button class="filter" type="button" data-filter="organization" aria-pressed="false">Organization</button>
-      <button class="filter" type="button" data-filter="website" aria-pressed="false">Website</button>
-      <button class="filter" type="button" data-filter="event" aria-pressed="false">Event</button>
-      <button class="filter" type="button" data-filter="other" aria-pressed="false">Other</button>
-    </div>
+    <div class="sh"><span class="num" aria-hidden="true">05</span><div><div class="eyebrow">Projects</div><h2 id="proj-title">Featured Projects</h2></div></div>
     <div class="grid3" id="projGrid">
       <a class="card proj" href="#" data-cat="website"><div class="shot" aria-hidden="true"><b>TVBD</b></div><div class="body"><div><h3>TVBD Website</h3><p>Website · Web Development</p></div><span class="arr" aria-hidden="true">→</span></div></a>
       <a class="card proj" href="#" data-cat="website"><div class="shot" aria-hidden="true"><b>AIYF</b></div><div class="body"><div><h3>AIYF Website</h3><p>Website · Web Development</p></div><span class="arr" aria-hidden="true">→</span></div></a>
       <a class="card proj" href="#" data-cat="website"><div class="shot" aria-hidden="true"><b>VYA</b></div><div class="body"><div><h3>VYA Platform</h3><p>Website · Web Development</p></div><span class="arr" aria-hidden="true">→</span></div></a>
-      <a class="card proj" href="#" data-cat="organization"><div class="shot" aria-hidden="true"><b>TV</b></div><div class="body"><div><h3>TalentVerse Bangladesh</h3><p>Organization · Founder &amp; Chairman</p></div><span class="arr" aria-hidden="true">→</span></div></a>
-      <a class="card proj" href="#" data-cat="event"><div class="shot" aria-hidden="true"><b>EVENT</b></div><div class="body"><div><h3>Youth Program (edit title)</h3><p>Event · Sample entry</p></div><span class="arr" aria-hidden="true">→</span></div></a>
-      <a class="card proj" href="#" data-cat="other"><div class="shot" aria-hidden="true"><b>MORE</b></div><div class="body"><div><h3>Awareness Campaign (edit title)</h3><p>Other · Sample entry</p></div><span class="arr" aria-hidden="true">→</span></div></a>
     </div>
-    <p class="empty" id="empty">No projects in this category yet.</p>
+    <p class="more-row"><a class="btn" id="projAll" href="projects.html">View all projects <span aria-hidden="true">→</span></a></p>
+    <p class="empty" id="empty">No projects yet.</p>
     <p class="sr" id="live" role="status" aria-live="polite"></p>
   </div>
 </section>
@@ -844,6 +864,7 @@ html{background:var(--bg)}
   var empty=document.getElementById('empty'),live=document.getElementById('live');
   function setupFilters(){
     var box=document.querySelector('.filters');
+    if(!box)return;
     var projs=[].slice.call(document.querySelectorAll('.proj'));
     var labels={},cats=[];
     projs.forEach(function(p){
@@ -994,7 +1015,7 @@ window.faContent=(async function(){
   function renderProjects(list){
     if(!Array.isArray(list))return;
     var g=document.getElementById('projGrid');g.textContent='';
-    list.forEach(function(p){
+    list.filter(function(p){return p&&String(p.title||'').trim()}).slice(0,3).forEach(function(p){
       var cat=String(p.category||'Other').trim()||'Other';
       var a=h('a','card proj');
       setExternal(a,p.url);

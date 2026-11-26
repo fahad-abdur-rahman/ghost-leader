@@ -108,7 +108,7 @@ function renderWorks(S) {
   box.textContent = '';
   list.forEach(function (p) {
     var url = /^https:\/\/\S+$/i.test(String(p.url || '').trim()) ? String(p.url).trim() : '';
-    var a = el('a', 'work card'); a.href = url || 'index.html#projects';
+    var a = el('a', 'work card'); a.href = url || 'projects.html';
     if (url) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
     var shot = el('div', 'wk-shot'), img = safeImg(p.shot);
     if (img) { var im = el('img'); im.src = img; im.alt = ''; im.loading = 'lazy'; im.decoding = 'async'; shot.appendChild(im); }

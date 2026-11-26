@@ -265,6 +265,7 @@
     'Events & Volunteers': 'ইভেন্ট ও স্বেচ্ছাসেবক',
     'Planning programs, competitions and gatherings, and organising our volunteer teams.': 'প্রোগ্রাম, প্রতিযোগিতা ও সমাবেশের পরিকল্পনা এবং স্বেচ্ছাসেবক দল সংগঠিত করা।',
     'Departments': 'বিভাগসমূহ', 'Six departments, one mission': 'ছয়টি বিভাগ, একটি লক্ষ্য', 'Every member can find a place to learn, to serve and to lead.': 'প্রতিটি সদস্য শিখতে, সেবা করতে ও নেতৃত্ব দিতে নিজের জায়গা খুঁজে পায়।',
+    'Built & Developed by': 'নির্মাণ ও ডেভেলপমেন্ট:', 'Featured Projects': 'নির্বাচিত প্রজেক্ট', 'View all projects': 'সব প্রজেক্ট দেখুন', 'Work & Initiatives': 'কাজ ও উদ্যোগ', 'Websites, organizations and youth programs I have built and led.': 'আমার গড়া ও পরিচালিত ওয়েবসাইট, সংগঠন ও যুব কর্মসূচি।', 'No projects yet.': 'এখনো কোনো প্রজেক্ট নেই।',
     'Vision': 'স্বপ্ন', 'Action': 'কাজ', 'Alliance': 'জোট',
     'Encouraging young people to imagine a better tomorrow for their communities.': 'তরুণরা যেন নিজেদের সমাজের জন্য একটি ভালো আগামীর স্বপ্ন দেখে, সে অনুপ্রেরণা দেওয়া।',
     'Turning ideas into real projects, programs and initiatives.': 'ভাবনাকে বাস্তব প্রকল্প, কর্মসূচি ও উদ্যোগে রূপ দেওয়া।',

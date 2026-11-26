@@ -7,17 +7,18 @@
   ft.setAttribute('data-sf', '1');
 
   var css = 'footer.sf{padding:0;margin-top:30px;text-align:left;font-size:.92rem;color:var(--muted);border-top:1px solid var(--border);background:color-mix(in srgb,var(--green) 4%,var(--bg))}' +
-    '.sf-top{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;gap:34px;padding:46px 0 34px}' +
+    '.sf-top{display:grid;grid-template-columns:1.5fr 1fr 1.2fr 1fr;gap:26px;padding:30px 0 22px}' +
     '.sf-brand .logo{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;color:var(--text);text-decoration:none}' +
-    '.sf-brand p{margin:14px 0 0;max-width:300px;line-height:1.6}' +
+    '.sf-brand p{margin:8px 0 0;max-width:300px;line-height:1.5}' +
     '.sf-brand .sf-motto{margin-top:10px;font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green-text)}' +
-    '.sf h2{margin:0 0 14px;font-size:.74rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text)}' +
-    '.sf-list{display:flex;flex-direction:column;gap:9px}' +
+    '.sf h2{margin:0 0 10px;font-size:.74rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text)}' +
+    '.sf-list{display:flex;flex-direction:column;gap:7px}' +
     '.sf-list a{color:var(--muted);text-decoration:none;width:fit-content;transition:color .2s,transform .2s}' +
     '.sf-list a:hover{color:var(--green-text);transform:translateX(3px)}' +
-    '.sf-r{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.sf-bot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px 0 calc(26px + env(safe-area-inset-bottom));border-top:1px solid var(--border);font-size:.84rem}' +
-    '@media(max-width:900px){.sf-top{grid-template-columns:1fr 1fr;gap:30px}.sf-brand{grid-column:1/-1}}' +
-    '@media(max-width:480px){.sf-top{grid-template-columns:1fr;padding:36px 0 26px}.sf-bot{flex-direction:column;padding-right:64px}}';
+    '.sf-r{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.sf-bot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 0 calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--border);font-size:.8rem}' +
+    '@media(max-width:900px){.sf-top{grid-template-columns:1fr 1fr;gap:22px 18px}.sf-brand{grid-column:1/-1}}' +
+    '@media(max-width:480px){.sf-top{padding:24px 0 16px;font-size:.88rem}.sf-brand .sf-motto{margin-top:6px}.sf-top>div:last-child{grid-column:1/-1}.sf-top>div:last-child .sf-list{flex-direction:row;flex-wrap:wrap;gap:6px 18px}.sf-bot{flex-direction:column;gap:6px;padding-right:64px}}' +
+    '.sf-credit{text-align:center;padding:14px 20px;margin-top:24px;font-size:.88rem;color:var(--muted);border-top:1px solid var(--border)}.sf-credit a{color:var(--green-text);font-weight:700;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}.sf-credit a:hover,.sf-credit a:focus-visible{border-bottom-color:currentColor}footer.sf{margin-top:0;border-top:0}';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
   function a(href, text, ext) {
@@ -31,6 +32,12 @@
     var l = document.createElement('div'); l.className = 'sf-list'; l.id = id; d.appendChild(l);
     return d;
   }
+
+  /* credit line right above the footer */
+  var cr = document.createElement('div'); cr.className = 'sf-credit';
+  cr.appendChild(document.createTextNode('Built & Developed by '));
+  var ca = document.createElement('a'); ca.href = 'https://fahad-abdur-rahman.github.io/ghost-leader/'; ca.textContent = 'Fahad Abdur Rahman'; cr.appendChild(ca);
+  ft.parentNode.insertBefore(cr, ft);
 
   ft.className = 'sf';
   ft.textContent = '';
@@ -69,7 +76,7 @@
   wrap.appendChild(top); wrap.appendChild(bot); ft.appendChild(wrap);
 
   /* Explore links */
-  [['Home', 'index.html#home'], ['About', 'about.html'], ['Blog', 'blog.html'], ['Services', 'web-services.html'], ['👻 Ghost Leader', 'ghost-leader.html'], ['Projects', 'index.html#projects'], ['Contact', 'contact.html'], ['Digital card', 'card.html'], ['Challenge', 'challenge.html']]
+  [['Home', 'index.html#home'], ['About', 'about.html'], ['Blog', 'blog.html'], ['Services', 'web-services.html'], ['👻 Ghost Leader', 'ghost-leader.html'], ['Projects', 'projects.html'], ['Contact', 'contact.html'], ['Digital card', 'card.html'], ['Challenge', 'challenge.html']]
     .forEach(function (x) { cE.lastChild.appendChild(a(x[1], x[0])); });
 
   /* Organizations + Connect: copy from the site menu (which is filled from the admin panel) */
